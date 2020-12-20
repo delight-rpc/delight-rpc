@@ -10,7 +10,7 @@
   "typings": "lib/es2018/index.d.ts",
   "module": "dist/es2018/index.mjs",
   "browser": "dist/es2018/index.umd.js",
-  "repository": "git@github.com:BlackGlory/light-rpc",
+  "repository": "git@github.com:BlackGlory/light-rpc.git",
   "author": "BlackGlory <woshenmedoubuzhidao@blackglory.me>",
   "license": "MIT",
   "scripts": {
@@ -21,9 +21,11 @@
     "clean": "yarn clean:build && yarn clean:bundle",
     "clean:build": "rm -rf lib",
     "clean:bundle": "rm -rf dist",
-    "build": "yarn build:es2015",
+    "build": "yarn build:es2015 && yarn build:es2018",
     "build:es2015": "tsc --project tsconfig.build.json --module commonjs --target es2015 --outDir lib/es2015 && tscpaths -p tsconfig.build.json -s ./src -o ./lib/es2015",
-    "bundle": "rollup --config rollup.config.js"
+    "build:es2018": "tsc --project tsconfig.build.json --module commonjs --target es2018 --outDir lib/es2018 && tscpaths -p tsconfig.build.json -s ./src -o ./lib/es2018",
+    "bundle": "rollup --config rollup.config.js",
+    "release": "standard-version"
   },
   "husky": {
     "hooks": {
@@ -35,6 +37,7 @@
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-typescript": "^8.1.0",
     "@types/jest": "^26.0.19",
