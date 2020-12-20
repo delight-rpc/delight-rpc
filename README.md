@@ -1,11 +1,11 @@
-# light-rpc
+# delight-rpc
 
 ## Install
 
 ```sh
-npm install --save light-rpc
+npm install --save delight-rpc
 # or
-yarn add light-rpc
+yarn add delight-rpc
 ```
 
 ## API
