@@ -4,7 +4,7 @@ import resolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
 
-const UMD_NAME = 'LightRPC'
+const UMD_NAME = 'DelightRPC'
 
 function createOptions({ directory, target }) {
   return [
