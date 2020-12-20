@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESNext"
+  , "module": "CommonJS"
+  , "strict": true
+  , "noUnusedLocals": true
+  , "noUnusedParameters": true
+  , "baseUrl": "."
+  , "paths": {
+      "@src/*": ["src/*"]
+    , "@test/*": ["__tests__/*"]
+    }
+  }
+}
