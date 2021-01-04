@@ -8,8 +8,6 @@
   ],
   "main": "lib/es2018/index.js",
   "typings": "lib/es2018/index.d.ts",
-  "module": "dist/es2018/index.mjs",
-  "browser": "dist/es2018/index.umd.js",
   "repository": "git@github.com:BlackGlory/delight-rpc.git",
   "author": "BlackGlory <woshenmedoubuzhidao@blackglory.me>",
   "license": "MIT",
