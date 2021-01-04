@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import { terser } from 'rollup-plugin-terser'
+import analyze from 'rollup-plugin-analyzer'
 
 const UMD_NAME = 'DelightRPC'
 
@@ -15,7 +16,8 @@ function createOptions({ directory, target }) {
         typescript({ target })
       , json()
       , commonjs()
-      , resolve()
+      , resolve({ browser: true })
+      , analyze({ summaryOnly: true })
       ]
     }
   , {
@@ -25,7 +27,7 @@ function createOptions({ directory, target }) {
         typescript({ target })
       , json()
       , commonjs()
-      , resolve()
+      , resolve({ browser: true })
       , terser()
       ]
     }
