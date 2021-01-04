@@ -41,24 +41,24 @@
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-typescript": "^8.1.0",
     "@types/jest": "^26.0.19",
-    "@typescript-eslint/eslint-plugin": "^4.10.0",
-    "@typescript-eslint/parser": "^4.10.0",
-    "eslint": "^7.16.0",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
+    "eslint": "^7.17.0",
     "husky": "^4.3.6",
     "jest": "^26.5.2",
-    "return-style": "^0.10.1",
+    "return-style": "^0.11.3",
     "rollup": "^2.35.1",
     "rollup-plugin-terser": "^7.0.2",
-    "standard-version": "^9.0.0",
+    "standard-version": "^9.1.0",
     "ts-jest": "^26.4.4",
     "tscpaths": "^0.0.9",
     "typescript": "^4.1.3"
   },
   "dependencies": {
-    "@blackglory/errors": "^0.1.2",
-    "@blackglory/jest-matchers": "^0.1.5",
-    "@blackglory/types": "^0.1.10",
-    "json-rpc-proxy": "^0.6.2",
+    "@blackglory/errors": "^0.1.3",
+    "@blackglory/jest-matchers": "^0.1.7",
+    "@blackglory/types": "^0.2.4",
+    "json-rpc-proxy": "^0.6.3",
     "nanoid": "^3.1.20"
   }
 }
