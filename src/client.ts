@@ -3,7 +3,7 @@ import { JsonRpcRequest, JsonRpcResponse, isJsonRpcSuccess } from '@blackglory/t
 import { createRequestProxy } from 'json-rpc-proxy'
 import { CustomError } from '@blackglory/errors'
 
-type RequestProxy<T> = {
+export type RequestProxy<T> = {
   [P in keyof T]:
     T[P] extends (...args: infer U) => PromiseLike<infer V>
       ? (...args: U) => Promise<V>
