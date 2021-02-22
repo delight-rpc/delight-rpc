@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/BlackGlory/delight-rpc/compare/v0.1.8...v0.1.9) (2021-02-22)
+
+
+### Bug Fixes
+
+* peer dependencies ([4ecd0ea](https://github.com/BlackGlory/delight-rpc/commit/4ecd0ea68d3728492e5f2df21ec139127bbfc41e))
+
 ### [0.1.8](https://github.com/BlackGlory/delight-rpc/compare/v0.1.7...v0.1.8) (2021-02-21)
 
 ### [0.1.7](https://github.com/BlackGlory/delight-rpc/compare/v0.1.6...v0.1.7) (2021-02-19)
