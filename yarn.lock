@@ -320,19 +320,17 @@
     ajv "^7.1.1"
     extra-dom "^0.2.9"
 
-"@blackglory/types@^0.2.19":
-  version "0.2.23"
-  resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.2.23.tgz#4e4d79f545fdf9901bedd4df3092e14897073717"
-  integrity sha512-shJnVh+oSAoxtBEQyEjGta+nqzfwOfvKyHmEG1GkrwdQFQHhtkQsKwEu9TI4UiGc5rt0X6iLXvG96j4bB504/w==
-  dependencies:
-    "@types/node" "^14.14.31"
-    ajv "^7.1.1"
-    extra-dom "^0.2.12"
-
 "@blackglory/types@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.3.0.tgz#deb85aa266b8e717da6de300f8b5e64fca46ac4f"
   integrity sha512-XZf98s8Rl/5ZAvNwK8XI2EQTZSUA8L8vvwo2JhQ26+gWiqNmY1u/Jn0lEGYOAZdPtAw/4sdq75IB5+Hid6gwJQ==
+  dependencies:
+    ajv "^7.1.1"
+
+"@blackglory/types@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@blackglory/types/-/types-0.3.1.tgz#824ff2a004622796a50d96488aa306d1dfba4800"
+  integrity sha512-GQvJiH+gqOxFeYp2IYFL7UOOzuDs+2k7Ak2W9iuYC6+J+7RyeYsBsb1JH7P2tPvq1dYUyT+8nCX3bHaTlZ+kAA==
   dependencies:
     ajv "^7.1.1"
 
@@ -2248,9 +2246,9 @@ eventemitter3@^4.0.7:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-"eventsource@git+https://github.com/EventSource/eventsource.git#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a":
+"eventsource@https://github.com/EventSource/eventsource#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a":
   version "1.0.7"
-  resolved "git+https://github.com/EventSource/eventsource.git#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a"
+  resolved "https://github.com/EventSource/eventsource#46fe04e03e54f4129a28bf75b3a1e5f4ab68b52a"
   dependencies:
     original "^1.0.0"
 
@@ -2350,14 +2348,6 @@ extglob@^2.0.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
-
-extra-dom@^0.2.12:
-  version "0.2.12"
-  resolved "https://registry.yarnpkg.com/extra-dom/-/extra-dom-0.2.12.tgz#2be1a6a482d7d8afe9c84d40dd9408482730c68d"
-  integrity sha512-7hTL+yRzpQZeeHhLTaWcUhwpimivFGiq0+Nrv3xfUeNeSuP00iNFHPI7dSLMmOiIEuRNSLuEd7M8xA8RvfmEoQ==
-  dependencies:
-    "@blackglory/types" "^0.2.17"
-    iterable-operator "^0.13.2"
 
 extra-dom@^0.2.9:
   version "0.2.11"
@@ -3797,12 +3787,12 @@ json-rpc-creator@^3.0.10:
   dependencies:
     "@blackglory/types" "^0.2.17"
 
-json-rpc-proxy@^0.6.10:
-  version "0.6.10"
-  resolved "https://registry.yarnpkg.com/json-rpc-proxy/-/json-rpc-proxy-0.6.10.tgz#1bb64fbb5c96470ba97c55357e7ee14ddf85c1a8"
-  integrity sha512-fimhbx8Qj68glNasEbF2UOew9yJ7sx/xvyxZNFAK9KoQkUOuUImqkjtpF7yuwFAsiSNziG3kaPuT7qiau5lAgA==
+json-rpc-proxy@^0.6.11:
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/json-rpc-proxy/-/json-rpc-proxy-0.6.11.tgz#cc636b9f7c9cd173a75b4d6cb2a6d13323c11888"
+  integrity sha512-fy8sDBJBfR8ilCQg0tLqUNVjIbqAg2wUGc9FGbvFxfBE7OshcHjKVzps+TnhwKmcp9i+t6bTGbMGiQwUex5imA==
   dependencies:
-    "@blackglory/types" "^0.2.19"
+    "@blackglory/types" "^0.3.1"
     json-rpc-creator "^3.0.10"
 
 json-schema-traverse@^0.4.1:

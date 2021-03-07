@@ -64,8 +64,8 @@
   },
   "dependencies": {
     "@blackglory/errors": "^1.1.2",
-    "@blackglory/types": "^0.3.0",
-    "json-rpc-proxy": "^0.6.10",
+    "@blackglory/types": "^0.3.1",
+    "json-rpc-proxy": "^0.6.11",
     "nanoid": "^3.1.20"
   }
 }
