@@ -36,7 +36,7 @@
     }
   },
   "devDependencies": {
-    "@blackglory/jest-matchers": "^0.1.12",
+    "@blackglory/jest-matchers": "^0.1.13",
     "@commitlint/cli": "^12.0.1",
     "@commitlint/config-conventional": "^12.0.1",
     "@rollup/plugin-commonjs": "^17.1.0",
@@ -64,8 +64,8 @@
   },
   "dependencies": {
     "@blackglory/errors": "^1.1.2",
-    "@blackglory/types": "^0.4.0",
-    "json-rpc-proxy": "^0.6.11",
+    "@blackglory/types": "^0.4.1",
+    "json-rpc-proxy": "^0.6.14",
     "nanoid": "^3.1.22"
   }
 }
