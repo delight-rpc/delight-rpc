@@ -1,5 +1,5 @@
 import { createResponse } from '@src/server'
-import { JsonRpcRequest } from '@blackglory/types'
+import { JsonRpcRequest } from 'justypes'
 import '@blackglory/jest-matchers'
 
 interface ICallable {

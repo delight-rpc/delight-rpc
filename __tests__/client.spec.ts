@@ -1,4 +1,4 @@
-import { JsonRpcRequest, JsonRpcResponse } from '@blackglory/types'
+import { JsonRpcRequest, JsonRpcResponse } from 'justypes'
 import { createClient } from '@src/client'
 import { getErrorPromise } from 'return-style'
 import { CustomError } from '@blackglory/errors'
