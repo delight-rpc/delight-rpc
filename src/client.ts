@@ -21,7 +21,9 @@ export function createClient<T extends object, U = unknown>(
   const proxy = createRequestProxy(nanoid)
 
   return new Proxy(proxy, {
-    get(target: any, prop: string | symbol) {
+    get(target: any, prop: string) {
+      if (['then'].includes(prop)) return
+
       return async function (this: unknown, ...args: unknown[]) {
         const fn = target[prop]
         const jsonRpc = Reflect.apply(fn, this, args) as JsonRpcRequest<U>

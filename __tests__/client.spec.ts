@@ -9,6 +9,23 @@ interface ICallables {
 }
 
 describe('createClient', () => {
+  describe('then method', () => {
+    it('return undefined', () => {
+      const send = jest.fn(async function (rpc: JsonRpcRequest<unknown>): Promise<JsonRpcResponse<unknown>> {
+        return {
+          jsonrpc: '2.0'
+        , id: rpc.id
+        , result: (rpc.params as unknown[])[0]
+        }
+      })
+
+      const client = createClient(send)
+
+      // @ts-ignore
+      expect(client.then).toBeUndefined()
+    })
+  })
+
   it('create json rpc', () => {
     const send = jest.fn(async function (rpc: JsonRpcRequest<unknown>): Promise<JsonRpcResponse<unknown>> {
       return {
