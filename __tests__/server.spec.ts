@@ -17,7 +17,7 @@ const Callable: ICallable = {
 }
 
 describe('createResponse', () => {
-  describe('', () => {
+  describe('method found', () => {
     it('return JsonRpcResult', async () => {
       const request: JsonRpcRequest<unknown> = {
         jsonrpc: '2.0'
