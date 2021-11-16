@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/delight-rpc/delight-rpc/compare/v0.1.22...v0.2.0) (2021-11-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* do not allow proxy `then` method
+
+### Bug Fixes
+
+* do not allow proxy `then` method ([cb1d1f1](https://github.com/delight-rpc/delight-rpc/commit/cb1d1f1583bd0145aa4d9aadd4eb3f944ea94fbc))
+
 ### [0.1.22](https://github.com/delight-rpc/delight-rpc/compare/v0.1.21...v0.1.22) (2021-11-16)
 
 ### [0.1.21](https://github.com/delight-rpc/delight-rpc/compare/v0.1.20...v0.1.21) (2021-10-19)
