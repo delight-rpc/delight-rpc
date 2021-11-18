@@ -1,8 +1,13 @@
 import { isString } from '@blackglory/types'
 import { JsonRpcNotification, JsonRpcParams } from 'justypes'
 
-export function notification<T>(method: string, params?: JsonRpcParams<T>): JsonRpcNotification<T>
-export function notification<T>(obj: Omit<JsonRpcNotification<T>, 'jsonrpc'>): JsonRpcNotification<T>
+export function notification<T>(
+  method: string
+, params?: JsonRpcParams<T>
+): JsonRpcNotification<T>
+export function notification<T>(
+  obj: Omit<JsonRpcNotification<T>, 'jsonrpc'>
+): JsonRpcNotification<T>
 export function notification<T>(...args:
 | [method: string, params?: JsonRpcParams<T>]
 | [obj: Omit<JsonRpcNotification<T>, 'jsonrpc'>]
