@@ -1,6 +1,10 @@
 import { JsonRpcId, JsonRpcRequest, JsonRpcParams } from 'justypes'
 
-export function request<T>(id: JsonRpcId, method: string, params?: JsonRpcParams<T>): JsonRpcRequest<T>
+export function request<T>(
+  id: JsonRpcId
+, method: string
+, params?: JsonRpcParams<T>
+): JsonRpcRequest<T>
 export function request<T>(obj: Omit<JsonRpcRequest<T>, 'jsonrpc'>): JsonRpcRequest<T>
 export function request<T>(...args:
 | [id: JsonRpcId, method: string, params?: JsonRpcParams<T>]

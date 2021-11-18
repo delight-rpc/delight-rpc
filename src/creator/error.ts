@@ -1,7 +1,12 @@
 import { isntUndefined } from '@blackglory/types'
 import { JsonRpcId, JsonRpcError, JsonRpcErrorObject } from 'justypes'
 
-export function error<T>(id: JsonRpcId, code: number, message: string, data?: T): JsonRpcError<T>
+export function error<T>(
+  id: JsonRpcId
+, code: number
+, message: string
+, data?: T
+): JsonRpcError<T>
 export function error<T>(id: JsonRpcId, error: JsonRpcErrorObject<T>): JsonRpcError<T>
 export function error<T>(obj: Omit<JsonRpcError<T>, 'jsonrpc'>): JsonRpcError<T>
 export function error<T>(...args:
