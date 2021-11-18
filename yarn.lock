@@ -4041,24 +4041,6 @@ json-parse-even-better-errors@^2.3.0:
   resolved "https://registry.yarnpkg.com/json-parse-even-better-errors/-/json-parse-even-better-errors-2.3.1.tgz#7c47805a94319928e05777405dc12e1f7a4ee02d"
   integrity sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==
 
-json-rpc-creator@^3.0.13:
-  version "3.0.13"
-  resolved "https://registry.yarnpkg.com/json-rpc-creator/-/json-rpc-creator-3.0.13.tgz#6406eb0fc0123b22f45675743bce77035398613a"
-  integrity sha512-himm4iF8RNliHOcEUqJ8dmdtxguPe+sJ6cKNpiDljsNeToziYVM0FAnGUtWFIFT4/20ZfZA0iy6WZ4CmLx+tNw==
-  dependencies:
-    "@blackglory/types" "^0.4.6"
-    justypes "^0.1.4"
-
-json-rpc-proxy@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/json-rpc-proxy/-/json-rpc-proxy-0.7.0.tgz#5b4b312e0041829ea031db0908aa053cc428ada0"
-  integrity sha512-rdqAYpMI9jR8Yl8NcvgedY7uGcE7bvbhWPokwfWKFgIdQWhUpTYYKo2Ez0NyhJOlLw9/hbR+MV5OgfrKKFjfHA==
-  dependencies:
-    "@blackglory/types" "^0.5.2"
-    hotypes "^0.4.2"
-    json-rpc-creator "^3.0.13"
-    justypes "^0.1.6"
-
 json-schema-traverse@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"

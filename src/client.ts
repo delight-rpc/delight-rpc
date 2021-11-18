@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid'
 import { JsonRpcRequest, JsonRpcResponse } from 'justypes'
 import { isJsonRpcSuccess } from '@blackglory/types'
-import { createRequestProxy } from 'json-rpc-proxy'
+import { createRequestProxy } from './proxy'
 import { CustomError } from '@blackglory/errors'
 
 export type RequestProxy<T> = {
