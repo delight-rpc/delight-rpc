@@ -1,3 +1,6 @@
 export * from './client'
 export * from './server'
 export * from './types'
+export * from '@utils/is-request'
+export * from '@utils/is-result'
+export * from '@utils/is-error'

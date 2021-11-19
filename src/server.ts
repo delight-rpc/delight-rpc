@@ -5,8 +5,6 @@ import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
 import { IRequest, IResponse } from '@src/types'
 
-export { isRequest } from '@utils/is-request'
-
 export async function createResponse<Obj extends object, DataType = unknown>(
   api: Obj
 , request: IRequest<DataType>

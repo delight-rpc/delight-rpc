@@ -57,8 +57,7 @@ interface IError extends IBase {
 }
 ```
 
-### Client-side
-#### createClient
+### createClient
 ```ts
 type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
@@ -76,13 +75,12 @@ function createClient<Obj extends object, DataType = unknown>(
 ): ClientProxy<Obj>
 ```
 
-#### MethodNotAvailable
+### MethodNotAvailable
 ```ts
 class MethodNotAvailable extends CustomError {}
 ```
 
-### Server-side
-#### createResponse
+### createResponse
 ```ts
 function createResponse<Obj extends object, DataType = unknown>(
   api: Obj
@@ -90,7 +88,17 @@ function createResponse<Obj extends object, DataType = unknown>(
 ): Promise<IResponse<DataType>>
 ```
 
-### isRequest
+## isRequest
 ```ts
 function isRequest<DataType>(val: unknown): val is IRequest<DataType>
+```
+
+## isResult
+```ts
+function isResult<DataType>(val: unknown): val is IResult<DataType>
+```
+
+## isError
+```ts
+function isError(val: unknown): val is IError
 ```

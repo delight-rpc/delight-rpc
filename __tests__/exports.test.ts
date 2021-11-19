@@ -4,8 +4,10 @@ test('exports', () => {
   const expected = [
     'createClient'
   , 'createResponse'
-  , 'isRequest'
   , 'MethodNotAvailable'
+  , 'isRequest'
+  , 'isResult'
+  , 'isError'
   ].sort()
 
   const exports = Object.keys(target).sort()
