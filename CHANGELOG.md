@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/delight-rpc/delight-rpc/compare/v1.0.0...v1.1.0) (2021-11-19)
+
+
+### Features
+
+* export isResult, isError ([296d5a6](https://github.com/delight-rpc/delight-rpc/commit/296d5a63c140fc5eaf6418f2533065f5146d15fd))
+
 ## [1.0.0](https://github.com/delight-rpc/delight-rpc/compare/v0.2.0...v1.0.0) (2021-11-19)
 
 
