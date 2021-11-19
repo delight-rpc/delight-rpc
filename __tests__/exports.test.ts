@@ -4,7 +4,7 @@ test('exports', () => {
   const expected = [
     'createClient'
   , 'createResponse'
-  , 'MethodNotFound'
+  , 'MethodNotAvailable'
   ].sort()
 
   const exports = Object.keys(target).sort()

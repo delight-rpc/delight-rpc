@@ -1,14 +1,13 @@
 import { createResponse } from '@src/server'
-import { JsonRpcRequest } from 'justypes'
 import '@blackglory/jest-matchers'
 
-interface ICallable {
-  method(message: string): Promise<string>
+interface IAPI {
+  echo(message: string): Promise<string>
   throws(): Promise<void>
 }
 
-const Callable: ICallable = {
-  async method(message: string): Promise<string> {
+const api: IAPI = {
+  async echo(message: string): Promise<string> {
     return message
   }
 , async throws() {
@@ -17,69 +16,76 @@ const Callable: ICallable = {
 }
 
 describe('createResponse', () => {
-  describe('method found', () => {
-    it('return JsonRpcResult', async () => {
-      const request: JsonRpcRequest<unknown> = {
-        jsonrpc: '2.0'
+  describe('method returns result', () => {
+    it('return IResult', async () => {
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '1.0'
       , id: 'id'
-      , method: 'method'
+      , method: ['echo']
       , params: ['message']
       }
 
-      const result = createResponse(Callable, request)
+      const result = createResponse(api, request)
       const proResult = await result
 
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
-        jsonrpc: '2.0'
+        protocol: 'delight-rpc'
+      , version: '1.0'
       , id: 'id'
       , result: 'message'
       })
     })
   })
 
-  describe('method not found', () => {
-    it('return JsonRpcError', async () => {
-      const request: JsonRpcRequest<unknown> = {
-        jsonrpc: '2.0'
+  describe('method not available', () => {
+    it('return IError', async () => {
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '1.0'
       , id: 'id'
-      , method: 'badMethod'
+      , method: ['notFound']
       , params: ['message']
       }
 
-      const result = createResponse(Callable, request)
+      const result = createResponse(api, request)
       const proResult = await result
 
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
-        jsonrpc: '2.0'
+        protocol: 'delight-rpc'
+      , version: '1.0'
       , id: 'id'
       , error: {
-          code: -32601
-        , message: 'The method does not exist / is not available.'
+          type: 'MethodNotAvailable'
+        , message: 'The method is not available.'
         }
       })
     })
   })
 
-  describe('method throws throw', () => {
-    it('return JsonRpcError', async () => {
-      const request: JsonRpcRequest<unknown> = {
-        jsonrpc: '2.0'
+  describe('method throws error', () => {
+    it('return IError', async () => {
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '1.0'
       , id: 'id'
-      , method: 'throws'
+      , method: ['throws']
+      , params: []
       }
 
-      const result = createResponse(Callable, request)
+      const result = createResponse(api, request)
       const proResult = await result
 
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
-        jsonrpc: '2.0'
+        protocol: 'delight-rpc'
+      , version: '1.0'
       , id: 'id'
       , error: {
-          code: -32000
-        , message: 'Error: message'
+          type: 'Error'
+        , message: 'message'
         }
       })
     })

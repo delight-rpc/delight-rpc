@@ -1,9 +1,8 @@
-import { JsonRpcRequest, JsonRpcResponse } from 'justypes'
-import { applyRequest } from './proxy'
+import { applyRequest } from '@utils/apply-request'
 
-export async function createResponse<T extends object, U = unknown>(
-  callables: T
-, request: JsonRpcRequest<U>
-): Promise<JsonRpcResponse<U>> {
-  return await applyRequest(callables, request)
+export async function createResponse<Obj extends object, DataType = unknown>(
+  api: Obj
+, request: IRequest<DataType>
+): Promise<IResponse<DataType>> {
+  return await applyRequest(api, request)
 }

@@ -1,23 +1,18 @@
-import { JsonRpcRequest, JsonRpcResponse } from 'justypes'
 import { createClient } from '@src/client'
 import { getErrorPromise } from 'return-style'
-import { CustomError } from '@blackglory/errors'
 import '@blackglory/jest-matchers'
 
-interface ICallables {
-  method(message: string): string
+interface IAPI {
+  echo(message: string): string
+  namespace: {
+    echo(message: string): string
+  }
 }
 
 describe('createClient', () => {
   describe('then method', () => {
     it('return undefined', () => {
-      const send = jest.fn(async function (rpc: JsonRpcRequest<unknown>): Promise<JsonRpcResponse<unknown>> {
-        return {
-          jsonrpc: '2.0'
-        , id: rpc.id
-        , result: (rpc.params as unknown[])[0]
-        }
-      })
+      const send = jest.fn()
 
       const client = createClient(send)
 
@@ -26,40 +21,43 @@ describe('createClient', () => {
     })
   })
 
-  it('create json rpc', () => {
-    const send = jest.fn(async function (rpc: JsonRpcRequest<unknown>): Promise<JsonRpcResponse<unknown>> {
+  it('creates a request', () => {
+    const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
       return {
-        jsonrpc: '2.0'
-      , id: rpc.id
-      , result: (rpc.params as unknown[])[0]
+        protocol: 'delight-rpc'
+      , version: '1.0'
+      , id: request.id
+      , result: request.params[0]
       }
     })
     const message = 'message'
 
-    const client = createClient<ICallables>(send)
-    client.method(message)
+    const client = createClient<IAPI>(send)
+    client.namespace.echo(message)
 
     expect(send).toBeCalledWith({
-      jsonrpc: '2.0'
+      protocol: 'delight-rpc'
+    , version: '1.0'
     , id: expect.any(String)
-    , method: 'method'
+    , method: ['namespace', 'echo']
     , params: [message]
     })
   })
 
   describe('success', () => {
-    it('return Promise', async () => {
-      async function send(rpc: JsonRpcRequest<unknown>): Promise<JsonRpcResponse<unknown>> {
+    it('return result', async () => {
+      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
-          jsonrpc: '2.0'
-        , id: rpc.id
-        , result: (rpc.params as unknown[])[0]
+          protocol: 'delight-rpc'
+        , version: '1.0'
+        , id: request.id
+        , result: request.params[0]
         }
       }
       const message = 'message'
 
-      const client = createClient<ICallables>(send)
-      const result = client.method(message)
+      const client = createClient<IAPI>(send)
+      const result = client.echo(message)
       const proResult = await result
 
       expect(result).toBePromise()
@@ -68,27 +66,29 @@ describe('createClient', () => {
   })
 
   describe('error', () => {
-    it('throw error', async () => {
+    it('throw Error', async () => {
+      const errorType = 'UserError'
       const errorMessage = 'error message'
-      async function send(rpc: JsonRpcRequest<unknown>): Promise<JsonRpcResponse<unknown>> {
+      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
-          jsonrpc: '2.0'
-        , id: rpc.id
+          protocol: 'delight-rpc'
+        , version: '1.0'
+        , id: request.id
         , error: {
-            code: -32000
+            type: errorType
           , message: errorMessage
           }
         }
       }
       const message = 'message'
 
-      const client = createClient<ICallables>(send)
-      const result = client.method(message)
+      const client = createClient<IAPI>(send)
+      const result = client.echo(message)
       const proResult = await getErrorPromise(result)
 
       expect(result).toBePromise()
-      expect(proResult).toBeInstanceOf(CustomError)
-      expect(proResult!.message).toBe('error message')
+      expect(proResult).toBeInstanceOf(Error)
+      expect(proResult!.message).toBe(`${errorType}: ${errorMessage}`)
     })
   })
 })

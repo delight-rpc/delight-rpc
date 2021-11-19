@@ -1,42 +1,69 @@
 import { nanoid } from 'nanoid'
-import { JsonRpcRequest, JsonRpcResponse } from 'justypes'
-import { isJsonRpcSuccess } from '@blackglory/types'
-import { createRequestProxy } from './proxy'
+import { createRequestProxy } from '@utils/create-request-proxy'
 import { CustomError } from '@blackglory/errors'
+import { isntString } from '@blackglory/types'
+import { isResult } from '@utils/is-result'
+import { FunctionKeys, KeysExtendType } from 'hotypes'
+import { getProp } from 'object-path-operator'
 
-export type RequestProxy<T> = {
-  [P in keyof T]:
-    T[P] extends (...args: infer U) => PromiseLike<infer V>
-      ? (...args: U) => Promise<V>
+export type ClientProxy<Obj> = {
+  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+    Obj[Key] extends (...args: infer Args) => PromiseLike<infer Result>
+      ? (...args: Args) => Promise<Result>
       : (
-          T[P] extends (...args: infer W) => infer X
-          ? (...args: W) => Promise<X>
-          : never
+          Obj[Key] extends (...args: infer Args) => infer Result
+            ? (...args: Args) => Promise<Result>
+            : ClientProxy<Obj[Key]>
         )
 }
 
-export function createClient<T extends object, U = unknown>(
-  request: (jsonRpc: JsonRpcRequest<U>) => PromiseLike<JsonRpcResponse<U>>
-): RequestProxy<T> {
-  const proxy = createRequestProxy(nanoid)
+class CallableObject extends Function {}
 
-  return new Proxy(proxy, {
-    get(target: any, prop: string) {
+export function createClient<Obj extends object, DataType = unknown>(
+  send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
+): ClientProxy<Obj> {
+  const requestProxy = createRequestProxy<Obj, DataType>(nanoid)
+
+  return new Proxy(Object.create(null), {
+    get(target: any, prop: string | symbol) {
+      if (isntString(prop)) return
       if (['then'].includes(prop)) return
+      return createCallableNestedProxy([prop])
+    }
+  , has(target, prop) {
+      if (isntString(prop)) return false
+      if (['then'].includes(prop)) return false
+      return true
+    }
+  })
 
-      return async function (this: unknown, ...args: unknown[]) {
-        const fn = target[prop]
-        const jsonRpc = Reflect.apply(fn, this, args) as JsonRpcRequest<U>
-        const response = await request(jsonRpc)
-        if (isJsonRpcSuccess(response)) {
+  function createCallableNestedProxy(path: [string, ...string[]]): ClientProxy<Obj> {
+    return new Proxy(new CallableObject(), {
+      get(target, prop) {
+        if (isntString(prop)) return
+        if (['then'].includes(prop)) return
+        return createCallableNestedProxy([...path, prop])
+      }
+    , async apply(target, thisArg, args) {
+        const fn = getProp(requestProxy, path) as Function
+        const request = Reflect.apply(fn, null, args) as IRequest<DataType>
+        const response = await send(request)
+        if (isResult(response)) {
           return response.result
         } else {
-          if (response.error.code === -32601) throw new MethodNotFound(response.error.message)
-          throw new CustomError(response.error.message)
+          if (response.error.type === 'MethodNotAvailable') {
+            throw new MethodNotAvailable(response.error.message)
+          }
+          throw new Error(`${response.error.type}: ${response.error.message}`)
         }
       }
-    }
-  }) as RequestProxy<T>
+    , has(target, prop) {
+        if (isntString(prop)) return false
+        if (['then'].includes(prop)) return false
+        return true
+      }
+    }) as unknown as ClientProxy<Obj>
+  }
 }
 
-export class MethodNotFound extends CustomError {}
+export class MethodNotAvailable extends CustomError {}
