@@ -75,6 +75,9 @@ function createClient<Obj extends object, DataType = unknown>(
 ): ClientProxy<Obj>
 ```
 
+For easy distinction, when the method is not available,
+`MethodNotAvailable` will be thrown instead of the general `Error`.
+
 ### MethodNotAvailable
 ```ts
 class MethodNotAvailable extends CustomError {}
@@ -88,17 +91,17 @@ function createResponse<Obj extends object, DataType = unknown>(
 ): Promise<IResponse<DataType>>
 ```
 
-## isRequest
+### isRequest
 ```ts
 function isRequest<DataType>(val: unknown): val is IRequest<DataType>
 ```
 
-## isResult
+### isResult
 ```ts
-function isResult<DataType>(val: unknown): val is IResult<DataType>
+function isResult<DataType>(val: unknown): val is IResult<DataType> 
 ```
 
-## isError
+### isError
 ```ts
 function isError(val: unknown): val is IError
 ```
