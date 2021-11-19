@@ -1,3 +1,5 @@
+import { IError } from '@src/types'
+
 export function createError(
   id: string
 , type: string

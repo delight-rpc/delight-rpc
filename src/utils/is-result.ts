@@ -1,4 +1,5 @@
 import { isRecord, isString } from '@blackglory/types'
+import { IResult } from '@src/types'
 
 export function isResult<DataType>(val: unknown): val is IResult<DataType> {
   return isRecord(val)

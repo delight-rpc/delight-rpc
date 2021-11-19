@@ -1,3 +1,5 @@
+import { IRequest } from '@src/types'
+
 export function createRequest<DataType>(
   id: string
 , method: string[]

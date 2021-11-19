@@ -4,6 +4,7 @@ test('exports', () => {
   const expected = [
     'createClient'
   , 'createResponse'
+  , 'isRequest'
   , 'MethodNotAvailable'
   ].sort()
 

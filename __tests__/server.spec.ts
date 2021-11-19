@@ -1,4 +1,5 @@
 import { createResponse } from '@src/server'
+import { IRequest } from '@src/types'
 import '@blackglory/jest-matchers'
 
 describe(`

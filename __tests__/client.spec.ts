@@ -1,5 +1,6 @@
 import { createClient } from '@src/client'
 import { getErrorPromise } from 'return-style'
+import { IRequest, IResponse } from '@src/types'
 import '@blackglory/jest-matchers'
 
 describe(`

@@ -1,4 +1,5 @@
 import { isRecord, isString } from '@blackglory/types'
+import { IError } from '@src/types'
 
 export function isError(val: unknown): val is IError {
   return isRecord(val)

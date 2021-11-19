@@ -4,6 +4,7 @@ import { isntString } from '@blackglory/types'
 import { isResult } from '@utils/is-result'
 import { FunctionKeys, KeysExtendType } from 'hotypes'
 import { createRequest } from '@utils/create-request'
+import { IRequest, IResponse } from '@src/types'
 
 export type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:

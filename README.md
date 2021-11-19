@@ -9,7 +9,56 @@ yarn add delight-rpc
 ```
 
 ## API
-### createClient
+```ts
+/**
+ * The reason why it is divided into two fields
+ * is to make it easier to distinguish
+ * when sharing channels with other protocols.
+ * 
+ * Reducing the size of payloads is not the goal of Delight RPC.
+ */
+interface IBase {
+  protocol: 'delight-rpc'
+  version: '1.0'
+}
+
+interface IRequest<T> extends IBase {
+  id: string
+  
+  /**
+   * The `method` field can include the namespace it belongs to.
+   * For example, `['config','save']` represents the `save` method
+   * under the namespace `config`.
+   */
+  method: string[]
+  params: T[]
+}
+
+type IResponse<T> = IResult<T> | IError
+
+interface IResult<T> extends IBase {
+  id: string
+  result: T
+}
+
+interface IError extends IBase {
+  id: string
+  error: {
+    /**
+     * The type the error belongs to.
+     */
+    type: string
+
+    /**
+     * Human-readable error message.
+     */
+    message: string
+  }
+}
+```
+
+### Client-side
+#### createClient
 ```ts
 type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
@@ -27,10 +76,21 @@ function createClient<Obj extends object, DataType = unknown>(
 ): ClientProxy<Obj>
 ```
 
-### createResponse
+#### MethodNotAvailable
+```ts
+class MethodNotAvailable extends CustomError {}
+```
+
+### Server-side
+#### createResponse
 ```ts
 function createResponse<Obj extends object, DataType = unknown>(
   api: Obj
 , request: IRequest<DataType>
 ): Promise<IResponse<DataType>>
+```
+
+### isRequest
+```ts
+function isRequest<DataType>(val: unknown): val is IRequest<DataType>
 ```
