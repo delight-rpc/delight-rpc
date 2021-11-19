@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/delight-rpc/delight-rpc/compare/v0.2.0...v1.0.0) (2021-11-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* rewrite
+
+### Features
+
+* rewrite ([b89925e](https://github.com/delight-rpc/delight-rpc/commit/b89925e365b21116983168f476fc1591c3fac657))
+
 ## [0.2.0](https://github.com/delight-rpc/delight-rpc/compare/v0.1.22...v0.2.0) (2021-11-16)
 
 
