@@ -2,14 +2,11 @@ import { createClient } from '@src/client'
 import { getErrorPromise } from 'return-style'
 import '@blackglory/jest-matchers'
 
-interface IAPI {
-  echo(message: string): string
-  namespace: {
-    echo(message: string): string
-  }
-}
-
-describe('createClient', () => {
+describe(`
+  createClient<Obj extends object, DataType = unknown>(
+    send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
+  ): ClientProxy<Obj>
+`, () => {
   describe('then method', () => {
     it('return undefined', () => {
       const send = jest.fn()
@@ -22,6 +19,11 @@ describe('createClient', () => {
   })
 
   it('creates a request', () => {
+    interface IAPI {
+      namespace: {
+        echo(message: string): string
+      }
+    }
     const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
       return {
         protocol: 'delight-rpc'
@@ -46,6 +48,9 @@ describe('createClient', () => {
 
   describe('success', () => {
     it('return result', async () => {
+      interface IAPI {
+        echo(message: string): string
+      }
       async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
@@ -67,6 +72,9 @@ describe('createClient', () => {
 
   describe('error', () => {
     it('throw Error', async () => {
+      interface IAPI {
+        echo(message: string): string
+      }
       const errorType = 'UserError'
       const errorMessage = 'error message'
       async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
