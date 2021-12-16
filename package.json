@@ -57,14 +57,14 @@
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "standard-version": "^9.3.2",
-    "ts-jest": "^27.1.1",
+    "ts-jest": "^27.1.2",
     "tscpaths": "^0.0.9",
     "tslib": "^2.3.1",
     "typescript": "^4.5.4"
   },
   "dependencies": {
     "@blackglory/errors": "^1.1.2",
-    "@blackglory/types": "^0.6.0",
+    "@blackglory/types": "^0.6.2",
     "hotypes": "^0.4.3",
     "nanoid": "^3.1.30",
     "object-path-operator": "^5.0.0"
