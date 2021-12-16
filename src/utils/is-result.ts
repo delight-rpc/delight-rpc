@@ -1,8 +1,8 @@
-import { isRecord, isString } from '@blackglory/types'
+import { isPlainObject, isString } from '@blackglory/types'
 import { IResult } from '@src/types'
 
 export function isResult<DataType>(val: unknown): val is IResult<DataType> {
-  return isRecord(val)
+  return isPlainObject(val)
       && val.protocol === 'delight-rpc'
       && val.version === '1.0'
       && isString(val.id)
