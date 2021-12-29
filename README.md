@@ -55,6 +55,13 @@ interface IError extends IBase {
     message: string
   }
 }
+
+type ParameterValidators<Obj> = Partial<{
+  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+    Obj[Key] extends (...args: infer Args) => void
+      ? (...args: Args) => void
+      : ParameterValidators<Obj[Key]>
+}>
 ```
 
 ### createClient
@@ -72,6 +79,7 @@ type ClientProxy<Obj> = {
 
 function createClient<Obj extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
+, parameterValidators: ParameterValidators<Obj> = {}
 ): ClientProxy<Obj>
 ```
 
@@ -83,11 +91,17 @@ For easy distinction, when the method is not available,
 class MethodNotAvailable extends CustomError {}
 ```
 
+### ParameterValidationError
+```ts
+class ParameterValidationError extends CustomError {}
+```
+
 ### createResponse
 ```ts
 function createResponse<Obj extends object, DataType = unknown>(
   api: Obj
 , request: IRequest<DataType>
+, parameterValidators: ParameterValidators<Obj> = {}
 ): Promise<IResponse<DataType>>
 ```
 

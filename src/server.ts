@@ -3,12 +3,23 @@ import { createResult } from '@utils/create-result'
 import { createError } from '@utils/create-error'
 import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
-import { IRequest, IResponse } from '@src/types'
+import { IRequest, IResponse, ParameterValidators } from '@src/types'
 
 export async function createResponse<Obj extends object, DataType = unknown>(
   api: Obj
 , request: IRequest<DataType>
+, parameterValidators: ParameterValidators<Obj> = {}
 ): Promise<IResponse<DataType>> {
+  try {
+    const validate = tryGetProp(
+      parameterValidators
+    , request.method
+    ) as ((...args: unknown[]) => void) | undefined
+    validate?.(...request.params)
+  } catch (e) {
+    return createError(request.id, 'ParameterValidationError', `${e}`)
+  }
+
   try {
     const fn = tryGetProp(api, request.method)
     if (isntFunction(fn)) {

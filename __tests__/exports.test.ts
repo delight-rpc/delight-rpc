@@ -5,6 +5,7 @@ test('exports', () => {
     'createClient'
   , 'createResponse'
   , 'MethodNotAvailable'
+  , 'ParameterValidationError'
   , 'isRequest'
   , 'isResult'
   , 'isError'

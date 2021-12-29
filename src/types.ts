@@ -1,3 +1,5 @@
+import { FunctionKeys, KeysExtendType } from 'hotypes'
+
 /**
  * The reason why it is divided into two fields
  * is to make it easier to distinguish
@@ -43,3 +45,10 @@ export interface IError extends IBase {
     message: string
   }
 }
+
+export type ParameterValidators<Obj> = Partial<{
+  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+    Obj[Key] extends (...args: infer Args) => void
+      ? (...args: Args) => void
+      : ParameterValidators<Obj[Key]>
+}>

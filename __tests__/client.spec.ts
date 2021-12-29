@@ -1,13 +1,9 @@
-import { createClient } from '@src/client'
-import { getErrorPromise } from 'return-style'
+import { createClient, MethodNotAvailable, ParameterValidationError } from '@src/client'
+import { getErrorPromise, getError } from 'return-style'
 import { IRequest, IResponse } from '@src/types'
 import '@blackglory/jest-matchers'
 
-describe(`
-  createClient<Obj extends object, DataType = unknown>(
-    send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
-  ): ClientProxy<Obj>
-`, () => {
+describe('createClient', () => {
   describe('then method', () => {
     it('return undefined', () => {
       const send = jest.fn()
@@ -19,85 +15,184 @@ describe(`
     })
   })
 
-  it('creates a request', () => {
-    interface IAPI {
-      namespace: {
-        echo(message: string): string
-      }
-    }
-    const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
-      return {
-        protocol: 'delight-rpc'
-      , version: '1.0'
-      , id: request.id
-      , result: request.params[0]
-      }
+  describe('create a request without a validator', () => {
+    describe('success', () => {
+      it('return result', async () => {
+        interface IAPI {
+          echo(message: string): string
+        }
+        async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+          return {
+            protocol: 'delight-rpc'
+          , version: '1.0'
+          , id: request.id
+          , result: request.params[0]
+          }
+        }
+        const message = 'message'
+
+        const client = createClient<IAPI>(send)
+        const result = client.echo(message)
+        const proResult = await result
+
+        expect(result).toBePromise()
+        expect(proResult).toBe(message)
+      })
     })
-    const message = 'message'
 
-    const client = createClient<IAPI>(send)
-    client.namespace.echo(message)
+    describe('error', () => {
+      it('throw Error', async () => {
+        interface IAPI {
+          echo(message: string): string
+        }
+        const errorType = 'UserError'
+        const errorMessage = 'error message'
+        async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+          return {
+            protocol: 'delight-rpc'
+          , version: '1.0'
+          , id: request.id
+          , error: {
+              type: errorType
+            , message: errorMessage
+            }
+          }
+        }
+        const message = 'message'
 
-    expect(send).toBeCalledWith({
-      protocol: 'delight-rpc'
-    , version: '1.0'
-    , id: expect.any(String)
-    , method: ['namespace', 'echo']
-    , params: [message]
+        const client = createClient<IAPI>(send)
+        const result = client.echo(message)
+        const proResult = await getErrorPromise(result)
+
+        expect(result).toBePromise()
+        expect(proResult).toBeInstanceOf(Error)
+        expect(proResult!.message).toBe(`${errorType}: ${errorMessage}`)
+      })
     })
-  })
 
-  describe('success', () => {
-    it('return result', async () => {
+    describe('method not available', () => {
+      it('throw MethodNotAvailable', async () => {
+        interface IAPI {
+          echo(message: string): string
+        }
+        const errorMessage = 'error message'
+        async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+          return {
+            protocol: 'delight-rpc'
+          , version: '1.0'
+          , id: request.id
+          , error: {
+              type: 'MethodNotAvailable'
+            , message: errorMessage
+            }
+          }
+        }
+        const message = 'message'
+
+        const client = createClient<IAPI>(send)
+        const result = client.echo(message)
+        const proResult = await getErrorPromise(result)
+
+        expect(result).toBePromise()
+        expect(proResult).toBeInstanceOf(MethodNotAvailable)
+        expect(proResult!.message).toBe(errorMessage)
+      })
+    })
+
+    test('with namespace', () => {
       interface IAPI {
-        echo(message: string): string
+        namespace: {
+          echo(message: string): string
+        }
       }
-      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+      const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
         , version: '1.0'
         , id: request.id
         , result: request.params[0]
         }
-      }
+      })
       const message = 'message'
 
       const client = createClient<IAPI>(send)
-      const result = client.echo(message)
-      const proResult = await result
+      client.namespace.echo(message)
 
-      expect(result).toBePromise()
-      expect(proResult).toBe(message)
+      expect(send).toBeCalledWith({
+        protocol: 'delight-rpc'
+      , version: '1.0'
+      , id: expect.any(String)
+      , method: ['namespace', 'echo']
+      , params: [message]
+      })
     })
   })
 
-  describe('error', () => {
-    it('throw Error', async () => {
+  describe('create a request with a validator', () => {
+    it('pass', () => {
       interface IAPI {
-        echo(message: string): string
+        namespace: {
+          echo(message: string): string
+        }
       }
-      const errorType = 'UserError'
-      const errorMessage = 'error message'
-      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+      const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
         , version: '1.0'
         , id: request.id
-        , error: {
-            type: errorType
-          , message: errorMessage
-          }
+        , result: request.params[0]
+        }
+      })
+      const validator = jest.fn()
+      const validators = {
+        namespace: {
+          echo: validator
         }
       }
       const message = 'message'
 
-      const client = createClient<IAPI>(send)
-      const result = client.echo(message)
-      const proResult = await getErrorPromise(result)
+      const client = createClient<IAPI>(send, validators)
+      client.namespace.echo(message)
 
-      expect(result).toBePromise()
-      expect(proResult).toBeInstanceOf(Error)
-      expect(proResult!.message).toBe(`${errorType}: ${errorMessage}`)
+      expect(validator).toBeCalledWith(message)
+      expect(send).toBeCalledWith({
+        protocol: 'delight-rpc'
+      , version: '1.0'
+      , id: expect.any(String)
+      , method: ['namespace', 'echo']
+      , params: [message]
+      })
+    })
+
+    it('not pass', () => {
+      interface IAPI {
+        namespace: {
+          echo(message: string): string
+        }
+      }
+      const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '1.0'
+        , id: request.id
+        , result: request.params[0]
+        }
+      })
+      const validator = jest.fn(() => {
+        throw new Error('custom error')
+      })
+      const validators = {
+        namespace: {
+          echo: validator
+        }
+      }
+      const message = 'message'
+
+      const client = createClient<IAPI>(send, validators)
+      const err = getError(() => client.namespace.echo(message))
+
+      expect(validator).toBeCalledWith(message)
+      expect(err).toBeInstanceOf(ParameterValidationError)
     })
   })
 })
