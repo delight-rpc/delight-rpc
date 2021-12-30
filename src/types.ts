@@ -48,7 +48,7 @@ export interface IError extends IBase {
 
 export type ParameterValidators<Obj> = Partial<{
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
-    Obj[Key] extends (...args: infer Args) => void
+    Obj[Key] extends (...args: infer Args) => unknown
       ? (...args: Args) => void
       : ParameterValidators<Obj[Key]>
 }>
