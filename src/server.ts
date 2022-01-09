@@ -3,10 +3,18 @@ import { createResult } from '@utils/create-result'
 import { createError } from '@utils/create-error'
 import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
+import { FunctionKeys, KeysExtendType } from 'hotypes'
 import { IRequest, IResponse, ParameterValidators } from '@src/types'
 
+export type ImplementationOf<Obj> = {
+  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+    Obj[Key] extends (...args: infer Args) => Awaited<infer Result>
+      ? (...args: Args) => PromiseLike<Result> | Result
+      : ImplementationOf<Obj[Key]>
+}
+
 export async function createResponse<Obj extends object, DataType = unknown>(
-  api: Obj
+  api: ImplementationOf<Obj>
 , request: IRequest<DataType>
 , parameterValidators: ParameterValidators<Obj> = {}
 ): Promise<IResponse<DataType>> {

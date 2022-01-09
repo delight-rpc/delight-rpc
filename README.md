@@ -68,13 +68,9 @@ type ParameterValidators<Obj> = Partial<{
 ```ts
 type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
-    Obj[Key] extends (...args: infer Args) => PromiseLike<infer Result>
+    Obj[Key] extends (...args: infer Args) => Awaited<infer Result>
       ? (...args: Args) => Promise<Result>
-      : (
-          Obj[Key] extends (...args: infer Args) => infer Result
-            ? (...args: Args) => Promise<Result>
-            : ClientProxy<Obj[Key]>
-        )
+      : ClientProxy<Obj[Key]>
 }
 
 function createClient<Obj extends object, DataType = unknown>(
@@ -98,8 +94,15 @@ class ParameterValidationError extends CustomError {}
 
 ### createResponse
 ```ts
+type ImplementationOf<Obj> = {
+  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+    Obj[Key] extends (...args: infer Args) => Awaited<infer Result>
+      ? (...args: Args) => PromiseLike<Result> | Result
+      : ImplementationOf<Obj[Key]>
+}
+
 function createResponse<Obj extends object, DataType = unknown>(
-  api: Obj
+  api: ImplementationOf<Obj>
 , request: IRequest<DataType>
 , parameterValidators: ParameterValidators<Obj> = {}
 ): Promise<IResponse<DataType>>
