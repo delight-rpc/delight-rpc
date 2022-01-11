@@ -8,8 +8,8 @@ import { IRequest, IResponse, ParameterValidators } from '@src/types'
 
 export type ImplementationOf<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
-    Obj[Key] extends (...args: infer Args) => Awaited<infer Result>
-      ? (...args: Args) => PromiseLike<Result> | Result
+    Obj[Key] extends (...args: infer Args) => infer Result
+      ? (...args: Args) => PromiseLike<Awaited<Result>> | Awaited<Result>
       : ImplementationOf<Obj[Key]>
 }
 

@@ -10,8 +10,8 @@ import { go } from '@blackglory/go'
 
 export type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
-    Obj[Key] extends (...args: infer Args) => Awaited<infer Result>
-      ? (...args: Args) => Promise<Result>
+    Obj[Key] extends (...args: infer Args) => infer Result
+      ? (...args: Args) => Promise<Awaited<Result>>
       : ClientProxy<Obj[Key]>
 }
 
