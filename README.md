@@ -24,7 +24,7 @@ interface IDelightRPC {
   [key: string]: unknown
 }
 
-interface IRequest<T> extends IBase {
+interface IRequest<T> extends IDelightRPC {
   id: string
 
   /**
@@ -44,12 +44,12 @@ interface IRequest<T> extends IBase {
 
 type IResponse<T> = IResult<T> | IError
 
-interface IResult<T> extends IBase {
+interface IResult<T> extends IDelightRPC {
   id: string
   result: T
 }
 
-interface IError extends IBase {
+interface IError extends IDelightRPC {
   id: string
   error: {
     /**
