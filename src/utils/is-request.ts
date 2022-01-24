@@ -1,10 +1,9 @@
-import { isPlainObject, isString, isArray } from '@blackglory/types'
+import { isString, isArray } from '@blackglory/types'
 import { IRequest } from '@src/types'
+import { isDelightRPC } from './is-delight-rpc'
 
 export function isRequest<DataType>(val: unknown): val is IRequest<DataType> {
-  return isPlainObject(val)
-      && val.protocol === 'delight-rpc'
-      && val.version === '1.0'
+  return isDelightRPC(val)
       && isString(val.id)
       && (
            isArray(val.method) &&

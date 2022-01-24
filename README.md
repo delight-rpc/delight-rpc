@@ -17,9 +17,11 @@ yarn add delight-rpc
  * 
  * Reducing the size of payloads is not the goal of Delight RPC.
  */
-interface IBase {
+interface IDelightRPC {
   protocol: 'delight-rpc'
-  version: '1.0'
+  version: `1.${number}`
+
+  [key: string]: unknown
 }
 
 interface IRequest<T> extends IBase {

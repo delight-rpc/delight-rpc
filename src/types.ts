@@ -7,12 +7,14 @@ import { FunctionKeys, KeysExtendType } from 'hotypes'
  * 
  * Reducing the size of payloads is not the goal of Delight RPC.
  */
-interface IBase {
+export interface IDelightRPC {
   protocol: 'delight-rpc'
-  version: '1.0'
+  version: `1.${number}`
+
+  [key: string]: unknown
 }
 
-export interface IRequest<T> extends IBase {
+export interface IRequest<T> extends IDelightRPC {
   id: string
   
   /**
@@ -26,12 +28,12 @@ export interface IRequest<T> extends IBase {
 
 export type IResponse<T> = IResult<T> | IError
 
-export interface IResult<T> extends IBase {
+export interface IResult<T> extends IDelightRPC {
   id: string
   result: T
 }
 
-export interface IError extends IBase {
+export interface IError extends IDelightRPC {
   id: string
   error: {
     /**
