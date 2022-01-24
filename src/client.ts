@@ -20,6 +20,7 @@ class CallableObject extends Function {}
 export function createClient<Obj extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
 , parameterValidators: ParameterValidators<Obj> = {}
+, expectedVersion?: `${number}.${number}.${number}`
 ): ClientProxy<Obj> {
   return new Proxy(Object.create(null), {
     get(target: any, prop: string | symbol) {
@@ -53,7 +54,7 @@ export function createClient<Obj extends object, DataType = unknown>(
         }
 
         return go(async () => {
-          const request = createRequest(createId(), path, args)
+          const request = createRequest(createId(), path, args, expectedVersion)
           const response = await send(request)
           if (isResult(response)) {
             return response.result
@@ -63,6 +64,9 @@ export function createClient<Obj extends object, DataType = unknown>(
             }
             if (response.error.type === 'ParameterValidationError') {
               throw new ParameterValidationError(response.error.message)
+            }
+            if (response.error.type === 'VersionMismatch') {
+              throw new VersionMismatch(response.error.message)
             }
             throw new Error(`${response.error.type}: ${response.error.message}`)
           }
@@ -79,6 +83,7 @@ export function createClient<Obj extends object, DataType = unknown>(
 
 export class ParameterValidationError extends CustomError {}
 export class MethodNotAvailable extends CustomError {}
+export class VersionMismatch extends CustomError {}
 
 function createId(): string {
   return nanoid()

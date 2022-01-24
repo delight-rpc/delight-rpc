@@ -6,6 +6,7 @@ test('exports', () => {
   , 'createResponse'
   , 'MethodNotAvailable'
   , 'ParameterValidationError'
+  , 'VersionMismatch'
   , 'isRequest'
   , 'isResult'
   , 'isError'

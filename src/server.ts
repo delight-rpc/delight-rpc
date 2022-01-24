@@ -5,6 +5,7 @@ import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
 import { FunctionKeys, KeysExtendType } from 'hotypes'
 import { IRequest, IResponse, ParameterValidators } from '@src/types'
+import semver from 'semver'
 
 export type ImplementationOf<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
@@ -17,7 +18,18 @@ export async function createResponse<Obj extends object, DataType = unknown>(
   api: ImplementationOf<Obj>
 , request: IRequest<DataType>
 , parameterValidators: ParameterValidators<Obj> = {}
+, version?: `${number}.${number}.${number}`
 ): Promise<IResponse<DataType>> {
+  if (request.expectedVersion && version) {
+    if (!semver.satisfies(version, `^${request.expectedVersion}`)) {
+      return createError(
+        request.id
+      , 'VersionMismatch'
+      , `The expected version is ^${request.expectedVersion}, but the server version is ${version}.`
+      )
+    }
+  }
+
   try {
     const validate = tryGetProp(
       parameterValidators

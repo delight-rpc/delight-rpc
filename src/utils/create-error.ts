@@ -7,7 +7,7 @@ export function createError(
 ): IError {
   return {
     protocol: 'delight-rpc'
-  , version: '1.0'
+  , version: '1.1'
   , id
   , error: {
       type

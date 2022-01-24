@@ -1,4 +1,9 @@
-import { createClient, MethodNotAvailable, ParameterValidationError } from '@src/client'
+import {
+  createClient
+, MethodNotAvailable
+, ParameterValidationError
+, VersionMismatch
+} from '@src/client'
 import { getErrorPromise, getError } from 'return-style'
 import { IRequest, IResponse } from '@src/types'
 import '@blackglory/jest-matchers'
@@ -15,6 +20,61 @@ describe('createClient', () => {
     })
   })
 
+  describe('with expectedVersion', () => {
+    describe('match', () => {
+      it('return result', async () => {
+        interface IAPI {
+          echo(message: string): string
+        }
+        async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+          return {
+            protocol: 'delight-rpc'
+          , version: '1.1'
+          , id: request.id
+          , result: request.params[0]
+          }
+        }
+        const message = 'message'
+
+        const client = createClient<IAPI>(send, undefined, '1.0.0')
+        const result = client.echo(message)
+        const proResult = await result
+
+        expect(result).toBePromise()
+        expect(proResult).toBe(message)
+      })
+    })
+
+    describe('mismatch', () => {
+      it('throw VersionMismatch', async () => {
+        interface IAPI {
+          echo(message: string): string
+        }
+        const errorMessage = 'error message'
+        async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+          return {
+            protocol: 'delight-rpc'
+          , version: '1.1'
+          , id: request.id
+          , error: {
+              type: 'VersionMismatch'
+            , message: errorMessage
+            }
+          }
+        }
+        const message = 'message'
+
+        const client = createClient<IAPI>(send, undefined, '1.0.0')
+        const result = client.echo(message)
+        const proResult = await getErrorPromise(result)
+
+        expect(result).toBePromise()
+        expect(proResult).toBeInstanceOf(VersionMismatch)
+        expect(proResult!.message).toBe(errorMessage)
+      })
+    })
+  })
+
   describe('create a request without a validator', () => {
     describe('success', () => {
       it('return result', async () => {
@@ -24,7 +84,7 @@ describe('createClient', () => {
         async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
           return {
             protocol: 'delight-rpc'
-          , version: '1.0'
+          , version: '1.1'
           , id: request.id
           , result: request.params[0]
           }
@@ -50,7 +110,7 @@ describe('createClient', () => {
         async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
           return {
             protocol: 'delight-rpc'
-          , version: '1.0'
+          , version: '1.1'
           , id: request.id
           , error: {
               type: errorType
@@ -79,7 +139,7 @@ describe('createClient', () => {
         async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
           return {
             protocol: 'delight-rpc'
-          , version: '1.0'
+          , version: '1.1'
           , id: request.id
           , error: {
               type: 'MethodNotAvailable'
@@ -108,7 +168,7 @@ describe('createClient', () => {
       const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '1.0'
+        , version: '1.1'
         , id: request.id
         , result: request.params[0]
         }
@@ -120,7 +180,7 @@ describe('createClient', () => {
 
       expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
-      , version: '1.0'
+      , version: '1.1'
       , id: expect.any(String)
       , method: ['namespace', 'echo']
       , params: [message]
@@ -138,7 +198,7 @@ describe('createClient', () => {
       const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '1.0'
+        , version: '1.1'
         , id: request.id
         , result: request.params[0]
         }
@@ -157,7 +217,7 @@ describe('createClient', () => {
       expect(validator).toBeCalledWith(message)
       expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
-      , version: '1.0'
+      , version: '1.1'
       , id: expect.any(String)
       , method: ['namespace', 'echo']
       , params: [message]
@@ -173,7 +233,7 @@ describe('createClient', () => {
       const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '1.0'
+        , version: '1.1'
         , id: request.id
         , result: request.params[0]
         }

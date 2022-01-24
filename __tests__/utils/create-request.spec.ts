@@ -1,19 +1,28 @@
 import { createRequest } from '@utils/create-request'
 
-test(`
-  createRequest<DataType>(
-    id: string
-  , method: string[]
-  , params: DataType[]
-  ): IRequest<DataType>
-`, () => {
-  const result = createRequest('id', ['hello'], ['world'])
+describe('createRequest', () => {
+  test('without expectedVersion', () => {
+    const result = createRequest('id', ['hello'], ['world'])
 
-  expect(result).toStrictEqual({
-    protocol: 'delight-rpc'
-  , version: '1.0'
-  , id: 'id'
-  , method: ['hello']
-  , params: ['world']
+    expect(result).toStrictEqual({
+      protocol: 'delight-rpc'
+    , version: '1.1'
+    , id: 'id'
+    , method: ['hello']
+    , params: ['world']
+    })
+  })
+
+  test('with expectedVersion', () => {
+    const result = createRequest('id', ['hello'], ['world'], '1.0.0')
+
+    expect(result).toStrictEqual({
+      protocol: 'delight-rpc'
+    , version: '1.1'
+    , expectedVersion: '1.0.0'
+    , id: 'id'
+    , method: ['hello']
+    , params: ['world']
+    })
   })
 })

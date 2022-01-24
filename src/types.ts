@@ -1,4 +1,5 @@
 import { FunctionKeys, KeysExtendType } from 'hotypes'
+import { Nullable } from 'justypes'
 
 /**
  * The reason why it is divided into two fields
@@ -16,6 +17,12 @@ export interface IDelightRPC {
 
 export interface IRequest<T> extends IDelightRPC {
   id: string
+
+  /**
+   * The expected server version, based on semver.
+   * @version 1.1
+   */
+  expectedVersion?: Nullable<`${number}.${number}.${number}`>
   
   /**
    * The `method` field can include the namespace it belongs to.

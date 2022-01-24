@@ -26,6 +26,12 @@ interface IDelightRPC {
 
 interface IRequest<T> extends IBase {
   id: string
+
+  /**
+   * The expected server version, based on semver.
+   * @version 1.1
+   */
+  expectedVersion?: Nullable<`${number}.${number}.${number}`>
   
   /**
    * The `method` field can include the namespace it belongs to.
@@ -78,6 +84,7 @@ type ClientProxy<Obj> = {
 function createClient<Obj extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
 , parameterValidators: ParameterValidators<Obj> = {}
+, expectedVersion?: `${number}.${number}.${number}`
 ): ClientProxy<Obj>
 ```
 
@@ -94,6 +101,11 @@ class MethodNotAvailable extends CustomError {}
 class ParameterValidationError extends CustomError {}
 ```
 
+### VersionMismatch
+```ts
+class VersionMismatch extends CustomError {}
+```
+
 ### createResponse
 ```ts
 type ImplementationOf<Obj> = {
@@ -107,6 +119,7 @@ function createResponse<Obj extends object, DataType = unknown>(
   api: ImplementationOf<Obj>
 , request: IRequest<DataType>
 , parameterValidators: ParameterValidators<Obj> = {}
+, version?: `${number}.${number}.${number}`
 ): Promise<IResponse<DataType>>
 ```
 
