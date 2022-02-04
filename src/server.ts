@@ -5,7 +5,7 @@ import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
 import { FunctionKeys, KeysExtendType } from 'hotypes'
 import { IRequest, IResponse, ParameterValidators } from '@src/types'
-import semver from 'semver'
+import { isAcceptable } from 'extra-semver'
 
 export type ImplementationOf<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
@@ -21,7 +21,7 @@ export async function createResponse<Obj extends object, DataType = unknown>(
 , version?: `${number}.${number}.${number}`
 ): Promise<IResponse<DataType>> {
   if (request.expectedVersion && version) {
-    if (!semver.satisfies(version, `^${request.expectedVersion}`)) {
+    if (!isAcceptable(version, request.expectedVersion)) {
       return createError(
         request.id
       , 'VersionMismatch'
