@@ -10,20 +10,20 @@ describe('createResponse', () => {
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , expectedVersion: '1.0.0'
         , id: 'id'
         , method: ['echo']
         , params: ['message']
         }
 
-        const result = createResponse(api, request, undefined, '1.1.0')
+        const result = createResponse(api, request, undefined, '1.0.0')
         const proResult = await result
 
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , result: 'message'
         })
@@ -36,8 +36,8 @@ describe('createResponse', () => {
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '1.1'
-        , expectedVersion: '1.1.0'
+        , version: '2.0'
+        , expectedVersion: '2.0.0'
         , id: 'id'
         , method: ['echo']
         , params: ['message']
@@ -47,13 +47,15 @@ describe('createResponse', () => {
         const proResult = await result
 
         expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(proResult).toMatchObject({
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , error: {
-            type: 'VersionMismatch'
-          , message: 'The expected version is ^1.1.0, but the server version is 1.0.0.'
+            name: 'VersionMismatch'
+          , message: 'The expected version is ^2.0.0, but the server version is 1.0.0.'
+          , stack: expect.any(String)
+          , ancestors: ['CustomError', 'Error']
           }
         })
       })
@@ -67,7 +69,7 @@ describe('createResponse', () => {
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , method: ['echo']
         , params: ['message']
@@ -79,7 +81,7 @@ describe('createResponse', () => {
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , result: 'message'
         })
@@ -91,7 +93,7 @@ describe('createResponse', () => {
         const api = {}
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , method: ['notFound']
         , params: ['message']
@@ -103,11 +105,13 @@ describe('createResponse', () => {
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , error: {
-            type: 'MethodNotAvailable'
+            name: 'MethodNotAvailable'
           , message: 'The method is not available.'
+          , stack: expect.any(String)
+          , ancestors: ['CustomError', 'Error']
           }
         })
       })
@@ -121,7 +125,7 @@ describe('createResponse', () => {
         const api = { throws: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , method: ['throws']
         , params: []
@@ -133,11 +137,13 @@ describe('createResponse', () => {
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '1.1'
+        , version: '2.0'
         , id: 'id'
         , error: {
-            type: 'Error'
+            name: 'Error'
           , message: 'message'
+          , stack: expect.any(String)
+          , ancestors: []
           }
         })
       })
@@ -150,7 +156,7 @@ describe('createResponse', () => {
       }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '1.1'
+      , version: '2.0'
       , id: 'id'
       , method: ['namespace', 'echo']
       , params: ['message']
@@ -163,7 +169,7 @@ describe('createResponse', () => {
       expect(method).toBeCalledTimes(1)
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '1.1'
+      , version: '2.0'
       , id: 'id'
       , result: 'message'
       })
@@ -180,7 +186,7 @@ describe('createResponse', () => {
       }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '1.1'
+      , version: '2.0'
       , id: 'id'
       , method: ['namespace', 'echo']
       , params: ['message']
@@ -199,7 +205,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '1.1'
+      , version: '2.0'
       , id: 'id'
       , result: 'message'
       })
@@ -214,7 +220,7 @@ describe('createResponse', () => {
       }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '1.1'
+      , version: '2.0'
       , id: 'id'
       , method: ['namespace', 'echo']
       , params: ['message']
@@ -236,11 +242,13 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '1.1'
+      , version: '2.0'
       , id: 'id'
       , error: {
-          type: 'ParameterValidationError'
-        , message: 'Error: custom error'
+          name: 'Error'
+        , message: 'custom error'
+        , stack: expect.any(String)
+        , ancestors: []
         }
       })
     })

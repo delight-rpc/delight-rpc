@@ -5,7 +5,7 @@ test('createResult<DataType>(id: string, result: DataType): IReult<DataType>', (
 
   expect(result).toStrictEqual({
     protocol: 'delight-rpc'
-  , version: '1.1'
+  , version: '2.0'
   , id: 'id'
   , result: 'result'
   })

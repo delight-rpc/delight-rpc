@@ -19,7 +19,7 @@ yarn add delight-rpc
  */
 interface IDelightRPC {
   protocol: 'delight-rpc'
-  version: `1.${number}`
+  version: `2.${number}`
 
   [key: string]: unknown
 }
@@ -29,7 +29,6 @@ interface IRequest<T> extends IDelightRPC {
 
   /**
    * The expected server version, based on semver.
-   * @version 1.1
    */
   expectedVersion?: Nullable<`${number}.${number}.${number}`>
   
@@ -49,19 +48,16 @@ interface IResult<T> extends IDelightRPC {
   result: T
 }
 
+interface SerializableError {
+  name: string
+  message: string
+  stack: string | null
+  ancestors: string[]
+}
+
 interface IError extends IDelightRPC {
   id: string
-  error: {
-    /**
-     * The type the error belongs to.
-     */
-    type: string
-
-    /**
-     * Human-readable error message.
-     */
-    message: string
-  }
+  error: SerializedError 
 }
 
 type ParameterValidators<Obj> = Partial<{
@@ -96,14 +92,14 @@ For easy distinction, when the method is not available,
 class MethodNotAvailable extends CustomError {}
 ```
 
-### ParameterValidationError
-```ts
-class ParameterValidationError extends CustomError {}
-```
-
 ### VersionMismatch
 ```ts
 class VersionMismatch extends CustomError {}
+```
+
+### InternalError
+```ts
+class InternalError extends CustomError {}
 ```
 
 ### createResponse

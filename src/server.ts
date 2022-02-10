@@ -4,7 +4,7 @@ import { createError } from '@utils/create-error'
 import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
 import { FunctionKeys, KeysExtendType } from 'hotypes'
-import { IRequest, IResponse, ParameterValidators } from '@src/types'
+import { IRequest, IResponse, ParameterValidators, MethodNotAvailable, VersionMismatch, InternalError } from '@src/types'
 import { isAcceptable } from 'extra-semver'
 
 export type ImplementationOf<Obj> = {
@@ -24,40 +24,31 @@ export async function createResponse<Obj extends object, DataType = unknown>(
     if (!isAcceptable(version, request.expectedVersion)) {
       return createError(
         request.id
-      , 'VersionMismatch'
-      , `The expected version is ^${request.expectedVersion}, but the server version is ${version}.`
+      , new VersionMismatch(`The expected version is ^${request.expectedVersion}, but the server version is ${version}.`)
       )
     }
   }
 
   try {
-    const validate = tryGetProp(
-      parameterValidators
-    , request.method
-    ) as ((...args: unknown[]) => void) | undefined
-    validate?.(...request.params)
-  } catch (e) {
-    return createError(request.id, 'ParameterValidationError', `${e}`)
-  }
-
-  try {
-    const fn = tryGetProp(api, request.method)
-    if (isntFunction(fn)) {
-      return createError(
-        request.id
-      , 'MethodNotAvailable'
-      , 'The method is not available.'
-      )
-    }
-
     try {
+      const validate = tryGetProp(
+        parameterValidators
+      , request.method
+      ) as ((...args: unknown[]) => void) | undefined
+      validate?.(...request.params)
+
+      const fn = tryGetProp(api, request.method)
+      if (isntFunction(fn)) {
+        return createError(request.id, new MethodNotAvailable('The method is not available.'))
+      }
+
       const result = await Reflect.apply(fn, api, request.params)
       return createResult(request.id, result)
     } catch (e) {
       assert(isError(e), 'The thrown object must be an Error')
-      return createError(request.id, e.name, e.message)
+      return createError(request.id, e)
     }
   } catch (e) {
-    return createError(request.id, 'InternalError', `${e}`)
+    return createError(request.id, new InternalError(`${e}`))
   }
 }

@@ -1,5 +1,6 @@
 import { FunctionKeys, KeysExtendType } from 'hotypes'
 import { Nullable } from 'justypes'
+import { SerializableError, CustomError } from '@blackglory/errors'
 
 /**
  * The reason why it is divided into two fields
@@ -10,7 +11,7 @@ import { Nullable } from 'justypes'
  */
 export interface IDelightRPC {
   protocol: 'delight-rpc'
-  version: `1.${number}`
+  version: `2.${number}`
 
   [key: string]: unknown
 }
@@ -20,7 +21,6 @@ export interface IRequest<T> extends IDelightRPC {
 
   /**
    * The expected server version, based on semver.
-   * @version 1.1
    */
   expectedVersion?: Nullable<`${number}.${number}.${number}`>
   
@@ -42,17 +42,7 @@ export interface IResult<T> extends IDelightRPC {
 
 export interface IError extends IDelightRPC {
   id: string
-  error: {
-    /**
-     * The type the error belongs to
-     */
-    type: string
-
-    /**
-     * Human-readable error message.
-     */
-    message: string
-  }
+  error: SerializableError
 }
 
 export type ParameterValidators<Obj> = Partial<{
@@ -61,3 +51,7 @@ export type ParameterValidators<Obj> = Partial<{
       ? (...args: Args) => void
       : ParameterValidators<Obj[Key]>
 }>
+
+export class MethodNotAvailable extends CustomError {}
+export class VersionMismatch extends CustomError {}
+export class InternalError extends CustomError {}

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { CustomError } from '@blackglory/errors'
+import { hydrate } from '@blackglory/errors'
 import { isntString } from '@blackglory/types'
 import { isResult } from '@utils/is-result'
 import { FunctionKeys, KeysExtendType } from 'hotypes'
@@ -43,15 +43,11 @@ export function createClient<Obj extends object, DataType = unknown>(
         return createCallableNestedProxy([...path, prop])
       }
     , apply(target, thisArg, args) {
-        try {
-          const validate = tryGetProp(
-            parameterValidators
-          , path
-          ) as ((...args: unknown[]) => void) | undefined
-          validate?.(...args)
-        } catch (e) {
-          throw new ParameterValidationError(`${e}`)
-        }
+        const validate = tryGetProp(
+          parameterValidators
+        , path
+        ) as ((...args: unknown[]) => void) | undefined
+        validate?.(...args)
 
         return go(async () => {
           const request = createRequest(createId(), path, args, expectedVersion)
@@ -59,16 +55,7 @@ export function createClient<Obj extends object, DataType = unknown>(
           if (isResult(response)) {
             return response.result
           } else {
-            if (response.error.type === 'MethodNotAvailable') {
-              throw new MethodNotAvailable(response.error.message)
-            }
-            if (response.error.type === 'ParameterValidationError') {
-              throw new ParameterValidationError(response.error.message)
-            }
-            if (response.error.type === 'VersionMismatch') {
-              throw new VersionMismatch(response.error.message)
-            }
-            throw new Error(`${response.error.type}: ${response.error.message}`)
+            throw hydrate(response.error)
           }
         })
       }
@@ -80,10 +67,6 @@ export function createClient<Obj extends object, DataType = unknown>(
     }) as unknown as ClientProxy<Obj>
   }
 }
-
-export class ParameterValidationError extends CustomError {}
-export class MethodNotAvailable extends CustomError {}
-export class VersionMismatch extends CustomError {}
 
 function createId(): string {
   return nanoid()

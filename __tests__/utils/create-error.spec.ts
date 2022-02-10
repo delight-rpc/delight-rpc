@@ -7,15 +7,18 @@ test(`
   , message: string
   ): IError
 `, () => {
-  const result = createError('id', 'type', 'message')
+  class UserError extends Error {}
+  const result = createError('id', new UserError('message'))
 
   expect(result).toStrictEqual({
     protocol: 'delight-rpc'
-  , version: '1.1'
+  , version: '2.0'
   , id: 'id'
   , error: {
-      type: 'type'
+      name: 'UserError'
     , message: 'message'
+    , stack: expect.any(String)
+    , ancestors: ['Error']
     }
   })
 })

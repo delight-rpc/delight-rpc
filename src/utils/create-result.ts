@@ -6,7 +6,7 @@ export function createResult<DataType>(
 ): IResult<DataType> {
   return {
     protocol: 'delight-rpc'
-  , version: '1.1'
+  , version: '2.0'
   , id
   , result
   }
