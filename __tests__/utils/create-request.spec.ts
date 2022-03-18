@@ -6,7 +6,7 @@ describe('createRequest', () => {
 
     expect(result).toStrictEqual({
       protocol: 'delight-rpc'
-    , version: '2.0'
+    , version: '2.1'
     , id: 'id'
     , method: ['hello']
     , params: ['world']
@@ -18,7 +18,7 @@ describe('createRequest', () => {
 
     expect(result).toStrictEqual({
       protocol: 'delight-rpc'
-    , version: '2.0'
+    , version: '2.1'
     , expectedVersion: '1.0.0'
     , id: 'id'
     , method: ['hello']

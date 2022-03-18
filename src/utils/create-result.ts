@@ -1,4 +1,5 @@
 import { IResult } from '@src/types'
+import { version } from './version'
 
 export function createResult<DataType>(
   id: string
@@ -6,7 +7,7 @@ export function createResult<DataType>(
 ): IResult<DataType> {
   return {
     protocol: 'delight-rpc'
-  , version: '2.0'
+  , version
   , id
   , result
   }

@@ -1,4 +1,4 @@
-import { isString } from '@blackglory/types'
+import { isString } from '@blackglory/prelude'
 import { IResult } from '@src/types'
 import { isDelightRPC } from './is-delight-rpc'
 

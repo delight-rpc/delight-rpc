@@ -1,4 +1,4 @@
-import { isPlainObject, isString } from '@blackglory/types'
+import { isPlainObject, isString } from '@blackglory/prelude'
 import { IDelightRPC } from '@src/types'
 
 export function isDelightRPC(val: unknown): val is IDelightRPC {

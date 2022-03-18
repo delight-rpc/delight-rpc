@@ -1,4 +1,4 @@
-import { isString } from '@blackglory/types'
+import { isString } from '@blackglory/prelude'
 import { isSerializableError } from '@blackglory/errors'
 import { IError } from '@src/types'
 import { isDelightRPC } from './is-delight-rpc'

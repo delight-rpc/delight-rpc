@@ -1,5 +1,6 @@
 import { IError } from '@src/types'
 import { normalize } from '@blackglory/errors'
+import { version } from './version'
 
 export function createError(
   id: string
@@ -7,7 +8,7 @@ export function createError(
 ): IError {
   return {
     protocol: 'delight-rpc'
-  , version: '2.0'
+  , version
   , id
   , error: normalize(error)
   }

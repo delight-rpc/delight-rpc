@@ -1,12 +1,12 @@
-import { nanoid } from 'nanoid'
 import { hydrate } from '@blackglory/errors'
-import { isntString } from '@blackglory/types'
+import { go, isntString } from '@blackglory/prelude'
 import { isResult } from '@utils/is-result'
 import { FunctionKeys, KeysExtendType } from 'hotypes'
 import { createRequest } from '@utils/create-request'
 import { IRequest, IResponse, ParameterValidators } from '@src/types'
 import { tryGetProp } from 'object-path-operator'
-import { go } from '@blackglory/go'
+import { createUUID } from '@utils/create-uuid'
+import { CallableObject } from '@utils/callable-object'
 
 export type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
@@ -15,13 +15,11 @@ export type ClientProxy<Obj> = {
       : ClientProxy<Obj[Key]>
 }
 
-class CallableObject extends Function {}
-
-export function createClient<Obj extends object, DataType = unknown>(
+export function createClient<API extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
-, parameterValidators: ParameterValidators<Obj> = {}
+, parameterValidators: ParameterValidators<API> = {}
 , expectedVersion?: `${number}.${number}.${number}`
-): ClientProxy<Obj> {
+): ClientProxy<API> {
   return new Proxy(Object.create(null), {
     get(target: any, prop: string | symbol) {
       if (isntString(prop)) return
@@ -35,7 +33,7 @@ export function createClient<Obj extends object, DataType = unknown>(
     }
   })
 
-  function createCallableNestedProxy(path: [string, ...string[]]): ClientProxy<Obj> {
+  function createCallableNestedProxy(path: [string, ...string[]]): ClientProxy<API> {
     return new Proxy(new CallableObject(), {
       get(target, prop) {
         if (isntString(prop)) return
@@ -50,7 +48,7 @@ export function createClient<Obj extends object, DataType = unknown>(
         validate?.(...args)
 
         return go(async () => {
-          const request = createRequest(createId(), path, args, expectedVersion)
+          const request = createRequest(createUUID(), path, args, expectedVersion)
           const response = await send(request)
           if (isResult(response)) {
             return response.result
@@ -64,10 +62,6 @@ export function createClient<Obj extends object, DataType = unknown>(
         if (['then'].includes(prop)) return false
         return true
       }
-    }) as unknown as ClientProxy<Obj>
+    }) as unknown as ClientProxy<API>
   }
-}
-
-function createId(): string {
-  return nanoid()
 }

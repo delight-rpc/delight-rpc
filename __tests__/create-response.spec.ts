@@ -1,8 +1,120 @@
-import { createResponse } from '@src/server'
+import { createResponse } from '@src/create-response'
 import { IRequest } from '@src/types'
 import '@blackglory/jest-matchers'
 
-describe('createResponse', () => {
+describe('createSingleResponse', () => {
+  describe('success', () => {
+    it('return IResult', async () => {
+      const method = jest.fn(async (message: string) => message)
+      const api = { echo: method }
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '2.1'
+      , id: 'id'
+      , method: ['echo']
+      , params: ['message']
+      }
+
+      const result = createResponse(api, request)
+      const proResult = await result
+
+      expect(result).toBePromise()
+      expect(proResult).toStrictEqual({
+        protocol: 'delight-rpc'
+      , version: '2.1'
+      , id: 'id'
+      , result: 'message'
+      })
+    })
+  })
+
+  describe('method not available', () => {
+    it('return IError', async () => {
+      const api = {}
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '2.1'
+      , id: 'id'
+      , method: ['notFound']
+      , params: ['message']
+      }
+
+      const result = createResponse(api, request)
+      const proResult = await result
+
+      expect(result).toBePromise()
+      expect(proResult).toStrictEqual({
+        protocol: 'delight-rpc'
+      , version: '2.1'
+      , id: 'id'
+      , error: {
+          name: 'MethodNotAvailable'
+        , message: 'The method is not available.'
+        , stack: expect.any(String)
+        , ancestors: ['CustomError', 'Error']
+        }
+      })
+    })
+  })
+
+  describe('method throws error', () => {
+    it('return IError', async () => {
+      const method = jest.fn(async () => {
+        throw new Error('message')
+      })
+      const api = { throws: method }
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '2.1'
+      , id: 'id'
+      , method: ['throws']
+      , params: []
+      }
+
+      const result = createResponse(api, request)
+      const proResult = await result
+
+      expect(result).toBePromise()
+      expect(proResult).toStrictEqual({
+        protocol: 'delight-rpc'
+      , version: '2.1'
+      , id: 'id'
+      , error: {
+          name: 'Error'
+        , message: 'message'
+        , stack: expect.any(String)
+        , ancestors: []
+        }
+      })
+    })
+  })
+
+  test('with namespace', async () => {
+    const method = jest.fn(async (message: string) => message)
+    const api = {
+      namespace: { echo: method }
+    }
+    const request: IRequest<unknown> = {
+      protocol: 'delight-rpc'
+    , version: '2.1'
+    , id: 'id'
+    , method: ['namespace', 'echo']
+    , params: ['message']
+    }
+
+    const result = createResponse(api, request)
+    const proResult = await result
+
+    expect(result).toBePromise()
+    expect(method).toBeCalledTimes(1)
+    expect(proResult).toStrictEqual({
+      protocol: 'delight-rpc'
+    , version: '2.1'
+    , id: 'id'
+    , result: 'message'
+    })
+  })
+
   describe('with expectedVersion', () => {
     describe('match', () => {
       it('return IResult', async () => {
@@ -10,7 +122,7 @@ describe('createResponse', () => {
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '2.0'
+        , version: '2.1'
         , expectedVersion: '1.0.0'
         , id: 'id'
         , method: ['echo']
@@ -23,7 +135,7 @@ describe('createResponse', () => {
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '2.0'
+        , version: '2.1'
         , id: 'id'
         , result: 'message'
         })
@@ -36,7 +148,7 @@ describe('createResponse', () => {
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '2.0'
+        , version: '2.1'
         , expectedVersion: '2.0.0'
         , id: 'id'
         , method: ['echo']
@@ -49,7 +161,7 @@ describe('createResponse', () => {
         expect(result).toBePromise()
         expect(proResult).toMatchObject({
           protocol: 'delight-rpc'
-        , version: '2.0'
+        , version: '2.1'
         , id: 'id'
         , error: {
             name: 'VersionMismatch'
@@ -62,121 +174,7 @@ describe('createResponse', () => {
     })
   })
 
-  describe('create a response without a validator', () => {
-    describe('success', () => {
-      it('return IResult', async () => {
-        const method = jest.fn(async (message: string) => message)
-        const api = { echo: method }
-        const request: IRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '2.0'
-        , id: 'id'
-        , method: ['echo']
-        , params: ['message']
-        }
-
-        const result = createResponse(api, request)
-        const proResult = await result
-
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
-          protocol: 'delight-rpc'
-        , version: '2.0'
-        , id: 'id'
-        , result: 'message'
-        })
-      })
-    })
-
-    describe('method not available', () => {
-      it('return IError', async () => {
-        const api = {}
-        const request: IRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '2.0'
-        , id: 'id'
-        , method: ['notFound']
-        , params: ['message']
-        }
-
-        const result = createResponse(api, request)
-        const proResult = await result
-
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
-          protocol: 'delight-rpc'
-        , version: '2.0'
-        , id: 'id'
-        , error: {
-            name: 'MethodNotAvailable'
-          , message: 'The method is not available.'
-          , stack: expect.any(String)
-          , ancestors: ['CustomError', 'Error']
-          }
-        })
-      })
-    })
-
-    describe('method throws error', () => {
-      it('return IError', async () => {
-        const method = jest.fn(async () => {
-          throw new Error('message')
-        })
-        const api = { throws: method }
-        const request: IRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '2.0'
-        , id: 'id'
-        , method: ['throws']
-        , params: []
-        }
-
-        const result = createResponse(api, request)
-        const proResult = await result
-
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
-          protocol: 'delight-rpc'
-        , version: '2.0'
-        , id: 'id'
-        , error: {
-            name: 'Error'
-          , message: 'message'
-          , stack: expect.any(String)
-          , ancestors: []
-          }
-        })
-      })
-    })
-
-    test('with namespace', async () => {
-      const method = jest.fn(async (message: string) => message)
-      const api = {
-        namespace: { echo: method }
-      }
-      const request: IRequest<unknown> = {
-        protocol: 'delight-rpc'
-      , version: '2.0'
-      , id: 'id'
-      , method: ['namespace', 'echo']
-      , params: ['message']
-      }
-
-      const result = createResponse(api, request)
-      const proResult = await result
-
-      expect(result).toBePromise()
-      expect(method).toBeCalledTimes(1)
-      expect(proResult).toStrictEqual({
-        protocol: 'delight-rpc'
-      , version: '2.0'
-      , id: 'id'
-      , result: 'message'
-      })
-    })
-  })
-
-  describe('create a response with a validator', () => {
+  describe('with validators', () => {
     it('pass', async () => {
       const method = jest.fn(async (message: string) => message)
       const api = {
@@ -186,7 +184,7 @@ describe('createResponse', () => {
       }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.0'
+      , version: '2.1'
       , id: 'id'
       , method: ['namespace', 'echo']
       , params: ['message']
@@ -205,7 +203,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.0'
+      , version: '2.1'
       , id: 'id'
       , result: 'message'
       })
@@ -220,7 +218,7 @@ describe('createResponse', () => {
       }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.0'
+      , version: '2.1'
       , id: 'id'
       , method: ['namespace', 'echo']
       , params: ['message']
@@ -242,7 +240,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.0'
+      , version: '2.1'
       , id: 'id'
       , error: {
           name: 'Error'

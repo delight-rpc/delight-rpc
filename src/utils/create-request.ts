@@ -9,7 +9,7 @@ export function createRequest<DataType>(
   if (expectedVersion) {
     return {
       protocol: 'delight-rpc'
-    , version: '2.0'
+    , version: '2.1'
     , expectedVersion
     , id
     , method
@@ -18,7 +18,7 @@ export function createRequest<DataType>(
   } else {
     return {
       protocol: 'delight-rpc'
-    , version: '2.0'
+    , version: '2.1'
     , id
     , method
     , params

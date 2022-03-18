@@ -1,23 +1,16 @@
-import { isntFunction, isError } from '@blackglory/types'
+import { isntFunction, isError } from '@blackglory/prelude'
 import { createResult } from '@utils/create-result'
 import { createError } from '@utils/create-error'
 import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
-import { FunctionKeys, KeysExtendType } from 'hotypes'
-import { IRequest, IResponse, ParameterValidators, MethodNotAvailable, VersionMismatch, InternalError } from '@src/types'
+import { IRequest, IResponse, ParameterValidators, MethodNotAvailable, VersionMismatch, InternalError, ImplementationOf } from '@src/types'
 import { isAcceptable } from 'extra-semver'
+import { createBatchResponse as _createBatchResponse } from '@utils/create-batch-response'
 
-export type ImplementationOf<Obj> = {
-  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
-    Obj[Key] extends (...args: infer Args) => infer Result
-      ? (...args: Args) => PromiseLike<Awaited<Result>> | Awaited<Result>
-      : ImplementationOf<Obj[Key]>
-}
-
-export async function createResponse<Obj extends object, DataType = unknown>(
-  api: ImplementationOf<Obj>
+export async function createResponse<API extends object, DataType = unknown>(
+  api: ImplementationOf<API>
 , request: IRequest<DataType>
-, parameterValidators: ParameterValidators<Obj> = {}
+, parameterValidators: ParameterValidators<API> = {}
 , version?: `${number}.${number}.${number}`
 ): Promise<IResponse<DataType>> {
   if (request.expectedVersion && version) {

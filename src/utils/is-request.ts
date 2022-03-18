@@ -1,4 +1,4 @@
-import { isString, isArray, isNull, isUndefined } from '@blackglory/types'
+import { isString, isArray, isNull, isUndefined } from '@blackglory/prelude'
 import { IRequest } from '@src/types'
 import { isDelightRPC } from './is-delight-rpc'
 
