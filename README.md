@@ -44,7 +44,7 @@ results[1] // Result<string, Error>
 
 ### Server
 ```ts
-import { createResponse, createBatchResponse, isRequest, isBatchRequest, IRequest, IBatchRequest } from 'delight-rpc'
+import { createResponse, IRequest, IBatchRequest } from 'delight-rpc'
 
 const api: IAPI = {
   foo(bar: string) {
@@ -55,11 +55,7 @@ const api: IAPI = {
 async function handle(
   request: IRequest<unknown> | IBatchRequest<unknown>
 ): Promise<IResponse<unknown> | IBatchResponse<unknown>> {
-  if (isRequest(request)) {
-    return await createResponse(api, request)
-  } else if (isBatchRequest(request)) {
-    return await createBatchResponse(api, request)
-  }
+  return await createResponse(api, request)
 }
 ```
 
@@ -239,20 +235,10 @@ class InternalError extends CustomError {}
 ```ts
 function createResponse<API extends object, DataType = unknown>(
   api: ImplementationOf<API>
-, request: IRequest<DataType>
+, request: IRequest<DataType> | IBatchRequest<DataType>
 , parameterValidators: ParameterValidators<API> = {}
 , version?: `${number}.${number}.${number}`
-): Promise<IResponse<DataType>>
-```
-
-### createBatchResponse
-```ts
-function createBatchResponse<API extends object, DataType = unknown>(
-  api: ImplementationOf<API>
-, request: IBatchRequest<DataType>
-, parameterValidators: ParameterValidators<API> = {}
-, version?: `${number}.${number}.${number}`
-): Promise<IError | IBatchResponse<DataType>>
+): Promise<IResponse<DataType> | IBatchResponse<DataType>>
 ```
 
 ### isRequest
