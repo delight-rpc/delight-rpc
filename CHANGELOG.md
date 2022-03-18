@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/delight-rpc/delight-rpc/compare/v2.1.0...v2.1.1) (2022-03-18)
+
+
+### Bug Fixes
+
+* add return-style into dependencies ([8687055](https://github.com/delight-rpc/delight-rpc/commit/8687055f45b8969d53aef92b9a603d413a755716))
+
 ## [2.1.0](https://github.com/delight-rpc/delight-rpc/compare/v2.0.0...v2.1.0) (2022-03-18)
 
 
