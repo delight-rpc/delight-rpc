@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.2](https://github.com/delight-rpc/delight-rpc/compare/v2.1.1...v2.1.2) (2022-04-14)
+
+
+### Bug Fixes
+
+* export BatchClientProxy ([e42cfd5](https://github.com/delight-rpc/delight-rpc/commit/e42cfd595905addfa83b268cd70f056b63345ff2))
+
 ### [2.1.1](https://github.com/delight-rpc/delight-rpc/compare/v2.1.0...v2.1.1) (2022-03-18)
 
 
