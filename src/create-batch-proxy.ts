@@ -5,7 +5,7 @@ import { tryGetProp } from 'object-path-operator'
 import { createRequestForBatchRequest } from '@utils/create-batch-request'
 import { CallableObject } from '@utils/callable-object'
 
-type BatchClientProxy<Obj, DataType> = {
+export type BatchClientProxy<Obj, DataType> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result
       ? (...args: Args) => IRequestForBatchRequest<Awaited<Result>, DataType>
