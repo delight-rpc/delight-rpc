@@ -16,7 +16,7 @@ describe('createBatchResponse', () => {
   expect(result).toStrictEqual({
     protocol: 'delight-rpc'
   , id: 'id'
-  , version: '2.1'
+  , version: '2.2'
   , responses: [
       { result: 'result' }
     , {

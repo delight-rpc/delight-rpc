@@ -19,6 +19,7 @@ export class BatchClient<DataType = unknown> {
     | IBatchResponse<DataType>
     >
   , private expectedVersion?: `${number}.${number}.${number}`
+  , private channel?: string
   ) {}
 
   async parallel<T extends IRequestForBatchRequest<unknown, DataType>[]>(
@@ -42,6 +43,7 @@ export class BatchClient<DataType = unknown> {
     , requests
     , parallel
     , this.expectedVersion
+    , this.channel
     )
     const response = await this.send(request)
     if (isError(response)) {

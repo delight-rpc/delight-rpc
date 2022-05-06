@@ -1,27 +1,27 @@
 import { IRequest } from '@src/types'
+import { isntUndefined } from '@blackglory/prelude'
+import { version } from './version'
 
 export function createRequest<DataType>(
   id: string
 , method: string[]
 , params: DataType[]
 , expectedVersion?: `${number}.${number}.${number}`
+, channel?: string
 ): IRequest<DataType> {
-  if (expectedVersion) {
-    return {
-      protocol: 'delight-rpc'
-    , version: '2.1'
-    , expectedVersion
-    , id
-    , method
-    , params
-    }
-  } else {
-    return {
-      protocol: 'delight-rpc'
-    , version: '2.1'
-    , id
-    , method
-    , params
-    }
+  const request: IRequest<DataType> = {
+    protocol: 'delight-rpc'
+  , version
+  , id
+  , method
+  , params
   }
+  if (isntUndefined(expectedVersion)) {
+    request.expectedVersion = expectedVersion
+  }
+  if (isntUndefined(channel)) {
+    request.channel = channel
+  }
+
+  return request
 }

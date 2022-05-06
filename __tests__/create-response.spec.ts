@@ -13,7 +13,7 @@ describe('createResponse(one-piece flow)', () => {
       const api = { echo: method }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , method: ['echo']
       , params: ['message']
@@ -25,7 +25,7 @@ describe('createResponse(one-piece flow)', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , result: 'message'
       })
@@ -37,7 +37,7 @@ describe('createResponse(one-piece flow)', () => {
       const api = {}
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , method: ['notFound']
       , params: ['message']
@@ -49,7 +49,7 @@ describe('createResponse(one-piece flow)', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , error: {
           name: 'MethodNotAvailable'
@@ -69,7 +69,7 @@ describe('createResponse(one-piece flow)', () => {
       const api = { throws: method }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , method: ['throws']
       , params: []
@@ -81,7 +81,7 @@ describe('createResponse(one-piece flow)', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , error: {
           name: 'Error'
@@ -100,7 +100,7 @@ describe('createResponse(one-piece flow)', () => {
     }
     const request: IRequest<unknown> = {
       protocol: 'delight-rpc'
-    , version: '2.1'
+    , version: '2.2'
     , id: 'id'
     , method: ['namespace', 'echo']
     , params: ['message']
@@ -113,7 +113,7 @@ describe('createResponse(one-piece flow)', () => {
     expect(method).toBeCalledTimes(1)
     expect(proResult).toStrictEqual({
       protocol: 'delight-rpc'
-    , version: '2.1'
+    , version: '2.2'
     , id: 'id'
     , result: 'message'
     })
@@ -126,7 +126,7 @@ describe('createResponse(one-piece flow)', () => {
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , expectedVersion: '1.0.0'
         , id: 'id'
         , method: ['echo']
@@ -139,7 +139,7 @@ describe('createResponse(one-piece flow)', () => {
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: 'id'
         , result: 'message'
         })
@@ -152,7 +152,7 @@ describe('createResponse(one-piece flow)', () => {
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , expectedVersion: '2.0.0'
         , id: 'id'
         , method: ['echo']
@@ -165,7 +165,7 @@ describe('createResponse(one-piece flow)', () => {
         expect(result).toBePromise()
         expect(proResult).toMatchObject({
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: 'id'
         , error: {
             name: 'VersionMismatch'
@@ -188,7 +188,7 @@ describe('createResponse(one-piece flow)', () => {
       }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , method: ['namespace', 'echo']
       , params: ['message']
@@ -207,7 +207,7 @@ describe('createResponse(one-piece flow)', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , result: 'message'
       })
@@ -222,7 +222,7 @@ describe('createResponse(one-piece flow)', () => {
       }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , method: ['namespace', 'echo']
       , params: ['message']
@@ -244,7 +244,7 @@ describe('createResponse(one-piece flow)', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , error: {
           name: 'Error'
@@ -270,7 +270,7 @@ describe('createResponse', () => {
       }
       const request: IBatchRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , parallel: false
       , requests: [
@@ -291,7 +291,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , responses: [
           {
@@ -315,7 +315,7 @@ describe('createResponse', () => {
       const api = {}
       const request: IBatchRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , parallel: false
       , requests: [
@@ -332,7 +332,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , responses: [
           {
@@ -361,7 +361,7 @@ describe('createResponse', () => {
       const api = { method1, method2 }
       const request: IBatchRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , expectedVersion: '1.0.0'
       , id: 'id'
       , parallel: true
@@ -383,7 +383,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , responses: [
           { result: expect.any(Number) }
@@ -413,7 +413,7 @@ describe('createResponse', () => {
       const api = { method1, method2 }
       const request: IBatchRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , expectedVersion: '1.0.0'
       , id: 'id'
       , parallel: false
@@ -435,7 +435,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , responses: [
           { result: expect.any(Number) }
@@ -461,7 +461,7 @@ describe('createResponse', () => {
     }
     const request: IBatchRequest<unknown> = {
       protocol: 'delight-rpc'
-    , version: '2.1'
+    , version: '2.2'
     , id: 'id'
     , parallel: false
     , requests: [
@@ -479,7 +479,7 @@ describe('createResponse', () => {
     expect(method).toBeCalledTimes(1)
     expect(proResult).toStrictEqual({
       protocol: 'delight-rpc'
-    , version: '2.1'
+    , version: '2.2'
     , id: 'id'
     , responses: [
         { result: 'message' }
@@ -494,7 +494,7 @@ describe('createResponse', () => {
         const api = { echo: method }
         const request: IBatchRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , expectedVersion: '1.0.0'
         , id: 'id'
         , parallel: false
@@ -512,7 +512,7 @@ describe('createResponse', () => {
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: 'id'
         , responses: [
             { result: 'message' }
@@ -527,7 +527,7 @@ describe('createResponse', () => {
         const api = { echo: method }
         const request: IBatchRequest<unknown> = {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , expectedVersion: '2.0.0'
         , id: 'id'
         , parallel: false
@@ -545,7 +545,7 @@ describe('createResponse', () => {
         expect(result).toBePromise()
         expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: 'id'
         , error: {
             name: 'VersionMismatch'
@@ -568,7 +568,7 @@ describe('createResponse', () => {
       }
       const request: IBatchRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , parallel: false
       , requests: [
@@ -592,7 +592,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , responses: [
           { result: 'message' }
@@ -609,7 +609,7 @@ describe('createResponse', () => {
       }
       const request: IBatchRequest<unknown> = {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , parallel: false
       , requests: [
@@ -636,7 +636,7 @@ describe('createResponse', () => {
       expect(result).toBePromise()
       expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: 'id'
       , responses: [
           {

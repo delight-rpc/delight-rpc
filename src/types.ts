@@ -20,6 +20,12 @@ export interface IDelightRPC {
   protocol: 'delight-rpc'
   version: `2.${number}`
 
+  /**
+   * An identifier used to offload multiple different RPC instances
+   * over a communication channel.
+   */
+  channel?: string
+
   [key: string]: unknown
 }
 

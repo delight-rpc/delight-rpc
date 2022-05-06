@@ -6,7 +6,7 @@ test('createError', () => {
 
   expect(result).toStrictEqual({
     protocol: 'delight-rpc'
-  , version: '2.1'
+  , version: '2.2'
   , id: 'id'
   , error: {
       name: 'UserError'

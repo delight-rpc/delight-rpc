@@ -1,14 +1,21 @@
 import { IResult } from '@src/types'
 import { version } from './version'
+import { isntUndefined } from '@blackglory/prelude'
 
 export function createResult<DataType>(
   id: string
-, result: DataType
+, value: DataType
+, channel?: string
 ): IResult<DataType> {
-  return {
+  const result: IResult<DataType> = {
     protocol: 'delight-rpc'
   , version
   , id
-  , result
+  , result: value
   }
+  if (isntUndefined(channel)) {
+    result.channel = channel
+  }
+
+  return result
 }

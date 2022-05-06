@@ -1,6 +1,7 @@
 import { IBatchResponse, IResultForBatchResponse, IErrorForBatchResponse } from '@src/types'
 import { version } from './version'
 import { normalize } from '@blackglory/errors'
+import { isntUndefined } from '@blackglory/prelude'
 
 export function createBatchResponse<DataType>(
   id: string
@@ -8,13 +9,19 @@ export function createBatchResponse<DataType>(
   | IResultForBatchResponse<DataType>
   | IErrorForBatchResponse
   >
+, channel?: string
 ): IBatchResponse<DataType> {
-  return {
+  const batchResponse: IBatchResponse<DataType> = {
     protocol: 'delight-rpc'
   , id
   , version
   , responses
   }
+  if (isntUndefined(channel)) {
+    batchResponse.channel = channel
+  }
+
+  return batchResponse
 }
 
 export function createErrorForBatchResponse(

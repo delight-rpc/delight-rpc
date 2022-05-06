@@ -19,6 +19,7 @@ export function createClient<API extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
 , parameterValidators: ParameterValidators<API> = {}
 , expectedVersion?: `${number}.${number}.${number}`
+, channel?: string
 ): ClientProxy<API> {
   return new Proxy(Object.create(null), {
     get(target: any, prop: string | symbol) {
@@ -48,7 +49,13 @@ export function createClient<API extends object, DataType = unknown>(
         validate?.(...args)
 
         return go(async () => {
-          const request = createRequest(createUUID(), path, args, expectedVersion)
+          const request = createRequest(
+            createUUID()
+          , path
+          , args
+          , expectedVersion
+          , channel
+          )
           const response = await send(request)
           if (isResult(response)) {
             return response.result

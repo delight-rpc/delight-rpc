@@ -72,6 +72,12 @@ interface IDelightRPC {
   protocol: 'delight-rpc'
   version: `2.${number}`
 
+  /**
+   * An identifier used to offload multiple different RPC instances
+   * over a communication channel.
+   */
+  channel?: string
+
   [key: string]: unknown
 }
 
@@ -168,6 +174,7 @@ function createClient<Obj extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
 , parameterValidators: ParameterValidators<Obj> = {}
 , expectedVersion?: `${number}.${number}.${number}`
+, channel?: string
 ): ClientProxy<Obj>
 ```
 
@@ -185,11 +192,12 @@ type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, 
 
 class BatchClient<DataType = unknown> {
   constructor(
-    private send: (batchRequest: IBatchRequest<DataType>) => PromiseLike<
+    send: (batchRequest: IBatchRequest<DataType>) => PromiseLike<
     | IError
     | IBatchResponse<DataType>
     >
-  , private expectedVersion?: `${number}.${number}.${number}`
+  , expectedVersion?: `${number}.${number}.${number}`
+  , channel?: string
   )
 
   async parallel<T extends IRequestForBatchRequest<unknown, DataType>[]>(
@@ -238,6 +246,7 @@ function createResponse<API extends object, DataType = unknown>(
 , request: IRequest<DataType> | IBatchRequest<DataType>
 , parameterValidators: ParameterValidators<API> = {}
 , version?: `${number}.${number}.${number}`
+, channel?: string
 ): Promise<IResponse<DataType> | IBatchResponse<DataType>>
 ```
 

@@ -24,7 +24,7 @@ describe('createClient', () => {
       async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: request.id
         , result: request.params[0]
         }
@@ -50,7 +50,7 @@ describe('createClient', () => {
       async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: request.id
         , error: normalize(new UserError(errorMessage))
         }
@@ -76,7 +76,7 @@ describe('createClient', () => {
       async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: request.id
         , error: normalize(new MethodNotAvailable(errorMessage))
         }
@@ -102,7 +102,7 @@ describe('createClient', () => {
     const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
       return {
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: request.id
       , result: request.params[0]
       }
@@ -114,7 +114,7 @@ describe('createClient', () => {
 
     expect(send).toBeCalledWith({
       protocol: 'delight-rpc'
-    , version: '2.1'
+    , version: '2.2'
     , id: expect.any(String)
     , method: ['namespace', 'echo']
     , params: [message]
@@ -130,7 +130,7 @@ describe('createClient', () => {
         async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
           return {
             protocol: 'delight-rpc'
-          , version: '2.1'
+          , version: '2.2'
           , id: request.id
           , result: request.params[0]
           }
@@ -155,7 +155,7 @@ describe('createClient', () => {
         async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
           return {
             protocol: 'delight-rpc'
-          , version: '2.1'
+          , version: '2.2'
           , id: request.id
           , error: normalize(new VersionMismatch(errorMessage))
           }
@@ -183,7 +183,7 @@ describe('createClient', () => {
       const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: request.id
         , result: request.params[0]
         }
@@ -202,7 +202,7 @@ describe('createClient', () => {
       expect(validator).toBeCalledWith(message)
       expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
-      , version: '2.1'
+      , version: '2.2'
       , id: expect.any(String)
       , method: ['namespace', 'echo']
       , params: [message]
@@ -218,7 +218,7 @@ describe('createClient', () => {
       const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.1'
+        , version: '2.2'
         , id: request.id
         , result: request.params[0]
         }

@@ -5,7 +5,7 @@ test('createResult', () => {
 
   expect(result).toStrictEqual({
     protocol: 'delight-rpc'
-  , version: '2.1'
+  , version: '2.2'
   , id: 'id'
   , result: 'result'
   })
