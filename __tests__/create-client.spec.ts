@@ -297,4 +297,29 @@ describe('createClient', () => {
       expect(err!.message).toBe('custom error')
     })
   })
+
+  test('with channel', async () => {
+    interface IAPI {
+      echo(message: string): string
+    }
+    const adapter: IClientAdapter<unknown> = {
+      send: jest.fn()
+    , listen: jest.fn()
+    }
+    const message = 'message'
+
+    const [client] = createClient<IAPI>(adapter, {
+      channel: 'channel'
+    })
+    client.echo(message)
+
+    expect(adapter.send).toBeCalledWith({
+      protocol: 'delight-rpc'
+    , version: '2.2'
+    , id: expect.any(String)
+    , method: ['echo']
+    , params: [message]
+    , channel: 'channel'
+    })
+  })
 })

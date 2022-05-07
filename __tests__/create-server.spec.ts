@@ -324,6 +324,73 @@ describe('createServer', () => {
         })
       })
     })
+
+    describe('channel', () => {
+      test('same channel', async () => {
+        const method = jest.fn(async (message: string) => message)
+        const api = { echo: method }
+        const request: IRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , method: ['echo']
+        , params: ['message']
+        , channel: 'channel'
+        }
+        const adapter: IServerAdapter<unknown> = {
+          send: jest.fn()
+        , listen(listener) {
+            setTimeout(100, () => listener(request))
+            return pass
+          }
+        }
+
+        createServer(api, adapter, {
+          channel: 'channel'
+        })
+
+        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
+        expect(adapter.send).toBeCalledTimes(1)
+        expect(adapter.send).toBeCalledWith({
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , result: 'message'
+        , channel: 'channel'
+        })
+      })
+
+      test('diff channel', async () => {
+        const method = jest.fn(async (message: string) => message)
+        const api = { echo: method }
+        const request: IRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , method: ['echo']
+        , params: ['message']
+        , channel: 'channel'
+        }
+        let calledTimes = 0
+        const adapter: IServerAdapter<unknown> = {
+          send: jest.fn()
+        , listen(listener) {
+            setTimeout(100, () => {
+              listener(request)
+              calledTimes++
+            })
+            return pass
+          }
+        }
+
+        createServer(api, adapter, {
+          channel: 'diff-channel'
+        })
+
+        await waitForFunction(() => calledTimes === 1)
+        expect(adapter.send).not.toBeCalled()
+      })
+    })
   })
 
   describe('IBatchRequest => IBatchResponse', () => {
@@ -793,6 +860,115 @@ describe('createServer', () => {
             }
           ]
         })
+      })
+    })
+
+    describe('channel', () => {
+      test('same channel', async () => {
+        const method1 = jest.fn(async () => {
+          throw new Error('message')
+        })
+        const method2 = jest.fn(async (message: string) => message)
+        const api = {
+          throws: method1
+        , echo: method2
+        }
+        const request: IBatchRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , parallel: false
+        , requests: [
+            {
+              method: ['throws']
+            , params: []
+            }
+          , {
+              method: ['echo']
+            , params: ['message']
+            }
+          ]
+        , channel: 'channel'
+        }
+        const adapter: IServerAdapter<unknown> = {
+          send: jest.fn()
+        , listen(listener) {
+            setTimeout(100, () => listener(request))
+            return pass
+          }
+        }
+
+        createServer(api, adapter, {
+          channel: 'channel'
+        })
+
+        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
+        expect(adapter.send).toBeCalledTimes(1)
+        expect(adapter.send).toBeCalledWith({
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , responses: [
+            {
+              error: {
+                name: 'Error'
+              , message: 'message'
+              , stack: expect.any(String)
+              , ancestors: []
+              }
+            }
+          , {
+              result: 'message'
+            }
+          ]
+        , channel: 'channel'
+        })
+      })
+
+      test('diff channel', async () => {
+        const method1 = jest.fn(async () => {
+          throw new Error('message')
+        })
+        const method2 = jest.fn(async (message: string) => message)
+        const api = {
+          throws: method1
+        , echo: method2
+        }
+        const request: IBatchRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , parallel: false
+        , requests: [
+            {
+              method: ['throws']
+            , params: []
+            }
+          , {
+              method: ['echo']
+            , params: ['message']
+            }
+          ]
+        , channel: 'channel'
+        }
+        let calledTimes = 0
+        const adapter: IServerAdapter<unknown> = {
+          send: jest.fn()
+        , listen(listener) {
+            setTimeout(100, () => {
+              listener(request)
+              calledTimes++
+            })
+            return pass
+          }
+        }
+
+        createServer(api, adapter, {
+          channel: 'diff-channel'
+        })
+
+        await waitForFunction(() => calledTimes === 1)
+        expect(adapter.send).toBeCalledTimes(0)
       })
     })
   })

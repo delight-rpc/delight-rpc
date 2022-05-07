@@ -326,4 +326,44 @@ describe('BatchClient', () => {
       })
     })
   })
+
+  test('with channel', async () => {
+    const adapter: IClientAdapter<unknown> = {
+      send: jest.fn()
+    , listen: jest.fn()
+    }
+
+    const client = new BatchClient(adapter, { 
+      channel: 'channel'
+    })
+    client.parallel(
+      {
+        method: ['method1']
+      , params: ['message1']
+      }
+    , {
+        method: ['method2']
+      , params: ['message2']
+      }
+    )
+
+    expect(adapter.send).toBeCalledTimes(1)
+    expect(adapter.send).toBeCalledWith({
+      protocol: 'delight-rpc'
+    , version: '2.2'
+    , id: expect.any(String)
+    , parallel: true
+    , requests: [
+        {
+          method: ['method1']
+        , params: ['message1']
+        }
+      , {
+          method: ['method2']
+        , params: ['message2']
+        }
+      ]
+    , channel: 'channel'
+    })
+  })
 })
