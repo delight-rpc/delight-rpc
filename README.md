@@ -17,7 +17,7 @@ interface API {
   foo(bar: string): string
 }
 
-const client = createClient<typeof api>(adapter)
+const [client, close] = createClient<typeof api>(adapter)
 const result = await client.foo('bar')
 ```
 
@@ -52,11 +52,7 @@ const api: IAPI = {
   }
 }
 
-async function handle(
-  request: IRequest<unknown> | IBatchRequest<unknown>
-): Promise<IResponse<unknown> | IBatchResponse<unknown>> {
-  return await createResponse(api, request)
-}
+const closeServer = createServer(api, adapter)
 ```
 
 ## API
@@ -152,6 +148,19 @@ function createBatchProxy<API extends object, DataType = unknown>(
     parameterValidators?: ParameterValidators<API>
   }
 ): BatchClientProxy<API, DataType>
+```
+
+### createServer
+```ts
+function createServer<API extends object, DataType = unknown>(
+  api: ImplementationOf<API>
+, adapter: IServerAdapter<DataType>
+, options?: {
+    parameterValidators?: ParameterValidators<API>
+    version?: `${number}.${number}.${number}`
+    channel?: string
+  }
+): () => void
 ```
 
 ### MethodNotAvailable
