@@ -13,11 +13,11 @@ yarn add delight-rpc
 ```ts
 import { createClient } from 'delight-rpc'
 
-interface API {
+interface IAPI {
   foo(bar: string): string
 }
 
-const [client, close] = createClient<typeof api>(adapter)
+const [client, close] = createClient<IAPI>(adapter)
 const result = await client.foo('bar')
 ```
 
