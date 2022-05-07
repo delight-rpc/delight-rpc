@@ -1,23 +1,16 @@
 import { createClient } from '@src/create-client'
 import { getErrorPromise, getError } from 'return-style'
 import { VersionMismatch, MethodNotAvailable } from '@src/errors'
-import { IClientAdapter } from '@src/types'
-import { IRequest } from '@delight-rpc/protocol'
+import { IRequest, IResponse } from '@delight-rpc/protocol'
 import { normalize, CustomError } from '@blackglory/errors'
-import { go, pass } from '@blackglory/prelude'
-import { mocked } from 'jest-mock'
-import { waitForFunction } from '@blackglory/wait-for'
 import '@blackglory/jest-matchers'
 
 describe('createClient', () => {
   describe('then method', () => {
     it('return undefined', () => {
-      const adapter: IClientAdapter<unknown> = {
-        send: jest.fn()
-      , listen: jest.fn()
-      }
+      const send = jest.fn()
 
-      const [client] = createClient(adapter)
+      const client = createClient(send)
 
       // @ts-ignore
       expect(client.then).toBeUndefined()
@@ -29,25 +22,17 @@ describe('createClient', () => {
       interface IAPI {
         echo(message: string): string
       }
-      const adapter: IClientAdapter<unknown> = {
-        send: jest.fn()
-      , listen(listener) {
-          go(async () => {
-            await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-            const request = mocked(adapter.send).mock.lastCall![0] as IRequest<unknown>
-            listener({
-              protocol: 'delight-rpc'
-            , version: '2.2'
-            , id: request.id
-            , result: request.params[0]
-            })
-          })
-          return pass
+      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: request.id
+        , result: request.params[0]
         }
       }
       const message = 'message'
 
-      const [client] = createClient<IAPI>(adapter)
+      const client = createClient<IAPI>(send)
       const result = client.echo(message)
       const proResult = await result
 
@@ -63,25 +48,17 @@ describe('createClient', () => {
         echo(message: string): string
       }
       const errorMessage = 'error message'
-      const adapter: IClientAdapter<unknown> = {
-        send: jest.fn()
-      , listen(listener) {
-          go(async () => {
-            await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-            const request = mocked(adapter.send).mock.lastCall![0] as IRequest<unknown>
-            listener({
-              protocol: 'delight-rpc'
-            , version: '2.2'
-            , id: request.id
-            , error: normalize(new UserError(errorMessage))
-            })
-          })
-          return pass
+      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: request.id
+        , error: normalize(new UserError(errorMessage))
         }
       }
       const message = 'message'
 
-      const [client] = createClient<IAPI>(adapter)
+      const client = createClient<IAPI>(send)
       const result = client.echo(message)
       const proResult = await getErrorPromise(result)
 
@@ -97,25 +74,17 @@ describe('createClient', () => {
         echo(message: string): string
       }
       const errorMessage = 'error message'
-      const adapter: IClientAdapter<unknown> = {
-        send: jest.fn()
-      , listen(listener) {
-          go(async () => {
-            await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-            const request = mocked(adapter.send).mock.lastCall![0] as IRequest<unknown>
-            listener({
-              protocol: 'delight-rpc'
-            , version: '2.2'
-            , id: request.id
-            , error: normalize(new MethodNotAvailable(errorMessage))
-            })
-          })
-          return pass
+      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: request.id
+        , error: normalize(new MethodNotAvailable(errorMessage))
         }
       }
       const message = 'message'
 
-      const [client] = createClient<IAPI>(adapter)
+      const client = createClient<IAPI>(send)
       const result = client.echo(message)
       const proResult = await getErrorPromise(result)
 
@@ -131,16 +100,20 @@ describe('createClient', () => {
         echo(message: string): string
       }
     }
-    const adapter: IClientAdapter<unknown> = {
-      send: jest.fn()
-    , listen: jest.fn()
-    }
+    const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
+      return {
+        protocol: 'delight-rpc'
+      , version: '2.2'
+      , id: request.id
+      , result: request.params[0]
+      }
+    })
     const message = 'message'
 
-    const [client] = createClient<IAPI>(adapter)
+    const client = createClient<IAPI>(send)
     client.namespace.echo(message)
 
-    expect(adapter.send).toBeCalledWith({
+    expect(send).toBeCalledWith({
       protocol: 'delight-rpc'
     , version: '2.2'
     , id: expect.any(String)
@@ -155,25 +128,17 @@ describe('createClient', () => {
         interface IAPI {
           echo(message: string): string
         }
-        const adapter: IClientAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            go(async () => {
-              await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-              const request = mocked(adapter.send).mock.lastCall![0] as IRequest<unknown>
-              listener({
-                protocol: 'delight-rpc'
-              , version: '2.2'
-              , id: request.id
-              , result: request.params[0]
-              })
-            })
-            return pass
+        async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+          return {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: request.id
+          , result: request.params[0]
           }
         }
         const message = 'message'
 
-        const [client] = createClient<IAPI>(adapter, {
+        const client = createClient<IAPI>(send, {
           expectedVersion: '1.0.0'
         })
         const result = client.echo(message)
@@ -190,25 +155,17 @@ describe('createClient', () => {
           echo(message: string): string
         }
         const errorMessage = 'error message'
-        const adapter: IClientAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            go(async () => {
-              await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-              const request = mocked(adapter.send).mock.lastCall![0] as IRequest<unknown>
-              listener({
-                protocol: 'delight-rpc'
-              , version: '2.2'
-              , id: request.id
-              , error: normalize(new VersionMismatch(errorMessage))
-              })
-            })
-            return pass
+        async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+          return {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: request.id
+          , error: normalize(new VersionMismatch(errorMessage))
           }
         }
         const message = 'message'
 
-        const [client] = createClient<IAPI>(adapter, {
+        const client = createClient<IAPI>(send, {
           expectedVersion: '1.0.0'
         })
         const result = client.echo(message)
@@ -228,22 +185,14 @@ describe('createClient', () => {
           echo(message: string): string
         }
       }
-      const adapter: IClientAdapter<unknown> = {
-        send: jest.fn()
-      , listen(listener) {
-          go(async () => {
-            await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-            const request = mocked(adapter.send).mock.lastCall![0] as IRequest<unknown>
-            listener({
-              protocol: 'delight-rpc'
-            , version: '2.2'
-            , id: request.id
-            , result: request.params[0]
-            })
-          })
-          return pass
+      const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: request.id
+        , result: request.params[0]
         }
-      }
+      })
       const validator = jest.fn()
       const validators = {
         namespace: {
@@ -252,13 +201,13 @@ describe('createClient', () => {
       }
       const message = 'message'
 
-      const [client] = createClient<IAPI>(adapter, {
+      const client = createClient<IAPI>(send, {
         parameterValidators: validators
       })
-      await client.namespace.echo(message)
+      client.namespace.echo(message)
 
       expect(validator).toBeCalledWith(message)
-      expect(adapter.send).toBeCalledWith({
+      expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
       , version: '2.2'
       , id: expect.any(String)
@@ -273,12 +222,14 @@ describe('createClient', () => {
           echo(message: string): string
         }
       }
-      const adapter: IClientAdapter<unknown> = {
-        send: jest.fn()
-      , listen(listener) {
-          return pass
+      const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: request.id
+        , result: request.params[0]
         }
-      }
+      })
       const validator = jest.fn(() => {
         throw new Error('custom error')
       })
@@ -289,7 +240,7 @@ describe('createClient', () => {
       }
       const message = 'message'
 
-      const [client] = createClient<IAPI>(adapter, {
+      const client = createClient<IAPI>(send, {
         parameterValidators: validators
       })
       const err = getError(() => client.namespace.echo(message))
@@ -304,18 +255,22 @@ describe('createClient', () => {
     interface IAPI {
       echo(message: string): string
     }
-    const adapter: IClientAdapter<unknown> = {
-      send: jest.fn()
-    , listen: jest.fn()
-    }
+    const send = jest.fn(async function (request: IRequest<unknown>): Promise<IResponse<unknown>> {
+      return {
+        protocol: 'delight-rpc'
+      , version: '2.2'
+      , id: request.id
+      , result: request.params[0]
+      }
+    })
     const message = 'message'
 
-    const [client] = createClient<IAPI>(adapter, {
+    const client = createClient<IAPI>(send, {
       channel: 'channel'
     })
-    client.echo(message)
+    await client.echo(message)
 
-    expect(adapter.send).toBeCalledWith({
+    expect(send).toBeCalledWith({
       protocol: 'delight-rpc'
     , version: '2.2'
     , id: expect.any(String)

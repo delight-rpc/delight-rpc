@@ -17,7 +17,7 @@ interface IAPI {
   foo(bar: string): string
 }
 
-const [client, close] = createClient<IAPI>(adapter)
+const [client, close] = createClient<IAPI>(send)
 const result = await client.foo('bar')
 ```
 
@@ -30,7 +30,7 @@ interface IAPI {
   getString(): string
 }
 
-const client = new BatchClient(adapter)
+const client = new BatchClient(send)
 const proxy = createBatchProxy<IAPI>()
 const results = await client.parallel(
   proxy.getNumber()
@@ -52,7 +52,7 @@ const api: IAPI = {
   }
 }
 
-const closeServer = createServer(api, adapter)
+const closeServer = createServer(api, send)
 ```
 
 ## API
@@ -70,16 +70,6 @@ type ParameterValidators<Obj> = Partial<{
       ? (...args: Args) => void
       : ParameterValidators<Obj[Key]>
 }>
-
-interface IClientAdapter<T> {
-  send(request: IRequest<T> | IBatchRequest<T>): Promise<void>
-  listen(listener: (response: IResponse<T> | IBatchResponse<T>) => void): () => void
-}
-
-interface IServerAdapter<T> {
-  send(response: IResponse<T> | IBatchResponse<T>): Promise<void>
-  listen(listener: (request: IRequest<T> | IBatchRequest<T>) => void): () => void
-}
 ```
 
 ### createClient
@@ -92,13 +82,13 @@ type ClientProxy<Obj> = {
 }
 
 function createClient<API extends object, DataType = unknown>(
-  adapter: IClientAdapter<DataType> 
+  send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
 , options?: {
     parameterValidators?: ParameterValidators<API>
     expectedVersion?: `${number}.${number}.${number}`
     channel?: string
   }
-): [client: ClientProxy<API>, close: () => void]
+): ClientProxy<API>
 ```
 
 For easy distinction, when the method is not available,
@@ -115,14 +105,15 @@ type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, 
 
 class BatchClient<DataType = unknown> {
   constructor(
-    private adapter: IClientAdapter<DataType>
+    send: (batchRequest: IBatchRequest<DataType>) => PromiseLike<
+    | IError
+    | IBatchResponse<DataType>
+    >
   , options?: {
       expectedVersion?: `${number}.${number}.${number}` 
       channel?: string
     }
   )
-
-  close(): void
 
   async parallel<T extends IRequestForBatchRequest<unknown, DataType>[]>(
     ...requests: T
@@ -173,8 +164,10 @@ function createResponse<API, DataType>(
     version?: `${number}.${number}.${number}`
     channel?: string
   } = {}
-): Promise<IResponse<DataType> | IBatchResponse<DataType>>
+): Promise<null | IResponse<DataType> | IBatchResponse<DataType>>
 ```
+
+`createResponse` returns `null` if the channel does not match.
 
 ### MethodNotAvailable
 ```ts

@@ -1,5 +1,4 @@
 import { FunctionKeys, KeysExtendType } from 'hotypes'
-import { IRequest, IResponse, IBatchRequest, IBatchResponse } from '@delight-rpc/protocol'
 
 export type ImplementationOf<Obj> = {
   [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
@@ -14,13 +13,3 @@ export type ParameterValidators<Obj> = Partial<{
       ? (...args: Args) => void
       : ParameterValidators<Obj[Key]>
 }>
-
-export interface IClientAdapter<T> {
-  send(request: IRequest<T> | IBatchRequest<T>): Promise<void>
-  listen(listener: (response: IResponse<T> | IBatchResponse<T>) => void): () => void
-}
-
-export interface IServerAdapter<T> {
-  send(response: IResponse<T> | IBatchResponse<T>): Promise<void>
-  listen(listener: (request: IRequest<T> | IBatchRequest<T>) => void): () => void
-}

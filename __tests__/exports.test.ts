@@ -5,7 +5,6 @@ test('exports', () => {
     'createClient'
   , 'BatchClient'
   , 'createBatchProxy'
-  , 'createServer'
   , 'createResponse'
   , 'MethodNotAvailable'
   , 'VersionMismatch'

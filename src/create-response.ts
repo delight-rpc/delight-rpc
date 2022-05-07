@@ -1,4 +1,4 @@
-import { isntFunction, isError } from '@blackglory/prelude'
+import { isntFunction, isntUndefined, isError } from '@blackglory/prelude'
 import { createResult } from '@utils/create-result'
 import { createError } from '@utils/create-error'
 import { tryGetProp } from 'object-path-operator'
@@ -20,8 +20,9 @@ export async function createResponse<API, DataType>(
     version?: `${number}.${number}.${number}`
     channel?: string
   } = {}
-): Promise<IResponse<DataType> | IBatchResponse<DataType>> {
-  if (request.expectedVersion && version) {
+): Promise<null | IResponse<DataType> | IBatchResponse<DataType>> {
+  if (request.channel !== channel) return null
+  if (request.expectedVersion && isntUndefined(version)) {
     if (!isAcceptable(version, request.expectedVersion)) {
       return createError(
         request.id

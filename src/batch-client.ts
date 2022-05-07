@@ -1,12 +1,9 @@
-import { assert, hydrate } from '@blackglory/errors'
-import { IClientAdapter } from '@src/types'
-import { IRequestForBatchRequest } from '@delight-rpc/protocol'
+import { hydrate } from '@blackglory/errors'
+import { IBatchRequest, IError, IBatchResponse, IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { createBatchRequest } from '@utils/create-batch-request'
 import { Result } from 'return-style'
 import { createUUID } from '@utils/create-uuid'
 import { isError } from '@utils/is-error'
-import { isBatchResponse } from '@utils/is-batch-response'
-import { Deferred } from 'extra-promise'
 
 type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, unknown>[]> = {
   [Index in keyof RequestTuple]:
@@ -16,13 +13,14 @@ type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, 
 }
 
 export class BatchClient<DataType = unknown> {
-  private pendings = new Map<string, undefined | Deferred<MapRequestsToResults<any>>>()
-  private removeResponsesHandler: () => void = this.handleResponses()
   private expectedVersion?: `${number}.${number}.${number}`
   private channel?: string
 
   constructor(
-    private adapter: IClientAdapter<DataType>
+    private send: (batchRequest: IBatchRequest<DataType>) => PromiseLike<
+    | IError
+    | IBatchResponse<DataType>
+    >
   , { expectedVersion, channel }: {
       expectedVersion?: `${number}.${number}.${number}` 
       channel?: string
@@ -30,11 +28,6 @@ export class BatchClient<DataType = unknown> {
   ) {
     this.expectedVersion = expectedVersion
     this.channel = channel
-  }
-
-  close(): void {
-    this.removeResponsesHandler()
-    this.pendings.clear()
   }
 
   async parallel<T extends IRequestForBatchRequest<unknown, DataType>[]>(
@@ -60,41 +53,17 @@ export class BatchClient<DataType = unknown> {
     , this.expectedVersion
     , this.channel
     )
-
-    assert(!this.pendings.has(request.id), 'request id duplicated')
-    const deferred = new Deferred<MapRequestsToResults<T>>()
-    this.pendings.set(request.id, deferred)
-
-    await this.adapter.send(request)
-    return await deferred
-  }
-
-  private handleResponses(): () => void {
-    return this.adapter.listen(response => {
-      if (this.channel !== response.channel) return
-
-      try {
-        const deferred = this.pendings.get(response.id)
-        if (deferred) {
-          if (isError(response)) {
-            deferred.reject(
-              hydrate(response.error)
-            )
-          } else if (isBatchResponse(response)) {
-            deferred.resolve(
-              response.responses.map(x => {
-                if ('result' in x) {
-                  return Result.Ok(x.result)
-                } else {
-                  return Result.Err(hydrate(x.error))
-                }
-              })
-            )
-          }
+    const response = await this.send(request)
+    if (isError(response)) {
+      throw hydrate(response.error)
+    } else {
+      return response.responses.map(x => {
+        if ('result' in x) {
+          return Result.Ok(x.result)
+        } else {
+          return Result.Err(hydrate(x.error))
         }
-      } finally {
-        this.pendings.delete(response.id)
-      }
-    })
+      }) as MapRequestsToResults<T>
+    }
   }
 }

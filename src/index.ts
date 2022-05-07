@@ -1,7 +1,6 @@
 export * from './create-client'
 export * from './batch-client'
 export * from './create-batch-proxy'
-export * from './create-server'
 export * from './create-response'
 export * from './types'
 export * from './errors'

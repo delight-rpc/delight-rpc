@@ -1,47 +1,35 @@
-import { createServer } from '@src/create-server'
-import { IServerAdapter } from '@src/types'
+import { createResponse } from '@src/create-response'
 import { IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@delight-rpc/protocol'
 import { delay } from 'extra-promise'
 import { isBatchResponse } from '@utils/is-batch-response'
-import { pass } from '@blackglory/prelude'
-import { mocked } from 'jest-mock'
-import { setTimeout } from 'extra-timers'
-import { waitForFunction } from '@blackglory/wait-for'
 import '@blackglory/jest-matchers'
 
 const TIME_ERROR = 1
 
-describe('createServer', () => {
+describe('createResponse', () => {
   describe('IRequest => IResponse', () => {
     describe('success', () => {
       it('return IResult', async () => {
-        const method = jest.fn(async (message: string) => message)
-        const api = { echo: method }
-        const request: IRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '2.2'
-        , id: 'id'
-        , method: ['echo']
-        , params: ['message']
-        }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
+      const method = jest.fn(async (message: string) => message)
+      const api = { echo: method }
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '2.2'
+      , id: 'id'
+      , method: ['echo']
+      , params: ['message']
+      }
 
-        createServer(api, adapter)
+      const result = createResponse(api, request)
+      const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
-          protocol: 'delight-rpc'
-        , version: '2.2'
-        , id: 'id'
-        , result: 'message'
-        })
+      expect(result).toBePromise()
+      expect(proResult).toStrictEqual({
+        protocol: 'delight-rpc'
+      , version: '2.2'
+      , id: 'id'
+      , result: 'message'
+      })
       })
     })
 
@@ -55,19 +43,12 @@ describe('createServer', () => {
         , method: ['notFound']
         , params: ['message']
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter)
+        const result = createResponse(api, request)
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -94,19 +75,12 @@ describe('createServer', () => {
         , method: ['throws']
         , params: []
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter)
+        const result = createResponse(api, request)
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -132,20 +106,13 @@ describe('createServer', () => {
       , method: ['namespace', 'echo']
       , params: ['message']
       }
-      const adapter: IServerAdapter<unknown> = {
-        send: jest.fn()
-      , listen(listener) {
-          setTimeout(100, () => listener(request))
-          return pass
-        }
-      }
 
-      createServer(api, adapter)
+      const result = createResponse(api, request)
+      const proResult = await result
 
-      await waitForFunction(() => mocked(adapter.send).mock.lastCall)
+      expect(result).toBePromise()
       expect(method).toBeCalledTimes(1)
-      expect(adapter.send).toBeCalledTimes(1)
-      expect(adapter.send).toBeCalledWith({
+      expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '2.2'
       , id: 'id'
@@ -166,21 +133,14 @@ describe('createServer', () => {
           , method: ['echo']
           , params: ['message']
           }
-          const adapter: IServerAdapter<unknown> = {
-            send: jest.fn()
-          , listen(listener) {
-              setTimeout(100, () => listener(request))
-              return pass
-            }
-          }
 
-          createServer(api, adapter, {
+          const result = createResponse(api, request, {
             version: '1.0.0'
           })
+          const proResult = await result
 
-          await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-          expect(adapter.send).toBeCalledTimes(1)
-          expect(adapter.send).toBeCalledWith({
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '2.2'
           , id: 'id'
@@ -201,21 +161,14 @@ describe('createServer', () => {
           , method: ['echo']
           , params: ['message']
           }
-          const adapter: IServerAdapter<unknown> = {
-            send: jest.fn()
-          , listen(listener) {
-              setTimeout(100, () => listener(request))
-              return pass
-            }
-          }
 
-          createServer(api, adapter, {
+          const result = createResponse(api, request, {
             version: '1.0.0'
           })
+          const proResult = await result
 
-          await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-          expect(adapter.send).toBeCalledTimes(1)
-          expect(adapter.send).toBeCalledWith({
+          expect(result).toBePromise()
+          expect(proResult).toMatchObject({
             protocol: 'delight-rpc'
           , version: '2.2'
           , id: 'id'
@@ -251,22 +204,15 @@ describe('createServer', () => {
             echo: validator
           }
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           parameterValidators: validators
         })
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
         expect(validator).toBeCalledWith('message')
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -275,54 +221,47 @@ describe('createServer', () => {
       })
 
       it('not pass', async () => {
-        const method = jest.fn(async (message: string) => message)
-        const api = {
-          namespace: {
-            echo: method
-          }
+      const method = jest.fn(async (message: string) => message)
+      const api = {
+        namespace: {
+          echo: method
         }
-        const request: IRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '2.2'
-        , id: 'id'
-        , method: ['namespace', 'echo']
-        , params: ['message']
+      }
+      const request: IRequest<unknown> = {
+        protocol: 'delight-rpc'
+      , version: '2.2'
+      , id: 'id'
+      , method: ['namespace', 'echo']
+      , params: ['message']
+      }
+      const customError = new Error('custom error')
+      const validator = jest.fn(() => {
+        throw customError
+      })
+      const validators = {
+        namespace: {
+          echo: validator
         }
-        const customError = new Error('custom error')
-        const validator = jest.fn(() => {
-          throw customError
-        })
-        const validators = {
-          namespace: {
-            echo: validator
-          }
-        }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
+      }
 
-        createServer(api, adapter, {
-          parameterValidators: validators
-        })
+      const result = createResponse(api, request, {
+        parameterValidators: validators
+      })
+      const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(validator).toBeCalledWith('message')
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
-          protocol: 'delight-rpc'
-        , version: '2.2'
-        , id: 'id'
-        , error: {
-            name: 'Error'
-          , message: 'custom error'
-          , stack: expect.any(String)
-          , ancestors: []
-          }
-        })
+      expect(validator).toBeCalledWith('message')
+      expect(result).toBePromise()
+      expect(proResult).toStrictEqual({
+        protocol: 'delight-rpc'
+      , version: '2.2'
+      , id: 'id'
+      , error: {
+          name: 'Error'
+        , message: 'custom error'
+        , stack: expect.any(String)
+        , ancestors: []
+        }
+      })
       })
     })
 
@@ -338,21 +277,14 @@ describe('createServer', () => {
         , params: ['message']
         , channel: 'channel'
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           channel: 'channel'
         })
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -372,24 +304,14 @@ describe('createServer', () => {
         , params: ['message']
         , channel: 'channel'
         }
-        let calledTimes = 0
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => {
-              listener(request)
-              calledTimes++
-            })
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           channel: 'diff-channel'
         })
+        const proResult = await result
 
-        await waitForFunction(() => calledTimes === 1)
-        expect(adapter.send).not.toBeCalled()
+        expect(result).toBePromise()
+        expect(proResult).toBeNull()
       })
     })
   })
@@ -421,19 +343,12 @@ describe('createServer', () => {
             }
           ]
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter)
+        const result = createResponse(api, request)
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -469,19 +384,12 @@ describe('createServer', () => {
             }
           ]
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter)
+        const result = createResponse(api, request)
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -527,21 +435,14 @@ describe('createServer', () => {
             }
           ]
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           version: '1.0.0'
         })
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -552,8 +453,8 @@ describe('createServer', () => {
         })
         expect(method1).toBeCalled()
         expect(method2).toBeCalled()
-        const response = mocked(adapter.send).mock.lastCall![0] as IBatchResponse<unknown>
-        expect(isBatchResponse(response)).toBe(true)
+        expect(isBatchResponse(proResult)).toBe(true)
+        const response = proResult as IBatchResponse<unknown>
         const result1 = response.responses[0] as IResultForBatchResponse<number>
         const result2 = response.responses[1] as IResultForBatchResponse<number>
         expect(result1.result).toEqual(expect.any(Number))
@@ -588,21 +489,14 @@ describe('createServer', () => {
             }
           ]
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           version: '1.0.0'
         })
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -613,8 +507,8 @@ describe('createServer', () => {
         })
         expect(method1).toBeCalled()
         expect(method2).toBeCalled()
-        const response = mocked(adapter.send).mock.lastCall![0] as IBatchResponse<unknown>
-        expect(isBatchResponse(response)).toBe(true)
+        expect(isBatchResponse(proResult)).toBe(true)
+        const response = proResult as IBatchResponse<unknown>
         const result1 = response.responses[0] as IResultForBatchResponse<number>
         const result2 = response.responses[1] as IResultForBatchResponse<number>
         expect(result1.result).toEqual(expect.any(Number))
@@ -640,20 +534,13 @@ describe('createServer', () => {
           }
         ]
       }
-      const adapter: IServerAdapter<unknown> = {
-        send: jest.fn()
-      , listen(listener) {
-          setTimeout(100, () => listener(request))
-          return pass
-        }
-      }
 
-      createServer(api, adapter)
+      const result = createResponse(api, request)
+      const proResult = await result
 
-      await waitForFunction(() => mocked(adapter.send).mock.lastCall)
+      expect(result).toBePromise()
       expect(method).toBeCalledTimes(1)
-      expect(adapter.send).toBeCalledTimes(1)
-      expect(adapter.send).toBeCalledWith({
+      expect(proResult).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '2.2'
       , id: 'id'
@@ -681,21 +568,14 @@ describe('createServer', () => {
               }
             ]
           }
-          const adapter: IServerAdapter<unknown> = {
-            send: jest.fn()
-          , listen(listener) {
-              setTimeout(100, () => listener(request))
-              return pass
-            }
-          }
 
-          createServer(api, adapter, {
-            version: '1.0.0'
+          const result = createResponse(api, request, {
+            parameterValidators: '1.0.0'
           })
+          const proResult = await result
 
-          await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-          expect(adapter.send).toBeCalledTimes(1)
-          expect(adapter.send).toBeCalledWith({
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '2.2'
           , id: 'id'
@@ -723,21 +603,14 @@ describe('createServer', () => {
               }
             ]
           }
-          const adapter: IServerAdapter<unknown> = {
-            send: jest.fn()
-          , listen(listener) {
-              setTimeout(100, () => listener(request))
-              return pass
-            }
-          }
 
-          createServer(api, adapter, { 
+          const result = createResponse(api, request, {
             version: '1.0.0'
           })
+          const proResult = await result
 
-          await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-          expect(adapter.send).toBeCalledTimes(1)
-          expect(adapter.send).toBeCalledWith({
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '2.2'
           , id: 'id'
@@ -778,22 +651,15 @@ describe('createServer', () => {
             echo: validator
           }
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           parameterValidators: validators
         })
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
         expect(validator).toBeCalledWith('message')
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -831,22 +697,15 @@ describe('createServer', () => {
             echo: validator
           }
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           parameterValidators: validators
         })
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
         expect(validator).toBeCalledWith('message')
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -891,21 +750,14 @@ describe('createServer', () => {
           ]
         , channel: 'channel'
         }
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => listener(request))
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           channel: 'channel'
         })
+        const proResult = await result
 
-        await waitForFunction(() => mocked(adapter.send).mock.lastCall)
-        expect(adapter.send).toBeCalledTimes(1)
-        expect(adapter.send).toBeCalledWith({
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '2.2'
         , id: 'id'
@@ -952,24 +804,14 @@ describe('createServer', () => {
           ]
         , channel: 'channel'
         }
-        let calledTimes = 0
-        const adapter: IServerAdapter<unknown> = {
-          send: jest.fn()
-        , listen(listener) {
-            setTimeout(100, () => {
-              listener(request)
-              calledTimes++
-            })
-            return pass
-          }
-        }
 
-        createServer(api, adapter, {
+        const result = createResponse(api, request, {
           channel: 'diff-channel'
         })
+        const proResult = await result
 
-        await waitForFunction(() => calledTimes === 1)
-        expect(adapter.send).toBeCalledTimes(0)
+        expect(result).toBePromise()
+        expect(proResult).toBeNull()
       })
     })
   })
