@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/delight-rpc/delight-rpc/compare/v2.1.2...v3.0.0) (2022-05-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* rewrite APIs
+
+### Features
+
+* add channel into IDelightRPC ([80835fc](https://github.com/delight-rpc/delight-rpc/commit/80835fca17660aee769c7f91708c0d373c13f88d))
+* rewrite APIs ([0c1bd58](https://github.com/delight-rpc/delight-rpc/commit/0c1bd58d5690ec2d00628527c614972799645bf0))
+
 ### [2.1.2](https://github.com/delight-rpc/delight-rpc/compare/v2.1.1...v2.1.2) (2022-04-14)
 
 
