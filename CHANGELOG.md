@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/delight-rpc/delight-rpc/compare/v3.0.0...v3.1.0) (2022-05-07)
+
+
+### Features
+
+* export createResponse ([14987a7](https://github.com/delight-rpc/delight-rpc/commit/14987a7a50003c912292d7adefadd42760138222))
+
 ## [3.0.0](https://github.com/delight-rpc/delight-rpc/compare/v2.1.2...v3.0.0) (2022-05-07)
 
 
