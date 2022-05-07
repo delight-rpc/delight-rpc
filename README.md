@@ -163,6 +163,19 @@ function createServer<API extends object, DataType = unknown>(
 ): () => void
 ```
 
+### createResponse
+```ts
+function createResponse<API, DataType>(
+  api: ImplementationOf<API>
+, request: IRequest<DataType> | IBatchRequest<DataType>
+, { parameterValidators = {}, version, channel }: {
+    parameterValidators?: ParameterValidators<API>
+    version?: `${number}.${number}.${number}`
+    channel?: string
+  } = {}
+): Promise<IResponse<DataType> | IBatchResponse<DataType>>
+```
+
 ### MethodNotAvailable
 ```ts
 class MethodNotAvailable extends CustomError {}
