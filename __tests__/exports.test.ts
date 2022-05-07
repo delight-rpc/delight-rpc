@@ -3,7 +3,7 @@ import * as target from '@src/index'
 test('exports', () => {
   const expected = [
     'createClient'
-  , 'createResponse'
+  , 'createServer'
   , 'BatchClient'
   , 'createBatchProxy'
   , 'MethodNotAvailable'

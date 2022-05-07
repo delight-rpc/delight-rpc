@@ -102,3 +102,13 @@ export interface IResultForBatchResponse<T> {
 export interface IErrorForBatchResponse {
   error: SerializableError 
 }
+
+export interface IClientAdapter<T> {
+  send(request: IRequest<T> | IBatchRequest<T>): Promise<void>
+  listen(listener: (response: IResponse<T> | IBatchResponse<T>) => void): () => void
+}
+
+export interface IServerAdapter<T> {
+  send(response: IResponse<T> | IBatchResponse<T>): Promise<void>
+  listen(listener: (request: IRequest<T> | IBatchRequest<T>) => void): () => void
+}

@@ -17,7 +17,7 @@ interface API {
   foo(bar: string): string
 }
 
-const client = createClient<typeof api>(send)
+const client = createClient<typeof api>(adapter)
 const result = await client.foo('bar')
 ```
 
@@ -30,7 +30,7 @@ interface IAPI {
   getString(): string
 }
 
-const client = new BatchClient(send)
+const client = new BatchClient(adapter)
 const proxy = createBatchProxy<IAPI>()
 const results = await client.parallel(
   proxy.getNumber()
@@ -170,12 +170,14 @@ type ClientProxy<Obj> = {
       : ClientProxy<Obj[Key]>
 }
 
-function createClient<Obj extends object, DataType = unknown>(
-  send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
-, parameterValidators: ParameterValidators<Obj> = {}
-, expectedVersion?: `${number}.${number}.${number}`
-, channel?: string
-): ClientProxy<Obj>
+function createClient<API extends object, DataType = unknown>(
+  adapter: IClientAdapter<DataType> 
+, options?: {
+    parameterValidators?: ParameterValidators<API>
+    expectedVersion?: `${number}.${number}.${number}`
+    channel?: string
+  }
+): [client: ClientProxy<API>, close: () => void]
 ```
 
 For easy distinction, when the method is not available,
@@ -192,13 +194,14 @@ type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, 
 
 class BatchClient<DataType = unknown> {
   constructor(
-    send: (batchRequest: IBatchRequest<DataType>) => PromiseLike<
-    | IError
-    | IBatchResponse<DataType>
-    >
-  , expectedVersion?: `${number}.${number}.${number}`
-  , channel?: string
+    private adapter: IClientAdapter<DataType>
+  , options?: {
+      expectedVersion?: `${number}.${number}.${number}` 
+      channel?: string
+    }
   )
+
+  close(): void
 
   async parallel<T extends IRequestForBatchRequest<unknown, DataType>[]>(
     ...requests: T
@@ -220,7 +223,9 @@ type BatchClientProxy<Obj, DataType> = {
 }
 
 function createBatchProxy<API extends object, DataType = unknown>(
-  parameterValidators: ParameterValidators<API> = {}
+  options?: {
+    parameterValidators?: ParameterValidators<API>
+  }
 ): BatchClientProxy<API, DataType>
 ```
 
@@ -239,25 +244,14 @@ class VersionMismatch extends CustomError {}
 class InternalError extends CustomError {}
 ```
 
-### createResponse
-```ts
-function createResponse<API extends object, DataType = unknown>(
-  api: ImplementationOf<API>
-, request: IRequest<DataType> | IBatchRequest<DataType>
-, parameterValidators: ParameterValidators<API> = {}
-, version?: `${number}.${number}.${number}`
-, channel?: string
-): Promise<IResponse<DataType> | IBatchResponse<DataType>>
-```
-
-### isRequest
+### isRequst
 ```ts
 function isRequest<DataType>(val: unknown): val is IRequest<DataType>
 ```
 
 ### isResult
 ```ts
-function isResult<DataType>(val: unknown): val is IResult<DataType> 
+function isResult<DataType>(val: unknown): val is IResult<DataType>
 ```
 
 ### isError
@@ -272,5 +266,5 @@ function isBatchRequest<T>(val: unknown): val is IBatchRequest<T>
 
 ### isBatchResponse
 ```ts
-function isBatchResponse<T>(val: unknown): val is IBatchResponse<T>
+function isBatchResponse<T>(val: unknown): val is IBatchResponse<T> 
 ```

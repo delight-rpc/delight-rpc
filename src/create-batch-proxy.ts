@@ -13,7 +13,9 @@ export type BatchClientProxy<Obj, DataType> = {
 }
 
 export function createBatchProxy<API extends object, DataType = unknown>(
-  parameterValidators: ParameterValidators<API> = {}
+  { parameterValidators = {} }: {
+    parameterValidators?: ParameterValidators<API>
+  } = {}
 ): BatchClientProxy<API, DataType> {
   return new Proxy(Object.create(null), {
     get(target: any, prop: string | symbol) {

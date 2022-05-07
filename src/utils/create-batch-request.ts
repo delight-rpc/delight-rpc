@@ -6,8 +6,8 @@ export function createBatchRequest<DataType>(
   id: string
 , requests: IRequestForBatchRequest<unknown, DataType>[]
 , parallel: boolean
-, expectedVersion?: `${number}.${number}.${number}`
-, channel?: string
+, expectedVersion: `${number}.${number}.${number}` | undefined
+, channel: string | undefined
 ): IBatchRequest<DataType> {
   const batchRequest: IBatchRequest<DataType> = {
     protocol: 'delight-rpc'

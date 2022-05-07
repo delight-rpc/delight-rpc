@@ -1,33 +1,77 @@
 import { createBatchResponse, createResultForBatchResponse, createErrorForBatchResponse } from '@utils/create-batch-response'
 
 describe('createBatchResponse', () => {
-  const result = createBatchResponse('id', [
-    { result: 'result' }
-  , {
-      error: {
-        name: 'UserError'
-      , message: 'message'
-      , stack: 'stack'
-      , ancestors: ['Error']
-      }
-    }
-  ])
+  describe('channel', () => {
+    test('without channel', () => {
+      const result = createBatchResponse(
+        'id'
+      , [
+          { result: 'result' }
+        , {
+            error: {
+              name: 'UserError'
+            , message: 'message'
+            , stack: 'stack'
+            , ancestors: ['Error']
+            }
+          }
+        ]
+      , undefined
+      )
 
-  expect(result).toStrictEqual({
-    protocol: 'delight-rpc'
-  , id: 'id'
-  , version: '2.2'
-  , responses: [
-      { result: 'result' }
-    , {
-        error: {
-          name: 'UserError'
-        , message: 'message'
-        , stack: 'stack'
-        , ancestors: ['Error']
-        }
-      }
-    ]
+      expect(result).toStrictEqual({
+        protocol: 'delight-rpc'
+      , id: 'id'
+      , version: '2.2'
+      , responses: [
+          { result: 'result' }
+        , {
+            error: {
+              name: 'UserError'
+            , message: 'message'
+            , stack: 'stack'
+            , ancestors: ['Error']
+            }
+          }
+        ]
+      })
+    })
+
+    test('with channel', () => {
+      const result = createBatchResponse(
+        'id'
+      , [
+          { result: 'result' }
+        , {
+            error: {
+              name: 'UserError'
+            , message: 'message'
+            , stack: 'stack'
+            , ancestors: ['Error']
+            }
+          }
+        ]
+      , 'channel'
+      )
+
+      expect(result).toStrictEqual({
+        protocol: 'delight-rpc'
+      , id: 'id'
+      , version: '2.2'
+      , responses: [
+          { result: 'result' }
+        , {
+            error: {
+              name: 'UserError'
+            , message: 'message'
+            , stack: 'stack'
+            , ancestors: ['Error']
+            }
+          }
+        ]
+      , channel: 'channel'
+      })
+    })
   })
 })
 

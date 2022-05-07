@@ -1,5 +1,5 @@
 export * from './create-client'
-export * from './create-response'
+export * from './create-server'
 export * from './batch-client'
 export * from './create-batch-proxy'
 export * from './types'

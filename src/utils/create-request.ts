@@ -6,8 +6,8 @@ export function createRequest<DataType>(
   id: string
 , method: string[]
 , params: DataType[]
-, expectedVersion?: `${number}.${number}.${number}`
-, channel?: string
+, expectedVersion: `${number}.${number}.${number}` | undefined
+, channel: string | undefined
 ): IRequest<DataType> {
   const request: IRequest<DataType> = {
     protocol: 'delight-rpc'

@@ -4,9 +4,11 @@ import { getError } from 'return-style'
 describe('createBatchProxy', () => {
   describe('then method', () => {
     it('return undefined', () => {
-      const send = jest.fn()
+      interface IAPI {
+        echo(message: string): string
+      }
 
-      const proxy = createBatchProxy(send)
+      const proxy = createBatchProxy<IAPI>()
 
       // @ts-ignore
       expect(proxy.then).toBeUndefined()
@@ -60,7 +62,9 @@ describe('createBatchProxy', () => {
       }
       const message = 'message'
 
-      const client = createBatchProxy<IAPI>(validators)
+      const client = createBatchProxy<IAPI>({
+        parameterValidators: validators
+      })
       const result = client.namespace.echo(message)
 
       expect(validator).toBeCalledWith(message)
@@ -86,7 +90,9 @@ describe('createBatchProxy', () => {
       }
       const message = 'message'
 
-      const client = createBatchProxy<IAPI>(validators)
+      const client = createBatchProxy<IAPI>({
+        parameterValidators: validators
+      })
       const err = getError(() => client.namespace.echo(message))
 
       expect(validator).toBeCalledWith(message)

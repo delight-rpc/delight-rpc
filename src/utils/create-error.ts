@@ -6,7 +6,7 @@ import { isntUndefined } from '@blackglory/prelude'
 export function createError(
   id: string
 , error: Error
-, channel?: string
+, channel: string | undefined
 ): IError {
   const err: IError = {
     protocol: 'delight-rpc'

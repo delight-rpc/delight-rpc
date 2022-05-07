@@ -9,7 +9,7 @@ export function createBatchResponse<DataType>(
   | IResultForBatchResponse<DataType>
   | IErrorForBatchResponse
   >
-, channel?: string
+, channel: string | undefined
 ): IBatchResponse<DataType> {
   const batchResponse: IBatchResponse<DataType> = {
     protocol: 'delight-rpc'
