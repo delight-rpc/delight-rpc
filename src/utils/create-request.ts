@@ -1,6 +1,5 @@
-import { IRequest } from '@src/types'
+import { version, IRequest } from '@delight-rpc/protocol'
 import { isntUndefined } from '@blackglory/prelude'
-import { version } from './version'
 
 export function createRequest<DataType>(
   id: string

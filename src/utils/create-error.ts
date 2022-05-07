@@ -1,6 +1,5 @@
-import { IError } from '@src/types'
+import { version, IError } from '@delight-rpc/protocol'
 import { normalize } from '@blackglory/errors'
-import { version } from './version'
 import { isntUndefined } from '@blackglory/prelude'
 
 export function createError(

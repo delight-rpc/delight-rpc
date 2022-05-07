@@ -1001,6 +1001,14 @@
   dependencies:
     "@cspotcode/source-map-consumer" "0.8.0"
 
+"@delight-rpc/protocol@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@delight-rpc/protocol/-/protocol-2.2.0.tgz#015eef475ca3e9ba6744b960a193049dca95540e"
+  integrity sha512-pFkZG4QWdXPX72xPLc9rlvbj5Fljcpc5T8Xt6KW7qmdJAzm0mvGMUN7qN2FyW6dPqrmA2qsn74hCGotnna2jEQ==
+  dependencies:
+    "@blackglory/errors" "^2.2.1"
+    "@blackglory/prelude" "^0.1.1"
+
 "@eslint/eslintrc@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-1.2.2.tgz#4989b9e8c0216747ee7cca314ae73791bb281aae"

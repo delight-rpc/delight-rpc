@@ -1,5 +1,4 @@
-import { IBatchRequest, IRequestForBatchRequest } from '@src/types'
-import { version } from './version'
+import { version, IBatchRequest, IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { isntUndefined } from '@blackglory/prelude'
 
 export function createBatchRequest<DataType>(

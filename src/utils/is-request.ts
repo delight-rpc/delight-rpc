@@ -1,5 +1,5 @@
 import { isString, isArray, isNull, isUndefined } from '@blackglory/prelude'
-import { IRequest } from '@src/types'
+import { IRequest } from '@delight-rpc/protocol'
 import { isDelightRPC } from './is-delight-rpc'
 
 export function isRequest<DataType>(val: unknown): val is IRequest<DataType> {

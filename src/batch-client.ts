@@ -1,5 +1,6 @@
 import { assert, hydrate } from '@blackglory/errors'
-import { IClientAdapter, IRequestForBatchRequest } from '@src/types'
+import { IClientAdapter } from '@src/types'
+import { IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { createBatchRequest } from '@utils/create-batch-request'
 import { Result } from 'return-style'
 import { createUUID } from '@utils/create-uuid'

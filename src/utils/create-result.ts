@@ -1,5 +1,4 @@
-import { IResult } from '@src/types'
-import { version } from './version'
+import { version, IResult } from '@delight-rpc/protocol'
 import { isntUndefined } from '@blackglory/prelude'
 
 export function createResult<DataType>(

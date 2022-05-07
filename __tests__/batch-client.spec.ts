@@ -1,5 +1,7 @@
 import { BatchClient } from '@src/batch-client'
-import { IClientAdapter, IBatchRequest, VersionMismatch } from '@src/types'
+import { IClientAdapter } from '@src/types'
+import { VersionMismatch } from '@src/errors'
+import { IBatchRequest } from '@delight-rpc/protocol'
 import { Result } from 'return-style'
 import { normalize, CustomError } from '@blackglory/errors'
 import { go, pass } from '@blackglory/prelude'

@@ -1,5 +1,4 @@
-import { IBatchResponse, IResultForBatchResponse, IErrorForBatchResponse } from '@src/types'
-import { version } from './version'
+import { version, IBatchResponse, IResultForBatchResponse, IErrorForBatchResponse } from '@delight-rpc/protocol'
 import { normalize } from '@blackglory/errors'
 import { isntUndefined } from '@blackglory/prelude'
 

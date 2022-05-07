@@ -1,5 +1,6 @@
 import { createServer } from '@src/create-server'
-import { IServerAdapter, IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@src/types'
+import { IServerAdapter } from '@src/types'
+import { IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@delight-rpc/protocol'
 import { delay } from 'extra-promise'
 import { isBatchResponse } from '@utils/is-batch-response'
 import { pass } from '@blackglory/prelude'

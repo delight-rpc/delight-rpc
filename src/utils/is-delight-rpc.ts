@@ -1,5 +1,5 @@
 import { isPlainObject, isString, isUndefined } from '@blackglory/prelude'
-import { IDelightRPC } from '@src/types'
+import { IDelightRPC } from '@delight-rpc/protocol'
 
 export function isDelightRPC(val: unknown): val is IDelightRPC {
   return isPlainObject(val)

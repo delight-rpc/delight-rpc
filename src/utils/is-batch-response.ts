@@ -1,4 +1,4 @@
-import { IBatchResponse } from '@src/types'
+import { IBatchResponse } from '@delight-rpc/protocol'
 import { isDelightRPC } from './is-delight-rpc'
 import { isArray, isString, isObject } from '@blackglory/prelude'
 import { isSerializableError } from '@blackglory/errors'

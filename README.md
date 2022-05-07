@@ -61,89 +61,11 @@ async function handle(
 
 ## API
 ```ts
-/**
- * The reason why it is divided into two fields
- * is to make it easier to distinguish
- * when sharing channels with other protocols.
- * 
- * Reducing the size of payloads is not the goal of Delight RPC.
- */
-interface IDelightRPC {
-  protocol: 'delight-rpc'
-  version: `2.${number}`
-
-  /**
-   * An identifier used to offload multiple different RPC instances
-   * over a communication channel.
-   */
-  channel?: string
-
-  [key: string]: unknown
-}
-
-interface IRequest<T> extends IDelightRPC {
-  id: string
-
-  /**
-   * The expected server version, based on semver.
-   */
-  expectedVersion?: Nullable<`${number}.${number}.${number}`>
-  
-  /**
-   * The `method` field can include the namespace it belongs to.
-   * For example, `['config','save']` represents the `save` method
-   * under the namespace `config`.
-   */
-  method: string[]
-  params: T[]
-}
-
-type IResponse<T> = IResult<T> | IError
-
-interface IResult<T> extends IDelightRPC {
-  id: string
-  result: T
-}
-
-interface SerializableError {
-  name: string
-  message: string
-  stack: string | null
-  ancestors: string[]
-}
-
-interface IError extends IDelightRPC {
-  id: string
-  error: SerializedError 
-}
-
-interface IBatchRequest<T> extends IDelightRPC {
-  id: string
-
-  /**
-   * The expected server version, based on semver.
-   */
-  expectedVersion?: Nullable<`${number}.${number}.${number}`>
-
-  parallel: boolean
-
-  requests: Array<{
-    /**
-     * The `method` field can include the namespace it belongs to.
-     * For example, `['config','save']` represents the `save` method
-     * under the namespace `config`.
-     */
-    method: string[]
-    params: T[]
-  }>
-}
-
-interface IBatchResponse<T> extends IDelightRPC {
-  id: string
-  responses: Array<
-  | { result: T }
-  | { error: SerializableError }
-  >
+type ImplementationOf<Obj> = {
+  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+    Obj[Key] extends (...args: infer Args) => infer Result
+      ? (...args: Args) => PromiseLike<Awaited<Result>> | Awaited<Result>
+      : ImplementationOf<Obj[Key]>
 }
 
 type ParameterValidators<Obj> = Partial<{
@@ -153,11 +75,14 @@ type ParameterValidators<Obj> = Partial<{
       : ParameterValidators<Obj[Key]>
 }>
 
-type ImplementationOf<Obj> = {
-  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
-    Obj[Key] extends (...args: infer Args) => infer Result
-      ? (...args: Args) => PromiseLike<Awaited<Result>> | Awaited<Result>
-      : ImplementationOf<Obj[Key]>
+interface IClientAdapter<T> {
+  send(request: IRequest<T> | IBatchRequest<T>): Promise<void>
+  listen(listener: (response: IResponse<T> | IBatchResponse<T>) => void): () => void
+}
+
+interface IServerAdapter<T> {
+  send(response: IResponse<T> | IBatchResponse<T>): Promise<void>
+  listen(listener: (request: IRequest<T> | IBatchRequest<T>) => void): () => void
 }
 ```
 

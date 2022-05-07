@@ -1,4 +1,4 @@
-import { IBatchRequest } from '@src/types'
+import { IBatchRequest } from '@delight-rpc/protocol'
 import { isDelightRPC } from './is-delight-rpc'
 import { isArray, isObject, isString, isBoolean } from '@blackglory/prelude'
 

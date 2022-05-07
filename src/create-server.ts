@@ -5,21 +5,16 @@ import { tryGetProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
 import {
   IServerAdapter
-, IRequest
-, IResponse
-, IBatchRequest
-, IBatchResponse
 , ParameterValidators
-, MethodNotAvailable
-, VersionMismatch
-, InternalError
 , ImplementationOf
 } from '@src/types'
+import { IRequest, IResponse, IBatchRequest, IBatchResponse } from '@delight-rpc/protocol'
 import { isAcceptable } from 'extra-semver'
 import { isRequest } from '@utils/is-request'
 import { isBatchRequest } from '@utils/is-batch-request'
 import { map } from 'extra-promise'
 import { createBatchResponse, createErrorForBatchResponse, createResultForBatchResponse } from '@utils/create-batch-response'
+import { InternalError, MethodNotAvailable, VersionMismatch } from '@src/errors'
 
 export function createServer<API extends object, DataType = unknown>(
   api: ImplementationOf<API>

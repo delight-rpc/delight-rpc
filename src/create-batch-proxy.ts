@@ -1,6 +1,7 @@
 import { isntString } from '@blackglory/prelude'
 import { FunctionKeys, KeysExtendType } from 'hotypes'
-import { ParameterValidators, IRequestForBatchRequest } from '@src/types'
+import { ParameterValidators} from '@src/types'
+import { IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { tryGetProp } from 'object-path-operator'
 import { createRequestForBatchRequest } from '@utils/create-batch-request'
 import { CallableObject } from '@utils/callable-object'
