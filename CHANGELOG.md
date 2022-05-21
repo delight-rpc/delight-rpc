@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/delight-rpc/delight-rpc/compare/v4.0.0...v4.1.0) (2022-05-21)
+
+
+### Features
+
+* add option ownPropsOnly ([e61855c](https://github.com/delight-rpc/delight-rpc/commit/e61855c7e898a1347e4af34d2d639c1089c21f5b))
+
 ## [4.0.0](https://github.com/delight-rpc/delight-rpc/compare/v3.1.1...v4.0.0) (2022-05-07)
 
 
