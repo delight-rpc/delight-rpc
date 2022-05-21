@@ -265,7 +265,7 @@ describe('createResponse', () => {
       })
     })
 
-    describe('channel', () => {
+    describe('with channel', () => {
       test('same channel', async () => {
         const method = jest.fn(async (message: string) => message)
         const api = { echo: method }
@@ -312,6 +312,71 @@ describe('createResponse', () => {
 
         expect(result).toBePromise()
         expect(proResult).toBeNull()
+      })
+    })
+
+    describe('with ownPropsOnly', () => {
+      it('is an own prop', async () => {
+        const method = jest.fn(async (message: string) => message)
+        const api = {
+          namespace: {
+            echo: method
+          }
+        }
+        const request: IRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , method: ['namespace', 'echo']
+        , params: ['message']
+        }
+
+        const result = createResponse(api, request, {
+           ownPropsOnly: true
+        })
+        const proResult = await result
+
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , result: 'message'
+        })
+      })
+
+      it('isnt an own prop', async () => {
+        const method = jest.fn(async (message: string) => message)
+        const api = Object.create({
+          namespace: {
+            echo: method
+          }
+        })
+        const request: IRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , method: ['namespace', 'echo']
+        , params: ['message']
+        }
+
+        const result = createResponse(api, request, {
+           ownPropsOnly: true
+        })
+        const proResult = await result
+
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
+          protocol: 'delight-rpc'
+        , version: '2.2'
+        , id: 'id'
+        , error: {
+            name: 'MethodNotAvailable'
+          , stack: expect.any(String)
+          , ancestors: ['CustomError', 'Error']
+          , message: 'The method is not available.'
+          }
+        })
       })
     })
   })
@@ -723,7 +788,7 @@ describe('createResponse', () => {
       })
     })
 
-    describe('channel', () => {
+    describe('with channel', () => {
       test('same channel', async () => {
         const method1 = jest.fn(async () => {
           throw new Error('message')

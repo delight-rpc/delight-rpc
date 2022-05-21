@@ -150,10 +150,11 @@ function createBatchProxy<API extends object, DataType = unknown>(
 function createResponse<API, DataType>(
   api: ImplementationOf<API>
 , request: IRequest<DataType> | IBatchRequest<DataType>
-, { parameterValidators = {}, version, channel }: {
+, { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
     channel?: string
+    ownPropsOnly?: boolean
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>>
 ```

@@ -1,7 +1,7 @@
 import { isntFunction, isntUndefined, isError } from '@blackglory/prelude'
 import { createResult } from '@utils/create-result'
 import { createError } from '@utils/create-error'
-import { tryGetProp } from 'object-path-operator'
+import { tryGetProp, tryGetOwnProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
 import { ParameterValidators, ImplementationOf } from '@src/types'
 import { IRequest, IResponse, IBatchRequest, IBatchResponse } from '@delight-rpc/protocol'
@@ -15,10 +15,11 @@ import { InternalError, MethodNotAvailable, VersionMismatch } from '@src/errors'
 export async function createResponse<API, DataType>(
   api: ImplementationOf<API>
 , request: IRequest<DataType> | IBatchRequest<DataType>
-, { parameterValidators = {}, version, channel }: {
+, { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
     channel?: string
+    ownPropsOnly?: boolean
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>> {
   if (request.channel !== channel) return null
@@ -43,7 +44,7 @@ export async function createResponse<API, DataType>(
         ) as ((...args: unknown[]) => void) | undefined
         validate?.(...request.params)
 
-        const fn = tryGetProp(api, request.method)
+        const fn = (ownPropsOnly ? tryGetOwnProp : tryGetProp)(api, request.method)
         if (isntFunction(fn)) {
           return createError(
             request.id
@@ -68,7 +69,7 @@ export async function createResponse<API, DataType>(
           ) as ((...args: unknown[]) => void) | undefined
           validate?.(...request.params)
 
-          const fn = tryGetProp(api, request.method)
+          const fn = (ownPropsOnly ? tryGetOwnProp : tryGetProp)(api, request.method)
           if (isntFunction(fn)) {
             return createErrorForBatchResponse(new MethodNotAvailable('The method is not available.'))
           }
