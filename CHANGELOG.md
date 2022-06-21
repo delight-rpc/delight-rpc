@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.2.0](https://github.com/delight-rpc/delight-rpc/compare/v4.1.0...v4.2.0) (2022-06-21)
+
+
+### Features
+
+* `channel` of `createResponse` can be a RegExp now ([c95bea6](https://github.com/delight-rpc/delight-rpc/commit/c95bea6110a2b940e6bcd9650b01b46b1ecd9bcd))
+* add AnyChannel support ([23b1434](https://github.com/delight-rpc/delight-rpc/commit/23b1434edb670f70ef1a47c15f2099a52974b266))
+
 ## [4.1.0](https://github.com/delight-rpc/delight-rpc/compare/v4.0.0...v4.1.0) (2022-05-21)
 
 
