@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.2.1](https://github.com/delight-rpc/delight-rpc/compare/v4.2.0...v4.2.1) (2022-06-21)
+
+
+### Bug Fixes
+
+* version of @blackglory/prelude ([f5cdae3](https://github.com/delight-rpc/delight-rpc/commit/f5cdae33aaa1e495b0e6d26b95e589efe8d57686))
+
 ## [4.2.0](https://github.com/delight-rpc/delight-rpc/compare/v4.1.0...v4.2.0) (2022-06-21)
 
 
