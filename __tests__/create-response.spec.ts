@@ -266,8 +266,27 @@ describe('createResponse', () => {
     })
 
     describe('with channel', () => {
+      test('no channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request)
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+      })
+
       describe('channel is a string', () => {
-        test('same channel', async () => {
+        test('same request.channel', async () => {
           const method = jest.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
@@ -294,7 +313,7 @@ describe('createResponse', () => {
           })
         })
 
-        test('diff channel', async () => {
+        test('diff request.channel', async () => {
           const method = jest.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
@@ -314,10 +333,30 @@ describe('createResponse', () => {
           expect(result).toBePromise()
           expect(proResult).toBeNull()
         })
+
+        test('no request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          }
+
+          const result = createResponse(api, request, {
+            channel: 'channel'
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+        })
       })
 
       describe('channel is a regexp', () => {
-        test('matched', async () => {
+        test('request.channel is matched', async () => {
           const method = jest.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
@@ -344,7 +383,7 @@ describe('createResponse', () => {
           })
         })
 
-        test('not matched', async () => {
+        test('request.channel is not matched', async () => {
           const method = jest.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
@@ -358,6 +397,26 @@ describe('createResponse', () => {
 
           const result = createResponse(api, request, {
             channel: /^diff-channel$/
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+        })
+
+        test('no request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          }
+
+          const result = createResponse(api, request, {
+            channel: /^channel$/
           })
           const proResult = await result
 
