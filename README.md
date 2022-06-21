@@ -147,13 +147,15 @@ function createBatchProxy<API extends object, DataType = unknown>(
 
 ### createResponse
 ```ts
+const AnyChannel
+
 function createResponse<API, DataType>(
   api: ImplementationOf<API>
 , request: IRequest<DataType> | IBatchRequest<DataType>
 , { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
-    channel?: string | RegExp
+    channel?: string | RegExp | AnyChannel
     ownPropsOnly?: boolean
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>>

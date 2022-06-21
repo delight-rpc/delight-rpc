@@ -1,4 +1,4 @@
-import { createResponse } from '@src/create-response'
+import { createResponse, AnyChannel } from '@src/create-response'
 import { IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@delight-rpc/protocol'
 import { delay } from 'extra-promise'
 import { isBatchResponse } from '@utils/is-batch-response'
@@ -283,6 +283,60 @@ describe('createResponse', () => {
 
           expect(result).toBePromise()
           expect(proResult).toBeNull()
+      })
+
+      describe('channel is AnyChannel', () => {
+        test('request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: AnyChannel
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , result: 'message'
+          , channel: 'channel'
+          })
+        })
+
+        test('no request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          }
+
+          const result = createResponse(api, request, {
+            channel: AnyChannel
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , result: 'message'
+          })
+        })
       })
 
       describe('channel is a string', () => {

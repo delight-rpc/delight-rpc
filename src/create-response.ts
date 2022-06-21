@@ -12,21 +12,25 @@ import { map } from 'extra-promise'
 import { createBatchResponse, createErrorForBatchResponse, createResultForBatchResponse } from '@utils/create-batch-response'
 import { InternalError, MethodNotAvailable, VersionMismatch } from '@src/errors'
 
+export const AnyChannel = Symbol()
+
 export async function createResponse<API, DataType>(
   api: ImplementationOf<API>
 , request: IRequest<DataType> | IBatchRequest<DataType>
 , { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
-    channel?: string | RegExp
+    channel?: string | RegExp | typeof AnyChannel
     ownPropsOnly?: boolean
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>> {
-  if (isRegExp(channel)) {
-    if (isUndefined(request.channel)) return null
-    if (!channel.test(request.channel)) return null
-  } else {
-    if (channel !== request.channel) return null
+  if (channel !== AnyChannel) {
+    if (isRegExp(channel)) {
+      if (isUndefined(request.channel)) return null
+      if (!channel.test(request.channel)) return null
+    } else {
+      if (channel !== request.channel) return null
+    }
   }
 
   if (request.expectedVersion && isntUndefined(version)) {
