@@ -266,52 +266,104 @@ describe('createResponse', () => {
     })
 
     describe('with channel', () => {
-      test('same channel', async () => {
-        const method = jest.fn(async (message: string) => message)
-        const api = { echo: method }
-        const request: IRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '2.2'
-        , id: 'id'
-        , method: ['echo']
-        , params: ['message']
-        , channel: 'channel'
-        }
+      describe('channel is a string', () => {
+        test('same channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          , channel: 'channel'
+          }
 
-        const result = createResponse(api, request, {
-          channel: 'channel'
+          const result = createResponse(api, request, {
+            channel: 'channel'
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , result: 'message'
+          , channel: 'channel'
+          })
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
-          protocol: 'delight-rpc'
-        , version: '2.2'
-        , id: 'id'
-        , result: 'message'
-        , channel: 'channel'
+        test('diff channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: 'diff-channel'
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
         })
       })
 
-      test('diff channel', async () => {
-        const method = jest.fn(async (message: string) => message)
-        const api = { echo: method }
-        const request: IRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '2.2'
-        , id: 'id'
-        , method: ['echo']
-        , params: ['message']
-        , channel: 'channel'
-        }
+      describe('channel is a regexp', () => {
+        test('matched', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          , channel: 'channel'
+          }
 
-        const result = createResponse(api, request, {
-          channel: 'diff-channel'
+          const result = createResponse(api, request, {
+            channel: /^channel$/
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , result: 'message'
+          , channel: 'channel'
+          })
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toBeNull()
+        test('not matched', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '2.2'
+          , id: 'id'
+          , method: ['echo']
+          , params: ['message']
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: /^diff-channel$/
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+        })
       })
     })
 

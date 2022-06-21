@@ -153,7 +153,7 @@ function createResponse<API, DataType>(
 , { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
-    channel?: string
+    channel?: string | RegExp
     ownPropsOnly?: boolean
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>>

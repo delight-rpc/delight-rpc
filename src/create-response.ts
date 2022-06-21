@@ -1,4 +1,4 @@
-import { isntFunction, isntUndefined, isError } from '@blackglory/prelude'
+import { isntFunction, isUndefined, isntUndefined, isError, isRegExp } from '@blackglory/prelude'
 import { createResult } from '@utils/create-result'
 import { createError } from '@utils/create-error'
 import { tryGetProp, tryGetOwnProp } from 'object-path-operator'
@@ -18,11 +18,17 @@ export async function createResponse<API, DataType>(
 , { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
-    channel?: string
+    channel?: string | RegExp
     ownPropsOnly?: boolean
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>> {
-  if (request.channel !== channel) return null
+  if (isRegExp(channel)) {
+    if (isUndefined(request.channel)) return null
+    if (!channel.test(request.channel)) return null
+  } else {
+    if (channel !== request.channel) return null
+  }
+
   if (request.expectedVersion && isntUndefined(version)) {
     if (!isAcceptable(version, request.expectedVersion)) {
       return createError(
@@ -30,7 +36,7 @@ export async function createResponse<API, DataType>(
       , new VersionMismatch(
           `The expected version is ^${request.expectedVersion}, but the server version is ${version}.`
         )
-      , channel
+      , request.channel
       )
     }
   }
@@ -49,15 +55,15 @@ export async function createResponse<API, DataType>(
           return createError(
             request.id
           , new MethodNotAvailable('The method is not available.')
-          , channel
+          , request.channel
           )
         }
 
         const result = await Reflect.apply(fn, api, request.params)
-        return createResult(request.id, result, channel)
+        return createResult(request.id, result, request.channel)
       } catch (e) {
         assert(isError(e), 'The thrown object must be an Error')
-        return createError(request.id, e, channel)
+        return createError(request.id, e, request.channel)
       }
     } else if (isBatchRequest(request)) {
       const concurrency = request.parallel ? Infinity : 1
@@ -81,11 +87,11 @@ export async function createResponse<API, DataType>(
           return createErrorForBatchResponse(e)
         }
       }, concurrency)
-      return createBatchResponse(request.id, responses, channel)
+      return createBatchResponse(request.id, responses, request.channel)
     } else {
       throw new Error('Unknown request')
     }
   } catch (e) {
-    return createError(request.id, new InternalError(`${e}`), channel)
+    return createError(request.id, new InternalError(`${e}`), request.channel)
   }
 }
