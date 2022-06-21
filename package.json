@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "@blackglory/errors": "^2.2.1",
-    "@blackglory/prelude": "^0.1.1",
+    "@blackglory/prelude": "^0.1.2",
     "@delight-rpc/protocol": "^2.2.0",
     "extra-promise": "^2.2.0",
     "extra-semver": "^0.1.0",

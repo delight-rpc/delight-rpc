@@ -753,7 +753,7 @@
     iterable-operator "^1.0.0"
     justypes "^2.0.0"
 
-"@blackglory/prelude@^0.1.1":
+"@blackglory/prelude@^0.1.1", "@blackglory/prelude@^0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@blackglory/prelude/-/prelude-0.1.2.tgz#9ab094f0c49f5b058ac6f937d3552e7ad994cabe"
   integrity sha512-8uUjp7OYjJhHgILTRPouuDxWl30OgzTJonHAnGEqSV+3zg4MFO8+T+2kDKojPGGJY7p7xL7Uj20r85EQLN07Ag==
