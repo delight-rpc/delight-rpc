@@ -1,5 +1,5 @@
 import { isntString } from '@blackglory/prelude'
-import { FunctionKeys, KeysExtendType } from 'hotypes'
+import { FunctionKeys, KeysByType } from 'hotypes'
 import { ParameterValidators} from '@src/types'
 import { IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { tryGetProp } from 'object-path-operator'
@@ -7,7 +7,7 @@ import { createRequestForBatchRequest } from '@utils/create-batch-request'
 import { CallableObject } from '@utils/callable-object'
 
 export type BatchClientProxy<Obj, DataType> = {
-  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+  [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result
       ? (...args: Args) => IRequestForBatchRequest<Awaited<Result>, DataType>
       : BatchClientProxy<Obj[Key], DataType>

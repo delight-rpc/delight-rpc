@@ -62,14 +62,14 @@ async function handle(
 ## API
 ```ts
 type ImplementationOf<Obj> = {
-  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+  [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result
       ? (...args: Args) => Awaitable<Awaited<Result>>
       : ImplementationOf<Obj[Key]>
 }
 
 type ParameterValidators<Obj> = Partial<{
-  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+  [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => unknown
       ? (...args: Args) => void
       : ParameterValidators<Obj[Key]>
@@ -79,7 +79,7 @@ type ParameterValidators<Obj> = Partial<{
 ### createClient
 ```ts
 type ClientProxy<Obj> = {
-  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+  [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result
       ? (...args: Args) => Promise<Awaited<Result>>
       : ClientProxy<Obj[Key]>
@@ -132,7 +132,7 @@ class BatchClient<DataType = unknown> {
 ### createBatchProxy
 ```ts
 type BatchClientProxy<Obj, DataType> = {
-  [Key in FunctionKeys<Obj> | KeysExtendType<Obj, object>]:
+  [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result
       ? (...args: Args) => IRequestForBatchRequest<Awaited<Result>, DataType>
       : BatchClientProxy<Obj[Key], DataType>
