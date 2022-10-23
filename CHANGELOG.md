@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/delight-rpc/delight-rpc/compare/v4.2.4...v4.3.0) (2022-10-23)
+
+
+### Features
+
+* block detection of `toJSON` method ([11b5cee](https://github.com/delight-rpc/delight-rpc/commit/11b5ceee87d0b7d505006dffbba86221f5009e03))
+
 ### [4.2.4](https://github.com/delight-rpc/delight-rpc/compare/v4.2.3...v4.2.4) (2022-09-13)
 
 ### [4.2.3](https://github.com/delight-rpc/delight-rpc/compare/v4.2.2...v4.2.3) (2022-08-10)
