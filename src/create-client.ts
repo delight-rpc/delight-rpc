@@ -27,12 +27,12 @@ export function createClient<API extends object, DataType = unknown>(
   return new Proxy(Object.create(null), {
     get(target: any, prop: string | symbol) {
       if (isntString(prop)) return
-      if (['then'].includes(prop)) return
+      if (['then', 'toJSON'].includes(prop)) return
       return createCallableNestedProxy([prop])
     }
   , has(target, prop) {
       if (isntString(prop)) return false
-      if (['then'].includes(prop)) return false
+      if (['then', 'toJSON'].includes(prop)) return false
       return true
     }
   })
