@@ -5,6 +5,34 @@ import { Result } from 'return-style'
 import { normalize, CustomError } from '@blackglory/errors'
 
 describe('BatchClient', () => {
+  describe('then method', () => {
+    it('return undefined', () => {
+      const send = jest.fn()
+      const client = new BatchClient(send)
+
+      // @ts-ignore
+      const value = client.then
+      const exists = 'then' in client
+
+      expect(value).toBe(undefined)
+      expect(exists).toBe(false)
+    })
+  })
+
+  describe('toJSON method', () => {
+    it('return undefined', () => {
+      const send = jest.fn()
+      const client = new BatchClient(send)
+
+      // @ts-ignore
+      const value = client.toJSON
+      const exists = 'toJSON' in client
+
+      expect(value).toBe(undefined)
+      expect(exists).toBe(false)
+    })
+  })
+
   describe('parallel', () => {
     test('return IBatchResponse', async () => {
       const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {

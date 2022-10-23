@@ -9,11 +9,28 @@ describe('createClient', () => {
   describe('then method', () => {
     it('return undefined', () => {
       const send = jest.fn()
-
       const client = createClient(send)
 
       // @ts-ignore
-      expect(client.then).toBeUndefined()
+      const value = client.then
+      const exists = 'then' in client
+
+      expect(value).toBe(undefined)
+      expect(exists).toBe(false)
+    })
+  })
+
+  describe('toJSON method', () => {
+    it('return undefined', () => {
+      const send = jest.fn()
+      const client = createClient(send)
+
+      // @ts-ignore
+      const value = client.toJSON
+      const exists = 'toJSON' in client
+
+      expect(value).toBe(undefined)
+      expect(exists).toBe(false)
     })
   })
 
