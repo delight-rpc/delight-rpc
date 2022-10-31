@@ -58,11 +58,9 @@ export class BatchClient<DataType = unknown> {
       throw hydrate(response.error)
     } else {
       return response.responses.map(x => {
-        if ('result' in x) {
-          return Result.Ok(x.result)
-        } else {
-          return Result.Err(hydrate(x.error))
-        }
+        if ('result' in x) return Result.Ok(x.result)
+        if ('error' in x) return Result.Err(hydrate(x.error))
+        throw new Error('Invalid response')
       }) as MapRequestsToResults<T>
     }
   }

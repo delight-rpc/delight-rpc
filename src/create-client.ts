@@ -2,6 +2,7 @@ import { IRequest, IResponse } from '@delight-rpc/protocol'
 import { hydrate } from '@blackglory/errors'
 import { go, isntString } from '@blackglory/prelude'
 import { isResult } from '@utils/is-result'
+import { isError } from '@utils/is-error'
 import { FunctionKeys, KeysByType } from 'hotypes'
 import { createRequest } from '@utils/create-request'
 import { ParameterValidators } from '@src/types'
@@ -59,12 +60,12 @@ export function createClient<API extends object, DataType = unknown>(
           , expectedVersion
           , channel
           )
+
           const response = await send(request)
-          if (isResult(response)) {
-            return response.result
-          } else {
-            throw hydrate(response.error)
-          }
+
+          if (isResult(response)) return response.result
+          if (isError(response)) throw hydrate(response.error)
+          throw new Error('Invalid response')
         })
       }
     , has(target, prop) {
