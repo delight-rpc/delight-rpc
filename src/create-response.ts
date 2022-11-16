@@ -63,7 +63,7 @@ export async function createResponse<API, DataType>(
           )
         }
 
-        const result = await Reflect.apply(fn, api, request.params)
+        const result: DataType = await Reflect.apply(fn, api, request.params)
         return createResult(request.id, result, request.channel)
       } catch (e) {
         assert(isError(e), 'The thrown object must be an Error')
@@ -84,7 +84,7 @@ export async function createResponse<API, DataType>(
             return createErrorForBatchResponse(new MethodNotAvailable('The method is not available.'))
           }
 
-          const result = await Reflect.apply(fn, api, request.params)
+          const result: DataType = await Reflect.apply(fn, api, request.params)
           return createResultForBatchResponse<DataType>(result)
         } catch (e) {
           assert(isError(e), 'The thrown object must be an Error')
