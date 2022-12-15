@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0](https://github.com/delight-rpc/delight-rpc/compare/v4.3.2...v5.0.0) (2022-12-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* - The new protocol version is 3.0
+- The type of `expectedVersion` changed
+
+### Features
+
+* use @delight-rpc/protocol 3.0 ([d46971d](https://github.com/delight-rpc/delight-rpc/commit/d46971d7a9b2786b99667952330563e114adff29))
+
 ### [4.3.2](https://github.com/delight-rpc/delight-rpc/compare/v4.3.1...v4.3.2) (2022-10-31)
 
 ### [4.3.1](https://github.com/delight-rpc/delight-rpc/compare/v4.3.0...v4.3.1) (2022-10-31)
