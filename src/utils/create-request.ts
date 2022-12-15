@@ -5,7 +5,7 @@ export function createRequest<DataType>(
   id: string
 , method: string[]
 , params: DataType[]
-, expectedVersion: `${number}.${number}.${number}` | undefined
+, expectedVersion: string | undefined
 , channel: string | undefined
 ): IRequest<DataType> {
   const request: IRequest<DataType> = {

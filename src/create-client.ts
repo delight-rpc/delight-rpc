@@ -21,7 +21,7 @@ export function createClient<API extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
 , { parameterValidators = {}, expectedVersion, channel }: {
     parameterValidators?: ParameterValidators<API>
-    expectedVersion?: `${number}.${number}.${number}`
+    expectedVersion?: string
     channel?: string
   } = {}
 ): ClientProxy<API> {

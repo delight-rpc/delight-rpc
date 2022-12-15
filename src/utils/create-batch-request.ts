@@ -5,7 +5,7 @@ export function createBatchRequest<DataType>(
   id: string
 , requests: IRequestForBatchRequest<unknown, DataType>[]
 , parallel: boolean
-, expectedVersion: `${number}.${number}.${number}` | undefined
+, expectedVersion: string | undefined
 , channel: string | undefined
 ): IBatchRequest<DataType> {
   const batchRequest: IBatchRequest<DataType> = {

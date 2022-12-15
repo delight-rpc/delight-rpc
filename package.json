@@ -2,7 +2,9 @@
   "name": "delight-rpc",
   "version": "4.3.2",
   "description": "",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "repository": "git@github.com:delight-rpc/delight-rpc.git",
@@ -42,17 +44,17 @@
     "ts-jest": "^29.0.3",
     "tscpaths": "^0.0.9",
     "tslib": "^2.4.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "dependencies": {
     "@blackglory/errors": "^2.3.0",
     "@blackglory/prelude": "^0.1.8",
-    "@delight-rpc/protocol": "^2.2.1",
+    "@delight-rpc/protocol": "^3.0.0",
     "extra-promise": "^4.4.0",
-    "extra-semver": "^0.1.0",
     "hotypes": "^0.5.1",
     "nanoid": "^3.3.4",
     "object-path-operator": "^5.2.1",
-    "return-style": "^1.0.0"
+    "return-style": "^1.0.0",
+    "semver": "^7.3.8"
   }
 }

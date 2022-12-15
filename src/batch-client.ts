@@ -13,7 +13,7 @@ type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, 
 }
 
 export class BatchClient<DataType = unknown> {
-  private expectedVersion?: `${number}.${number}.${number}`
+  private expectedVersion?: string
   private channel?: string
 
   constructor(
@@ -22,7 +22,7 @@ export class BatchClient<DataType = unknown> {
     | IBatchResponse<DataType>
     >
   , { expectedVersion, channel }: {
-      expectedVersion?: `${number}.${number}.${number}` 
+      expectedVersion?: string
       channel?: string
     } = {}
   ) {

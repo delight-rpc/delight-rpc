@@ -5,10 +5,10 @@ import { tryGetProp, tryGetOwnProp } from 'object-path-operator'
 import { assert } from '@blackglory/errors'
 import { ParameterValidators, ImplementationOf } from '@src/types'
 import { IRequest, IResponse, IBatchRequest, IBatchResponse } from '@delight-rpc/protocol'
-import { isAcceptable } from 'extra-semver'
 import { isRequest } from '@utils/is-request'
 import { isBatchRequest } from '@utils/is-batch-request'
 import { map } from 'extra-promise'
+import { satisfies } from 'semver'
 import { createBatchResponse, createErrorForBatchResponse, createResultForBatchResponse } from '@utils/create-batch-response'
 import { InternalError, MethodNotAvailable, VersionMismatch } from '@src/errors'
 
@@ -34,11 +34,11 @@ export async function createResponse<API, DataType>(
   }
 
   if (request.expectedVersion && isntUndefined(version)) {
-    if (!isAcceptable(version, request.expectedVersion)) {
+    if (!satisfies(version, request.expectedVersion)) {
       return createError(
         request.id
       , new VersionMismatch(
-          `The expected version is ^${request.expectedVersion}, but the server version is ${version}.`
+          `The expected version is "${request.expectedVersion}", but the server version is "${version}".`
         )
       , request.channel
       )

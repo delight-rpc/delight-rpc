@@ -8,10 +8,7 @@ export function isRequest<DataType>(val: unknown): val is IRequest<DataType> {
       && (
            isNull(val.expectedVersion) ||
            isUndefined(val.expectedVersion) ||
-           (
-             isString(val.expectedVersion) &&
-             /^\d+\.\d+\.\d+$/.test(val.expectedVersion)
-           )
+           isString(val.expectedVersion)
          )
       && (
            isArray(val.method) &&

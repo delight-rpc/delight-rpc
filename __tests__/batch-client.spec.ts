@@ -38,7 +38,7 @@ describe('BatchClient', () => {
       const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.2'
+        , version: '3.0'
         , id: request.id
         , responses: [
             { result: 'message1' }
@@ -69,7 +69,7 @@ describe('BatchClient', () => {
       expect(send).toBeCalledTimes(1)
       expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
-      , version: '2.2'
+      , version: '3.0'
       , id: expect.any(String)
       , parallel: true
       , requests: [
@@ -90,7 +90,7 @@ describe('BatchClient', () => {
       const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.2'
+        , version: '3.0'
         , id: request.id
         , responses: [
             { error: normalize(new UserError('message')) }
@@ -122,7 +122,7 @@ describe('BatchClient', () => {
       expect(send).toBeCalledTimes(1)
       expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
-      , version: '2.2'
+      , version: '3.0'
       , id: expect.any(String)
       , parallel: true
       , requests: [
@@ -144,7 +144,7 @@ describe('BatchClient', () => {
       const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.2'
+        , version: '3.0'
         , id: request.id
         , responses: [
             { result: 'message1' }
@@ -175,7 +175,7 @@ describe('BatchClient', () => {
       expect(send).toBeCalledTimes(1)
       expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
-      , version: '2.2'
+      , version: '3.0'
       , id: expect.any(String)
       , parallel: false
       , requests: [
@@ -196,7 +196,7 @@ describe('BatchClient', () => {
       const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
-        , version: '2.2'
+        , version: '3.0'
         , id: request.id
         , responses: [
             { error: normalize(new UserError('message')) }
@@ -228,7 +228,7 @@ describe('BatchClient', () => {
       expect(send).toBeCalledTimes(1)
       expect(send).toBeCalledWith({
         protocol: 'delight-rpc'
-      , version: '2.2'
+      , version: '3.0'
       , id: expect.any(String)
       , parallel: false
       , requests: [
@@ -251,7 +251,7 @@ describe('BatchClient', () => {
         async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
           return {
             protocol: 'delight-rpc'
-          , version: '2.2'
+          , version: '3.0'
           , id: request.id
           , responses: [
               { result: request.requests[0].params[0] }
@@ -260,7 +260,7 @@ describe('BatchClient', () => {
         }
 
         const client = new BatchClient(send, {
-          expectedVersion: '1.0.0'
+          expectedVersion: '^1.0.0'
         })
         const results = await client.series({
           method: ['echo']
@@ -280,7 +280,7 @@ describe('BatchClient', () => {
         async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
           return {
             protocol: 'delight-rpc'
-          , version: '2.2'
+          , version: '3.0'
           , id: request.id
           , responses: [
               { error: normalize(new VersionMismatch(errorMessage)) }
@@ -289,7 +289,7 @@ describe('BatchClient', () => {
         }
 
         const client = new BatchClient(send, {
-          expectedVersion: '1.0.0'
+          expectedVersion: '^1.0.0'
         })
         const results = await client.series({
           method: ['echo']
@@ -309,7 +309,7 @@ describe('BatchClient', () => {
     const send = jest.fn(async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
       return {
         protocol: 'delight-rpc'
-      , version: '2.2'
+      , version: '3.0'
       , id: request.id
       , responses: [
           { result: 'message1' }
@@ -335,7 +335,7 @@ describe('BatchClient', () => {
     expect(send).toBeCalledTimes(1)
     expect(send).toBeCalledWith({
       protocol: 'delight-rpc'
-    , version: '2.2'
+    , version: '3.0'
     , id: expect.any(String)
     , parallel: true
     , requests: [

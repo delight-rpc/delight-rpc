@@ -89,7 +89,7 @@ function createClient<API extends object, DataType = unknown>(
   send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
 , options?: {
     parameterValidators?: ParameterValidators<API>
-    expectedVersion?: `${number}.${number}.${number}`
+    expectedVersion?: string
     channel?: string
   }
 ): ClientProxy<API>
@@ -114,7 +114,7 @@ class BatchClient<DataType = unknown> {
     | IBatchResponse<DataType>
     >
   , options?: {
-      expectedVersion?: `${number}.${number}.${number}` 
+      expectedVersion?: string
       channel?: string
     }
   )

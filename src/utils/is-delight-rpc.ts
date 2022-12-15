@@ -10,6 +10,6 @@ export function isDelightRPC(val: unknown): val is IDelightRPC {
          )
       && (
            isString(val.version) &&
-           /^2\.\d+$/.test(val.version)
+           /^3\.\d+$/.test(val.version)
          )
 }
