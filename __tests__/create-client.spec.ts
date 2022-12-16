@@ -6,109 +6,99 @@ import { normalize, CustomError } from '@blackglory/errors'
 import '@blackglory/jest-matchers'
 
 describe('createClient', () => {
-  describe('then method', () => {
-    it('return undefined', () => {
-      const send = jest.fn()
-      const client = createClient(send)
+  test('then method', () => {
+    const send = jest.fn()
+    const client = createClient(send)
 
-      // @ts-ignore
-      const value = client.then
-      const exists = 'then' in client
+    const exists = 'then' in client
+    // @ts-ignore
+    const value = client.then
 
-      expect(value).toBe(undefined)
-      expect(exists).toBe(false)
-    })
+    expect(exists).toBe(false)
+    expect(value).toBe(undefined)
   })
 
-  describe('toJSON method', () => {
-    it('return undefined', () => {
-      const send = jest.fn()
-      const client = createClient(send)
+  test('toJSON method', () => {
+    const send = jest.fn()
+    const client = createClient(send)
 
-      // @ts-ignore
-      const value = client.toJSON
-      const exists = 'toJSON' in client
+    const exists = 'toJSON' in client
+    // @ts-ignore
+    const value = client.toJSON
 
-      expect(value).toBe(undefined)
-      expect(exists).toBe(false)
-    })
+    expect(exists).toBe(false)
+    expect(value).toBe(undefined)
   })
 
-  describe('success', () => {
-    it('return result', async () => {
-      interface IAPI {
-        echo(message: string): string
+  test('success', async () => {
+    interface IAPI {
+      echo(message: string): string
+    }
+    async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+      return {
+        protocol: 'delight-rpc'
+      , version: '3.0'
+      , id: request.id
+      , result: request.params[0]
       }
-      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
-        return {
-          protocol: 'delight-rpc'
-        , version: '3.0'
-        , id: request.id
-        , result: request.params[0]
-        }
-      }
-      const message = 'message'
+    }
+    const message = 'message'
 
-      const client = createClient<IAPI>(send)
-      const result = client.echo(message)
-      const proResult = await result
+    const client = createClient<IAPI>(send)
+    const result = client.echo(message)
+    const proResult = await result
 
-      expect(result).toBePromise()
-      expect(proResult).toBe(message)
-    })
+    expect(result).toBePromise()
+    expect(proResult).toBe(message)
   })
 
-  describe('error', () => {
-    it('throw Error', async () => {
-      class UserError extends CustomError {}
-      interface IAPI {
-        echo(message: string): string
+  test('error', async () => {
+    class UserError extends CustomError {}
+    interface IAPI {
+      echo(message: string): string
+    }
+    const errorMessage = 'error message'
+    async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+      return {
+        protocol: 'delight-rpc'
+      , version: '3.0'
+      , id: request.id
+      , error: normalize(new UserError(errorMessage))
       }
-      const errorMessage = 'error message'
-      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
-        return {
-          protocol: 'delight-rpc'
-        , version: '3.0'
-        , id: request.id
-        , error: normalize(new UserError(errorMessage))
-        }
-      }
-      const message = 'message'
+    }
+    const message = 'message'
 
-      const client = createClient<IAPI>(send)
-      const result = client.echo(message)
-      const proResult = await getErrorPromise(result)
+    const client = createClient<IAPI>(send)
+    const result = client.echo(message)
+    const proResult = await getErrorPromise(result)
 
-      expect(result).toBePromise()
-      expect(proResult).toBeInstanceOf(Error)
-      expect(proResult).toBeInstanceOf(UserError)
-    })
+    expect(result).toBePromise()
+    expect(proResult).toBeInstanceOf(Error)
+    expect(proResult).toBeInstanceOf(UserError)
   })
 
-  describe('method not available', () => {
-    it('throw MethodNotAvailable', async () => {
-      interface IAPI {
-        echo(message: string): string
+  test('method not available', async () => {
+    interface IAPI {
+      echo(message: string): string
+    }
+    const errorMessage = 'error message'
+    async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
+      return {
+        protocol: 'delight-rpc'
+      , version: '3.0'
+      , id: request.id
+      , error: normalize(new MethodNotAvailable(errorMessage))
       }
-      const errorMessage = 'error message'
-      async function send(request: IRequest<unknown>): Promise<IResponse<unknown>> {
-        return {
-          protocol: 'delight-rpc'
-        , version: '3.0'
-        , id: request.id
-        , error: normalize(new MethodNotAvailable(errorMessage))
-        }
-      }
-      const message = 'message'
+    }
+    const message = 'message'
 
-      const client = createClient<IAPI>(send)
-      const result = client.echo(message)
-      const proResult = await getErrorPromise(result)
+    const client = createClient<IAPI>(send)
+    const result = client.echo(message)
+    const proResult = await getErrorPromise(result)
 
-      expect(result).toBePromise()
-      expect(proResult).toBeInstanceOf(MethodNotAvailable)
-      expect(proResult!.message).toBe(errorMessage)
-    })
+    expect(result).toBePromise()
+    expect(proResult).toBeInstanceOf(MethodNotAvailable)
+    expect(proResult!.message).toBe(errorMessage)
   })
 
   test('with namespace', () => {
@@ -196,7 +186,7 @@ describe('createClient', () => {
   })
 
   describe('with validators', () => {
-    it('pass', async () => {
+    test('pass', async () => {
       interface IAPI {
         namespace: {
           echo(message: string): string
@@ -233,7 +223,7 @@ describe('createClient', () => {
       })
     })
 
-    it('not pass', () => {
+    test('not pass', () => {
       interface IAPI {
         namespace: {
           echo(message: string): string

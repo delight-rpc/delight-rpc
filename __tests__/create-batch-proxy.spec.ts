@@ -2,20 +2,7 @@ import { createBatchProxy } from '@src/create-batch-proxy'
 import { getError } from 'return-style'
 
 describe('createBatchProxy', () => {
-  describe('then method', () => {
-    it('return undefined', () => {
-      interface IAPI {
-        echo(message: string): string
-      }
-
-      const proxy = createBatchProxy<IAPI>()
-
-      // @ts-ignore
-      expect(proxy.then).toBeUndefined()
-    })
-  })
-
-  it('return IRequestForBatchRequest', async () => {
+  it('returns IRequestForBatchRequest', async () => {
     interface IAPI {
       echo(message: string): string
     }
@@ -48,7 +35,7 @@ describe('createBatchProxy', () => {
   })
 
   describe('with validators', () => {
-    it('pass', () => {
+    test('pass', () => {
       interface IAPI {
         namespace: {
           echo(message: string): string
@@ -74,7 +61,7 @@ describe('createBatchProxy', () => {
       })
     })
 
-    it('not pass', () => {
+    test('not pass', () => {
       interface IAPI {
         namespace: {
           echo(message: string): string

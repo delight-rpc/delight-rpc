@@ -5,32 +5,28 @@ import { Result } from 'return-style'
 import { normalize, CustomError } from '@blackglory/errors'
 
 describe('BatchClient', () => {
-  describe('then method', () => {
-    it('return undefined', () => {
-      const send = jest.fn()
-      const client = new BatchClient(send)
+  test('then method', () => {
+    const send = jest.fn()
+    const client = new BatchClient(send)
 
-      // @ts-ignore
-      const value = client.then
-      const exists = 'then' in client
+    const exists = 'then' in client
+    // @ts-ignore
+    const value = client.then
 
-      expect(value).toBe(undefined)
-      expect(exists).toBe(false)
-    })
+    expect(exists).toBe(false)
+    expect(value).toBe(undefined)
   })
 
-  describe('toJSON method', () => {
-    it('return undefined', () => {
-      const send = jest.fn()
-      const client = new BatchClient(send)
+  test('toJSON method', () => {
+    const send = jest.fn()
+    const client = new BatchClient(send)
 
-      // @ts-ignore
-      const value = client.toJSON
-      const exists = 'toJSON' in client
+    const exists = 'toJSON' in client
+    // @ts-ignore
+    const value = client.toJSON
 
-      expect(value).toBe(undefined)
-      expect(exists).toBe(false)
-    })
+    expect(exists).toBe(false)
+    expect(value).toBe(undefined)
   })
 
   describe('parallel', () => {
@@ -246,62 +242,58 @@ describe('BatchClient', () => {
   })
 
   describe('with expectedVersion', () => {
-    describe('match', () => {
-      it('return result', async () => {
-        async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
-          return {
-            protocol: 'delight-rpc'
-          , version: '3.0'
-          , id: request.id
-          , responses: [
-              { result: request.requests[0].params[0] }
-            ]
-          }
+    test('match', async () => {
+      async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '3.0'
+        , id: request.id
+        , responses: [
+            { result: request.requests[0].params[0] }
+          ]
         }
+      }
 
-        const client = new BatchClient(send, {
-          expectedVersion: '^1.0.0'
-        })
-        const results = await client.series({
-          method: ['echo']
-        , params: ['message']
-        })
-
-        expect(results).toHaveLength(1)
-        expect(results[0]).toBeInstanceOf(Result)
-        expect(results[0].isOk()).toBe(true)
-        expect(results[0].unwrap()).toBe('message')
+      const client = new BatchClient(send, {
+        expectedVersion: '^1.0.0'
       })
+      const results = await client.series({
+        method: ['echo']
+      , params: ['message']
+      })
+
+      expect(results).toHaveLength(1)
+      expect(results[0]).toBeInstanceOf(Result)
+      expect(results[0].isOk()).toBe(true)
+      expect(results[0].unwrap()).toBe('message')
     })
 
-    describe('mismatch', () => {
-      it('throw VersionMismatch', async () => {
-        const errorMessage = 'error message'
-        async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
-          return {
-            protocol: 'delight-rpc'
-          , version: '3.0'
-          , id: request.id
-          , responses: [
-              { error: normalize(new VersionMismatch(errorMessage)) }
-            ]
-          }
+    test('mismatch', async () => {
+      const errorMessage = 'error message'
+      async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
+        return {
+          protocol: 'delight-rpc'
+        , version: '3.0'
+        , id: request.id
+        , responses: [
+            { error: normalize(new VersionMismatch(errorMessage)) }
+          ]
         }
+      }
 
-        const client = new BatchClient(send, {
-          expectedVersion: '^1.0.0'
-        })
-        const results = await client.series({
-          method: ['echo']
-        , params: ['message']
-        })
-
-        expect(results).toHaveLength(1)
-        expect(results[0]).toBeInstanceOf(Result)
-        expect(results[0].isErr()).toBe(true)
-        expect(results[0].unwrapErr()).toBeInstanceOf(VersionMismatch)
-        expect(results[0].unwrapErr().message).toBe(errorMessage)
+      const client = new BatchClient(send, {
+        expectedVersion: '^1.0.0'
       })
+      const results = await client.series({
+        method: ['echo']
+      , params: ['message']
+      })
+
+      expect(results).toHaveLength(1)
+      expect(results[0]).toBeInstanceOf(Result)
+      expect(results[0].isErr()).toBe(true)
+      expect(results[0].unwrapErr()).toBeInstanceOf(VersionMismatch)
+      expect(results[0].unwrapErr().message).toBe(errorMessage)
     })
   })
 
