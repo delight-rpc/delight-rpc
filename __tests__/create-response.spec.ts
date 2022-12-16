@@ -954,14 +954,288 @@ describe('createResponse', () => {
     })
 
     describe('with channel', () => {
-      test('same channel', async () => {
-        const method1 = jest.fn(async () => {
-          throw new Error('message')
+      test('no channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request)
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+      })
+
+      describe('channel is AnyChannel', () => {
+        test('request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: AnyChannel
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , responses: [
+              {
+                result: 'message'
+              }
+            ]
+          , channel: 'channel'
+          })
         })
-        const method2 = jest.fn(async (message: string) => message)
+
+        test('no request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          }
+
+          const result = createResponse(api, request, {
+            channel: AnyChannel
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , responses: [
+              {
+                result: 'message'
+              }
+            ]
+          })
+        })
+      })
+
+      describe('channel is a string', () => {
+        test('same request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: 'channel'
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , responses: [
+              {
+                result: 'message'
+              }
+            ]
+          , channel: 'channel'
+          })
+        })
+
+        test('diff request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: 'diff-channel'
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+        })
+
+        test('no request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          }
+
+          const result = createResponse(api, request, {
+            channel: 'channel'
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+        })
+      })
+
+      describe('channel is a regexp', () => {
+        test('request.channel is matched', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: /^channel$/
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toStrictEqual({
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , responses: [
+              {
+                result: 'message'
+              }
+            ]
+          , channel: 'channel'
+          })
+        })
+
+        test('request.channel is not matched', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          , channel: 'channel'
+          }
+
+          const result = createResponse(api, request, {
+            channel: /^diff-channel$/
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+        })
+
+        test('no request.channel', async () => {
+          const method = jest.fn(async (message: string) => message)
+          const api = { echo: method }
+          const request: IBatchRequest<unknown> = {
+            protocol: 'delight-rpc'
+          , version: '3.0'
+          , id: 'id'
+          , parallel: false
+          , requests: [
+              {
+                method: ['echo']
+              , params: ['message']
+              }
+            ]
+          }
+
+          const result = createResponse(api, request, {
+            channel: /^channel$/
+          })
+          const proResult = await result
+
+          expect(result).toBePromise()
+          expect(proResult).toBeNull()
+        })
+      })
+    })
+
+    describe('with ownPropsOnly', () => {
+      it('is an own prop', async () => {
+        const method = jest.fn(async (message: string) => message)
         const api = {
-          throws: method1
-        , echo: method2
+          namespace: {
+            echo: method
+          }
         }
         const request: IBatchRequest<unknown> = {
           protocol: 'delight-rpc'
@@ -970,19 +1244,52 @@ describe('createResponse', () => {
         , parallel: false
         , requests: [
             {
-              method: ['throws']
-            , params: []
-            }
-          , {
-              method: ['echo']
+              method: ['namespace', 'echo']
             , params: ['message']
             }
           ]
-        , channel: 'channel'
         }
 
         const result = createResponse(api, request, {
-          channel: 'channel'
+          ownPropsOnly: true
+        })
+        const proResult = await result
+
+        expect(result).toBePromise()
+        expect(proResult).toStrictEqual({
+          protocol: 'delight-rpc'
+        , version: '3.0'
+        , id: 'id'
+        , responses: [
+            {
+              result: 'message'
+            }
+          ]
+        })
+      })
+
+      it('isnt an own prop', async () => {
+        const method = jest.fn(async (message: string) => message)
+        const api = Object.create({
+          namespace: {
+            echo: method
+          }
+        })
+        const request: IBatchRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '3.0'
+        , id: 'id'
+        , parallel: false
+        , requests: [
+            {
+              method: ['namespace', 'echo']
+            , params: ['message']
+            }
+          ]
+        }
+
+        const result = createResponse(api, request, {
+          ownPropsOnly: true
         })
         const proResult = await result
 
@@ -994,54 +1301,14 @@ describe('createResponse', () => {
         , responses: [
             {
               error: {
-                name: 'Error'
-              , message: 'message'
+                name: 'MethodNotAvailable'
               , stack: expect.any(String)
-              , ancestors: []
+              , ancestors: ['CustomError', 'Error']
+              , message: 'The method is not available.'
               }
             }
-          , {
-              result: 'message'
-            }
           ]
-        , channel: 'channel'
         })
-      })
-
-      test('diff channel', async () => {
-        const method1 = jest.fn(async () => {
-          throw new Error('message')
-        })
-        const method2 = jest.fn(async (message: string) => message)
-        const api = {
-          throws: method1
-        , echo: method2
-        }
-        const request: IBatchRequest<unknown> = {
-          protocol: 'delight-rpc'
-        , version: '3.0'
-        , id: 'id'
-        , parallel: false
-        , requests: [
-            {
-              method: ['throws']
-            , params: []
-            }
-          , {
-              method: ['echo']
-            , params: ['message']
-            }
-          ]
-        , channel: 'channel'
-        }
-
-        const result = createResponse(api, request, {
-          channel: 'diff-channel'
-        })
-        const proResult = await result
-
-        expect(result).toBePromise()
-        expect(proResult).toBeNull()
       })
     })
   })
