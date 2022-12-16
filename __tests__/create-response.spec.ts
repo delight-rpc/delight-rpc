@@ -2,7 +2,6 @@ import { createResponse, AnyChannel } from '@src/create-response'
 import { IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@delight-rpc/protocol'
 import { delay } from 'extra-promise'
 import { isBatchResponse } from '@utils/is-batch-response'
-import '@blackglory/jest-matchers'
 
 const TIME_ERROR = 1
 
@@ -19,11 +18,9 @@ describe('createResponse', () => {
       , params: ['message']
       }
 
-      const result = createResponse(api, request)
-      const proResult = await result
+      const result = await createResponse(api, request)
 
-      expect(result).toBePromise()
-      expect(proResult).toStrictEqual({
+      expect(result).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '3.0'
       , id: 'id'
@@ -41,11 +38,9 @@ describe('createResponse', () => {
       , params: ['message']
       }
 
-      const result = createResponse(api, request)
-      const proResult = await result
+      const result = await createResponse(api, request)
 
-      expect(result).toBePromise()
-      expect(proResult).toStrictEqual({
+      expect(result).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '3.0'
       , id: 'id'
@@ -71,11 +66,9 @@ describe('createResponse', () => {
       , params: []
       }
 
-      const result = createResponse(api, request)
-      const proResult = await result
+      const result = await createResponse(api, request)
 
-      expect(result).toBePromise()
-      expect(proResult).toStrictEqual({
+      expect(result).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '3.0'
       , id: 'id'
@@ -101,12 +94,10 @@ describe('createResponse', () => {
       , params: ['message']
       }
 
-      const result = createResponse(api, request)
-      const proResult = await result
+      const result = await createResponse(api, request)
 
-      expect(result).toBePromise()
       expect(method).toBeCalledTimes(1)
-      expect(proResult).toStrictEqual({
+      expect(result).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '3.0'
       , id: 'id'
@@ -127,13 +118,11 @@ describe('createResponse', () => {
         , params: ['message']
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           version: '1.0.0'
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -153,13 +142,11 @@ describe('createResponse', () => {
         , params: ['message']
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           version: '1.0.0'
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toMatchObject({
+        expect(result).toMatchObject({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -195,14 +182,12 @@ describe('createResponse', () => {
           }
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           parameterValidators: validators
         })
-        const proResult = await result
 
         expect(validator).toBeCalledWith('message')
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -234,14 +219,12 @@ describe('createResponse', () => {
           }
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           parameterValidators: validators
         })
-        const proResult = await result
 
         expect(validator).toBeCalledWith('message')
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -257,22 +240,20 @@ describe('createResponse', () => {
 
     describe('with channel', () => {
       test('no channel', async () => {
-          const method = jest.fn(async (message: string) => message)
-          const api = { echo: method }
-          const request: IRequest<unknown> = {
-            protocol: 'delight-rpc'
-          , version: '3.0'
-          , id: 'id'
-          , method: ['echo']
-          , params: ['message']
-          , channel: 'channel'
-          }
+        const method = jest.fn(async (message: string) => message)
+        const api = { echo: method }
+        const request: IRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '3.0'
+        , id: 'id'
+        , method: ['echo']
+        , params: ['message']
+        , channel: 'channel'
+        }
 
-          const result = createResponse(api, request)
-          const proResult = await result
+        const result = await createResponse(api, request)
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+        expect(result).toBeNull()
       })
 
       describe('channel is AnyChannel', () => {
@@ -288,13 +269,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: AnyChannel
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -314,13 +293,11 @@ describe('createResponse', () => {
           , params: ['message']
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: AnyChannel
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -342,13 +319,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: 'channel'
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -369,13 +344,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: 'diff-channel'
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
 
         test('no request.channel', async () => {
@@ -389,13 +362,11 @@ describe('createResponse', () => {
           , params: ['message']
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: 'channel'
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
       })
 
@@ -412,13 +383,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: /^channel$/
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -439,13 +408,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: /^diff-channel$/
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
 
         test('no request.channel', async () => {
@@ -459,13 +426,11 @@ describe('createResponse', () => {
           , params: ['message']
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: /^channel$/
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
       })
     })
@@ -486,13 +451,11 @@ describe('createResponse', () => {
         , params: ['message']
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
            ownPropsOnly: true
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -515,13 +478,11 @@ describe('createResponse', () => {
         , params: ['message']
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
            ownPropsOnly: true
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -563,11 +524,9 @@ describe('createResponse', () => {
         ]
       }
 
-      const result = createResponse(api, request)
-      const proResult = await result
+      const result = await createResponse(api, request)
 
-      expect(result).toBePromise()
-      expect(proResult).toStrictEqual({
+      expect(result).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '3.0'
       , id: 'id'
@@ -602,11 +561,9 @@ describe('createResponse', () => {
         ]
       }
 
-      const result = createResponse(api, request)
-      const proResult = await result
+      const result = await createResponse(api, request)
 
-      expect(result).toBePromise()
-      expect(proResult).toStrictEqual({
+      expect(result).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '3.0'
       , id: 'id'
@@ -652,13 +609,11 @@ describe('createResponse', () => {
           ]
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           version: '1.0.0'
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -669,8 +624,8 @@ describe('createResponse', () => {
         })
         expect(method1).toBeCalled()
         expect(method2).toBeCalled()
-        expect(isBatchResponse(proResult)).toBe(true)
-        const response = proResult as IBatchResponse<unknown>
+        expect(isBatchResponse(result)).toBe(true)
+        const response = result as IBatchResponse<unknown>
         const result1 = response.responses[0] as IResultForBatchResponse<number>
         const result2 = response.responses[1] as IResultForBatchResponse<number>
         expect(result1.result).toEqual(expect.any(Number))
@@ -706,13 +661,11 @@ describe('createResponse', () => {
           ]
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           version: '1.0.0'
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -723,8 +676,8 @@ describe('createResponse', () => {
         })
         expect(method1).toBeCalled()
         expect(method2).toBeCalled()
-        expect(isBatchResponse(proResult)).toBe(true)
-        const response = proResult as IBatchResponse<unknown>
+        expect(isBatchResponse(result)).toBe(true)
+        const response = result as IBatchResponse<unknown>
         const result1 = response.responses[0] as IResultForBatchResponse<number>
         const result2 = response.responses[1] as IResultForBatchResponse<number>
         expect(result1.result).toEqual(expect.any(Number))
@@ -751,12 +704,10 @@ describe('createResponse', () => {
         ]
       }
 
-      const result = createResponse(api, request)
-      const proResult = await result
+      const result = await createResponse(api, request)
 
-      expect(result).toBePromise()
       expect(method).toBeCalledTimes(1)
-      expect(proResult).toStrictEqual({
+      expect(result).toStrictEqual({
         protocol: 'delight-rpc'
       , version: '3.0'
       , id: 'id'
@@ -784,13 +735,11 @@ describe('createResponse', () => {
           ]
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           parameterValidators: '1.0.0'
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -817,13 +766,11 @@ describe('createResponse', () => {
           ]
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           version: '1.0.0'
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -864,14 +811,12 @@ describe('createResponse', () => {
           }
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           parameterValidators: validators
         })
-        const proResult = await result
 
         expect(validator).toBeCalledWith('message')
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -910,14 +855,12 @@ describe('createResponse', () => {
           }
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           parameterValidators: validators
         })
-        const proResult = await result
 
         expect(validator).toBeCalledWith('message')
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -953,11 +896,9 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request)
-          const proResult = await result
+          const result = await createResponse(api, request)
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
       })
 
       describe('channel is AnyChannel', () => {
@@ -978,13 +919,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: AnyChannel
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -1013,13 +952,11 @@ describe('createResponse', () => {
             ]
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: AnyChannel
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -1050,13 +987,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: 'channel'
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -1086,13 +1021,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: 'diff-channel'
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
 
         test('no request.channel', async () => {
@@ -1111,13 +1044,11 @@ describe('createResponse', () => {
             ]
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: 'channel'
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
       })
 
@@ -1139,13 +1070,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: /^channel$/
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toStrictEqual({
+          expect(result).toStrictEqual({
             protocol: 'delight-rpc'
           , version: '3.0'
           , id: 'id'
@@ -1175,13 +1104,11 @@ describe('createResponse', () => {
           , channel: 'channel'
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: /^diff-channel$/
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
 
         test('no request.channel', async () => {
@@ -1200,13 +1127,11 @@ describe('createResponse', () => {
             ]
           }
 
-          const result = createResponse(api, request, {
+          const result = await createResponse(api, request, {
             channel: /^channel$/
           })
-          const proResult = await result
 
-          expect(result).toBePromise()
-          expect(proResult).toBeNull()
+          expect(result).toBeNull()
         })
       })
     })
@@ -1232,13 +1157,11 @@ describe('createResponse', () => {
           ]
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           ownPropsOnly: true
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'
@@ -1270,13 +1193,11 @@ describe('createResponse', () => {
           ]
         }
 
-        const result = createResponse(api, request, {
+        const result = await createResponse(api, request, {
           ownPropsOnly: true
         })
-        const proResult = await result
 
-        expect(result).toBePromise()
-        expect(proResult).toStrictEqual({
+        expect(result).toStrictEqual({
           protocol: 'delight-rpc'
         , version: '3.0'
         , id: 'id'

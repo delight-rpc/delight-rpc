@@ -3,7 +3,6 @@ import { getErrorPromise, getError } from 'return-style'
 import { VersionMismatch, MethodNotAvailable } from '@src/errors'
 import { IRequest, IResponse } from '@delight-rpc/protocol'
 import { normalize, CustomError } from '@blackglory/errors'
-import '@blackglory/jest-matchers'
 
 describe('createClient', () => {
   test('then method', () => {
@@ -45,11 +44,9 @@ describe('createClient', () => {
     const message = 'message'
 
     const client = createClient<IAPI>(send)
-    const result = client.echo(message)
-    const proResult = await result
+    const result = await client.echo(message)
 
-    expect(result).toBePromise()
-    expect(proResult).toBe(message)
+    expect(result).toBe(message)
   })
 
   test('error', async () => {
@@ -69,12 +66,10 @@ describe('createClient', () => {
     const message = 'message'
 
     const client = createClient<IAPI>(send)
-    const result = client.echo(message)
-    const proResult = await getErrorPromise(result)
+    const err = await getErrorPromise(client.echo(message))
 
-    expect(result).toBePromise()
-    expect(proResult).toBeInstanceOf(Error)
-    expect(proResult).toBeInstanceOf(UserError)
+    expect(err).toBeInstanceOf(Error)
+    expect(err).toBeInstanceOf(UserError)
   })
 
   test('method not available', async () => {
@@ -93,12 +88,10 @@ describe('createClient', () => {
     const message = 'message'
 
     const client = createClient<IAPI>(send)
-    const result = client.echo(message)
-    const proResult = await getErrorPromise(result)
+    const result = await getErrorPromise(client.echo(message))
 
-    expect(result).toBePromise()
-    expect(proResult).toBeInstanceOf(MethodNotAvailable)
-    expect(proResult!.message).toBe(errorMessage)
+    expect(result).toBeInstanceOf(MethodNotAvailable)
+    expect(result!.message).toBe(errorMessage)
   })
 
   test('with namespace', () => {
@@ -148,11 +141,9 @@ describe('createClient', () => {
         const client = createClient<IAPI>(send, {
           expectedVersion: '^1.0.0'
         })
-        const result = client.echo(message)
-        const proResult = await result
+        const result = await client.echo(message)
 
-        expect(result).toBePromise()
-        expect(proResult).toBe(message)
+        expect(result).toBe(message)
       })
     })
 
@@ -175,12 +166,10 @@ describe('createClient', () => {
         const client = createClient<IAPI>(send, {
           expectedVersion: '^1.0.0'
         })
-        const result = client.echo(message)
-        const proResult = await getErrorPromise(result)
+        const result = await getErrorPromise(client.echo(message))
 
-        expect(result).toBePromise()
-        expect(proResult).toBeInstanceOf(VersionMismatch)
-        expect(proResult!.message).toBe(errorMessage)
+        expect(result).toBeInstanceOf(VersionMismatch)
+        expect(result!.message).toBe(errorMessage)
       })
     })
   })
