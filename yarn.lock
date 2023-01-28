@@ -2411,7 +2411,7 @@ extra-promise@^4.4.0:
     lodash "^4.17.21"
     return-style "^1.0.0"
 
-"extra-promise@^4.4.0 || ^5.0.0", "extra-promise@^4.4.0 || ^5.0.1", extra-promise@^5.0.0:
+"extra-promise@^4.4.0 || ^5.0.1", extra-promise@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/extra-promise/-/extra-promise-5.0.1.tgz#ca9beb770f30c2de758ff3ae47b56c21ce82ffd9"
   integrity sha512-TnK8FcR185qjG+IMbrMJ2PD3N0dbLWZhEOzLB4ihGSF0+u+lmWJGaOpwNSYdyrTD93ZI9YoiA2R0w+xmC80YMg==
