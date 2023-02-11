@@ -1,10 +1,9 @@
-import { isntString } from '@blackglory/prelude'
+import { pass, isntString } from '@blackglory/prelude'
 import { FunctionKeys, KeysByType } from 'hotypes'
 import { ParameterValidators} from '@src/types'
 import { IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { tryGetProp } from 'object-path-operator'
 import { createRequestForBatchRequest } from '@utils/create-batch-request'
-import { CallableObject } from '@utils/callable-object'
 
 export type BatchClientProxy<Obj, DataType> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
@@ -32,7 +31,7 @@ export function createBatchProxy<API extends object, DataType = unknown>(
   })
 
   function createCallableNestedProxy(path: [string, ...string[]]): BatchClientProxy<API, DataType> {
-    return new Proxy(new CallableObject(), {
+    return new Proxy(pass, {
       get(target, prop) {
         if (isntString(prop)) return
         if (['then'].includes(prop)) return

@@ -1,6 +1,6 @@
 import { IRequest, IResponse } from '@delight-rpc/protocol'
 import { hydrate } from '@blackglory/errors'
-import { go, isntString } from '@blackglory/prelude'
+import { go, pass, isntString } from '@blackglory/prelude'
 import { isResult } from '@utils/is-result'
 import { isError } from '@utils/is-error'
 import { FunctionKeys, KeysByType } from 'hotypes'
@@ -8,7 +8,6 @@ import { createRequest } from '@utils/create-request'
 import { ParameterValidators } from '@src/types'
 import { tryGetProp } from 'object-path-operator'
 import { createUUID } from '@utils/create-uuid'
-import { CallableObject } from '@utils/callable-object'
 
 export type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
@@ -39,7 +38,7 @@ export function createClient<API extends object, DataType = unknown>(
   })
 
   function createCallableNestedProxy(path: [string, ...string[]]): ClientProxy<API> {
-    return new Proxy(new CallableObject(), {
+    return new Proxy(pass, {
       get(target, prop) {
         if (isntString(prop)) return
         if (['then'].includes(prop)) return
