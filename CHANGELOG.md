@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/delight-rpc/delight-rpc/compare/v5.0.4...v5.1.0) (2023-02-23)
+
+
+### Features
+
+* add `matchChannel` ([0abe8e5](https://github.com/delight-rpc/delight-rpc/commit/0abe8e5ec4fd5c5ab3a9a7c59c7dc3e7e7b38251))
+
 ### [5.0.4](https://github.com/delight-rpc/delight-rpc/compare/v5.0.3...v5.0.4) (2023-02-11)
 
 ### [5.0.3](https://github.com/delight-rpc/delight-rpc/compare/v5.0.2...v5.0.3) (2023-01-28)
