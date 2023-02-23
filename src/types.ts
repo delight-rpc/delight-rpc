@@ -1,6 +1,8 @@
 import { FunctionKeys, KeysByType } from 'hotypes'
 import { Awaitable } from '@blackglory/prelude'
 
+export const AnyChannel = Symbol()
+
 export type ImplementationOf<Obj> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result

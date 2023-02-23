@@ -202,3 +202,19 @@ function isBatchRequest<T>(val: unknown): val is IBatchRequest<T>
 ```ts
 function isBatchResponse<T>(val: unknown): val is IBatchResponse<T> 
 ```
+
+### matchChannel
+```ts
+function matchChannel<DataType>(
+  requestOrResponse:
+  | IRequest<DataType>
+  | IBatchRequest<DataType>
+  | IResponse<DataType>
+  | IBatchResponse<DataType>
+, channel:
+  | undefined
+  | string
+  | RegExp
+  | typeof AnyChannel
+): boolean
+```

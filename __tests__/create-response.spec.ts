@@ -1,4 +1,5 @@
-import { createResponse, AnyChannel } from '@src/create-response'
+import { createResponse } from '@src/create-response'
+import { AnyChannel } from '@src/types'
 import { IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@delight-rpc/protocol'
 import { delay } from 'extra-promise'
 import { isBatchResponse } from '@utils/is-batch-response'

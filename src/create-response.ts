@@ -1,4 +1,4 @@
-import { isntFunction, isUndefined, isntUndefined, isError, isRegExp } from '@blackglory/prelude'
+import { isntFunction, isntUndefined, isError } from '@blackglory/prelude'
 import { createResult } from '@utils/create-result'
 import { createError } from '@utils/create-error'
 import { tryGetProp, tryGetOwnProp } from 'object-path-operator'
@@ -11,8 +11,8 @@ import { map } from 'extra-promise'
 import { satisfies } from 'semver'
 import { createBatchResponse, createErrorForBatchResponse, createResultForBatchResponse } from '@utils/create-batch-response'
 import { InternalError, MethodNotAvailable, VersionMismatch } from '@src/errors'
-
-export const AnyChannel = Symbol()
+import { AnyChannel } from './types'
+import { matchChannel } from '@utils/match-channel'
 
 export async function createResponse<API, DataType>(
   api: ImplementationOf<API>
@@ -24,14 +24,7 @@ export async function createResponse<API, DataType>(
     ownPropsOnly?: boolean
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>> {
-  if (channel !== AnyChannel) {
-    if (isRegExp(channel)) {
-      if (isUndefined(request.channel)) return null
-      if (!channel.test(request.channel)) return null
-    } else {
-      if (channel !== request.channel) return null
-    }
-  }
+  if (!matchChannel(request, channel)) return null
 
   if (request.expectedVersion && isntUndefined(version)) {
     if (!satisfies(version, request.expectedVersion)) {
