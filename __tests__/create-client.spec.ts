@@ -1,12 +1,14 @@
-import { createClient } from '@src/create-client'
+import { createClient } from '@src/create-client.js'
 import { getErrorPromise, getError } from 'return-style'
-import { VersionMismatch, MethodNotAvailable } from '@src/errors'
+import { VersionMismatch, MethodNotAvailable } from '@src/errors.js'
 import { IRequest, IResponse } from '@delight-rpc/protocol'
 import { normalize, CustomError } from '@blackglory/errors'
+import { jest } from '@jest/globals'
 
 describe('createClient', () => {
   test('then method', () => {
     const send = jest.fn()
+    // @ts-ignore
     const client = createClient(send)
 
     const exists = 'then' in client
@@ -19,6 +21,7 @@ describe('createClient', () => {
 
   test('toJSON method', () => {
     const send = jest.fn()
+    // @ts-ignore
     const client = createClient(send)
 
     const exists = 'toJSON' in client

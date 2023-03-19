@@ -1,8 +1,9 @@
-import { createResponse } from '@src/create-response'
-import { AnyChannel } from '@src/types'
+import { createResponse } from '@src/create-response.js'
+import { AnyChannel } from '@src/types.js'
 import { IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@delight-rpc/protocol'
 import { delay } from 'extra-promise'
-import { isBatchResponse } from '@utils/is-batch-response'
+import { isBatchResponse } from '@utils/is-batch-response.js'
+import { jest } from '@jest/globals'
 
 const TIME_ERROR = 1
 

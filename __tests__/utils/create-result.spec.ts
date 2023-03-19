@@ -1,4 +1,4 @@
-import { createResult } from '@src/utils/create-result'
+import { createResult } from '@src/utils/create-result.js'
 
 describe('createResult', () => {
   describe('channel', () => {

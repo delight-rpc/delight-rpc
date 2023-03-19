@@ -1,6 +1,6 @@
 import { isString } from '@blackglory/prelude'
 import { IResult } from '@delight-rpc/protocol'
-import { isDelightRPC } from './is-delight-rpc'
+import { isDelightRPC } from './is-delight-rpc.js'
 
 export function isResult<DataType>(val: unknown): val is IResult<DataType> {
   return isDelightRPC(val)

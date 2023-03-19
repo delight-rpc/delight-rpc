@@ -1,4 +1,4 @@
-import { createError } from '@src/utils/create-error'
+import { createError } from '@src/utils/create-error.js'
 
 describe('createError', () => {
   describe('channel', () => {

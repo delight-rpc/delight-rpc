@@ -1,4 +1,4 @@
-import { createBatchResponse, createResultForBatchResponse, createErrorForBatchResponse } from '@utils/create-batch-response'
+import { createBatchResponse, createResultForBatchResponse, createErrorForBatchResponse } from '@utils/create-batch-response.js'
 
 describe('createBatchResponse', () => {
   describe('channel', () => {

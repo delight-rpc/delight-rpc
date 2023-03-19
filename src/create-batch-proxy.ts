@@ -1,9 +1,9 @@
 import { pass, isntString } from '@blackglory/prelude'
 import { FunctionKeys, KeysByType } from 'hotypes'
-import { ParameterValidators} from '@src/types'
+import { ParameterValidators} from '@src/types.js'
 import { IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { tryGetProp } from 'object-path-operator'
-import { createRequestForBatchRequest } from '@utils/create-batch-request'
+import { createRequestForBatchRequest } from '@utils/create-batch-request.js'
 
 export type BatchClientProxy<Obj, DataType> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:

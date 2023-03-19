@@ -1,9 +1,9 @@
 import { hydrate } from '@blackglory/errors'
 import { IBatchRequest, IError, IBatchResponse, IRequestForBatchRequest } from '@delight-rpc/protocol'
-import { createBatchRequest } from '@utils/create-batch-request'
+import { createBatchRequest } from '@utils/create-batch-request.js'
 import { Result } from 'return-style'
-import { createUUID } from '@utils/create-uuid'
-import { isError } from '@utils/is-error'
+import { createUUID } from '@utils/create-uuid.js'
+import { isError } from '@utils/is-error.js'
 
 type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, unknown>[]> = {
   [Index in keyof RequestTuple]:

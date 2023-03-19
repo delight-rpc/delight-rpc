@@ -1,12 +1,14 @@
-import { BatchClient } from '@src/batch-client'
-import { VersionMismatch } from '@src/errors'
+import { BatchClient } from '@src/batch-client.js'
+import { VersionMismatch } from '@src/errors.js'
 import { IBatchRequest, IBatchResponse } from '@delight-rpc/protocol'
 import { Result } from 'return-style'
 import { normalize, CustomError } from '@blackglory/errors'
+import { jest } from '@jest/globals'
 
 describe('BatchClient', () => {
   test('then method', () => {
     const send = jest.fn()
+    // @ts-ignore
     const client = new BatchClient(send)
 
     const exists = 'then' in client
@@ -19,6 +21,7 @@ describe('BatchClient', () => {
 
   test('toJSON method', () => {
     const send = jest.fn()
+    // @ts-ignore
     const client = new BatchClient(send)
 
     const exists = 'toJSON' in client

@@ -1,6 +1,6 @@
 import { isUndefined, isRegExp } from '@blackglory/prelude'
 import { IRequest, IBatchRequest, IResponse, IBatchResponse } from '@delight-rpc/protocol'
-import { AnyChannel } from '@src/types'
+import { AnyChannel } from '@src/types.js'
 
 export function matchChannel<DataType>(
   requestOrResponse:

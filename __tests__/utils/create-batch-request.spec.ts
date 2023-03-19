@@ -1,4 +1,4 @@
-import { createBatchRequest, createRequestForBatchRequest } from '@utils/create-batch-request'
+import { createBatchRequest, createRequestForBatchRequest } from '@utils/create-batch-request.js'
 
 describe('createBatchRequest', () => {
   describe('expectedVersion', () => {

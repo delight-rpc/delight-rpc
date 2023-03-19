@@ -1,4 +1,4 @@
-import { createRequest } from '@utils/create-request'
+import { createRequest } from '@utils/create-request.js'
 
 describe('createRequest', () => {
   describe('expectedVersion', () => {

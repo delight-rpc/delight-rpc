@@ -1,5 +1,6 @@
-import { createBatchProxy } from '@src/create-batch-proxy'
+import { createBatchProxy } from '@src/create-batch-proxy.js'
 import { getError } from 'return-style'
+import { jest } from '@jest/globals'
 
 describe('createBatchProxy', () => {
   it('returns IRequestForBatchRequest', async () => {
