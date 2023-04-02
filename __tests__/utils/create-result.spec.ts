@@ -7,7 +7,7 @@ describe('createResult', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , id: 'id'
       , result: 'result'
       })
@@ -18,7 +18,7 @@ describe('createResult', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , id: 'id'
       , result: 'result'
       , channel: 'channel'

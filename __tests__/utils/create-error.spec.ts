@@ -12,7 +12,7 @@ describe('createError', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , id: 'id'
       , error: {
           name: 'UserError'
@@ -33,7 +33,7 @@ describe('createError', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , id: 'id'
       , error: {
           name: 'UserError'

@@ -547,10 +547,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@delight-rpc/protocol@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@delight-rpc/protocol/-/protocol-4.0.0.tgz#184705600fc8ce68807c3a1c06e8bb3a918bf0ee"
-  integrity sha512-A5FisLKLPrMsu+IgApd57fWH96RfZTY9zR6IMItk+hobs9K6FDa1KeaRCny9gbwqq7MZJ34BbXpk1NDYSKEmnw==
+"@delight-rpc/protocol@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@delight-rpc/protocol/-/protocol-4.1.0.tgz#80a0d52b385a1620883541a32d672665e1c40fb5"
+  integrity sha512-BzPqbI63DN8338oGCVp2FDW+LcSCiJbKYCaHgPNFEek97BT0FinuhDOmyFaOowciUBMnS5HYhEVvEizOHwAHyw==
   dependencies:
     "@blackglory/errors" "^3.0.0"
     "@blackglory/prelude" "^0.3.1"

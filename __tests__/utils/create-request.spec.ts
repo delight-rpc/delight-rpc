@@ -13,7 +13,7 @@ describe('createRequest', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , id: 'id'
       , method: ['hello']
       , params: ['world']
@@ -31,7 +31,7 @@ describe('createRequest', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , expectedVersion: '^1.0.0'
       , id: 'id'
       , method: ['hello']
@@ -52,7 +52,7 @@ describe('createRequest', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , id: 'id'
       , method: ['hello']
       , params: ['world']
@@ -70,7 +70,7 @@ describe('createRequest', () => {
 
       expect(result).toStrictEqual({
         protocol: 'delight-rpc'
-      , version: '3.0'
+      , version: '3.1'
       , id: 'id'
       , method: ['hello']
       , params: ['world']
