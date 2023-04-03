@@ -3,11 +3,10 @@ import { VersionMismatch } from '@src/errors.js'
 import { IBatchRequest, IBatchResponse } from '@delight-rpc/protocol'
 import { Result } from 'return-style'
 import { normalize, CustomError } from '@blackglory/errors'
-import { jest } from '@jest/globals'
 
 describe('BatchClient', () => {
   test('then method', () => {
-    const send = jest.fn()
+    const send = vi.fn()
     // @ts-ignore
     const client = new BatchClient(send)
 
@@ -20,7 +19,7 @@ describe('BatchClient', () => {
   })
 
   test('toJSON method', () => {
-    const send = jest.fn()
+    const send = vi.fn()
     // @ts-ignore
     const client = new BatchClient(send)
 
@@ -34,7 +33,7 @@ describe('BatchClient', () => {
 
   describe('parallel', () => {
     test('return IBatchResponse', async () => {
-      const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
+      const send = vi.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
         , version: '3.1'
@@ -86,7 +85,7 @@ describe('BatchClient', () => {
 
     test('return IError', async () => {
       class UserError extends CustomError {}
-      const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
+      const send = vi.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
         , version: '3.1'
@@ -140,7 +139,7 @@ describe('BatchClient', () => {
 
   describe('series', () => {
     test('return IBatchResponse', async () => {
-      const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
+      const send = vi.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
         , version: '3.1'
@@ -192,7 +191,7 @@ describe('BatchClient', () => {
 
     test('return IError', async () => {
       class UserError extends CustomError {}
-      const send = jest.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
+      const send = vi.fn(async function (request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
         return {
           protocol: 'delight-rpc'
         , version: '3.1'
@@ -301,7 +300,7 @@ describe('BatchClient', () => {
   })
 
   test('with channel', async () => {
-    const send = jest.fn(async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
+    const send = vi.fn(async function send(request: IBatchRequest<unknown>): Promise<IBatchResponse<unknown>> {
       return {
         protocol: 'delight-rpc'
       , version: '3.1'

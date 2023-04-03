@@ -17,11 +17,12 @@ import { matchChannel } from '@utils/match-channel.js'
 export async function createResponse<API, DataType>(
   api: ImplementationOf<API>
 , request: IRequest<DataType> | IBatchRequest<DataType>
-, { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
+, { parameterValidators = {}, version, channel, signal, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
     channel?: string | RegExp | typeof AnyChannel
     ownPropsOnly?: boolean
+    signal?: AbortSignal
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>> {
   if (!matchChannel(request, channel)) return null
@@ -56,7 +57,13 @@ export async function createResponse<API, DataType>(
           )
         }
 
-        const result: DataType = await Reflect.apply(fn, api, request.params)
+        signal?.throwIfAborted()
+        const result: DataType = await Reflect.apply(
+          fn
+        , api
+        , [...request.params, signal]
+        )
+
         return createResult(request.id, result, request.channel)
       } catch (e) {
         assert(isError(e), 'The thrown object must be an Error')
@@ -74,10 +81,18 @@ export async function createResponse<API, DataType>(
 
           const fn = (ownPropsOnly ? tryGetOwnProp : tryGetProp)(api, request.method)
           if (isntFunction(fn)) {
-            return createErrorForBatchResponse(new MethodNotAvailable('The method is not available.'))
+            return createErrorForBatchResponse(new 
+              MethodNotAvailable('The method is not available.')
+            )
           }
 
-          const result: DataType = await Reflect.apply(fn, api, request.params)
+          signal?.throwIfAborted()
+          const result: DataType = await Reflect.apply(
+            fn
+          , api
+          , [...request.params, signal]
+          )
+
           return createResultForBatchResponse<DataType>(result)
         } catch (e) {
           assert(isError(e), 'The thrown object must be an Error')

@@ -1,6 +1,5 @@
 import { createBatchProxy } from '@src/create-batch-proxy.js'
 import { getError } from 'return-style'
-import { jest } from '@jest/globals'
 
 describe('createBatchProxy', () => {
   it('returns IRequestForBatchRequest', async () => {
@@ -42,7 +41,7 @@ describe('createBatchProxy', () => {
           echo(message: string): string
         }
       }
-      const validator = jest.fn()
+      const validator = vi.fn()
       const validators = {
         namespace: {
           echo: validator
@@ -68,7 +67,7 @@ describe('createBatchProxy', () => {
           echo(message: string): string
         }
       }
-      const validator = jest.fn(() => {
+      const validator = vi.fn(() => {
         throw new Error('custom error')
       })
       const validators = {

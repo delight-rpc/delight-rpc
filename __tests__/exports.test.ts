@@ -16,6 +16,8 @@ test('exports', () => {
   , 'isBatchRequest'
   , 'isBatchResponse'
   , 'matchChannel'
+  , 'createAbort'
+  , 'isAbort'
   ].sort()
 
   const exports = Object.keys(target).sort()

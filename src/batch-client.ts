@@ -1,3 +1,4 @@
+import { Awaitable } from '@blackglory/prelude'
 import { hydrate } from '@blackglory/errors'
 import { IBatchRequest, IError, IBatchResponse, IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { createBatchRequest } from '@utils/create-batch-request.js'
@@ -5,7 +6,9 @@ import { Result } from 'return-style'
 import { createUUID } from '@utils/create-uuid.js'
 import { isError } from '@utils/is-error.js'
 
-type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, unknown>[]> = {
+type MapRequestsToResults<
+  RequestTuple extends IRequestForBatchRequest<unknown, unknown>[]
+> = {
   [Index in keyof RequestTuple]:
     RequestTuple[Index] extends IRequestForBatchRequest<infer T, unknown>
     ? Result<T, Error>
@@ -17,7 +20,7 @@ export class BatchClient<DataType = unknown> {
   private channel?: string
 
   constructor(
-    private send: (batchRequest: IBatchRequest<DataType>) => PromiseLike<
+    private send: (batchRequest: IBatchRequest<DataType>) => Awaitable<
     | IError
     | IBatchResponse<DataType>
     >
@@ -53,7 +56,9 @@ export class BatchClient<DataType = unknown> {
     , this.expectedVersion
     , this.channel
     )
+
     const response = await this.send(request)
+
     if (isError(response)) {
       throw hydrate(response.error)
     } else {

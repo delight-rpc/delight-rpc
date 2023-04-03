@@ -3,14 +3,14 @@ import { AnyChannel } from '@src/types.js'
 import { IRequest, IBatchRequest, IBatchResponse, IResultForBatchResponse } from '@delight-rpc/protocol'
 import { delay } from 'extra-promise'
 import { isBatchResponse } from '@utils/is-batch-response.js'
-import { jest } from '@jest/globals'
+import { AbortController } from 'extra-abort'
 
 const TIME_ERROR = 1
 
 describe('createResponse', () => {
   describe('IRequest => IResponse', () => {
     test('success', async () => {
-      const method = jest.fn(async (message: string) => message)
+      const method = vi.fn(async (message: string) => message)
       const api = { echo: method }
       const request: IRequest<unknown> = {
         protocol: 'delight-rpc'
@@ -56,7 +56,7 @@ describe('createResponse', () => {
     })
 
     test('method throws error', async () => {
-      const method = jest.fn(async () => {
+      const method = vi.fn(async () => {
         throw new Error('message')
       })
       const api = { throws: method }
@@ -84,7 +84,7 @@ describe('createResponse', () => {
     })
 
     test('with namespace', async () => {
-      const method = jest.fn(async (message: string) => message)
+      const method = vi.fn(async (message: string) => message)
       const api = {
         namespace: { echo: method }
       }
@@ -109,7 +109,7 @@ describe('createResponse', () => {
 
     describe('with expectedVersion', () => {
       test('match', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
@@ -133,7 +133,7 @@ describe('createResponse', () => {
       })
 
       test('mismatch', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
@@ -164,7 +164,7 @@ describe('createResponse', () => {
 
     describe('with validators', () => {
       test('pass', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = {
           namespace: {
             echo: method
@@ -177,7 +177,7 @@ describe('createResponse', () => {
         , method: ['namespace', 'echo']
         , params: ['message']
         }
-        const validator = jest.fn()
+        const validator = vi.fn()
         const validators = {
           namespace: {
             echo: validator
@@ -198,7 +198,7 @@ describe('createResponse', () => {
       })
 
       test('not pass', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = {
           namespace: {
             echo: method
@@ -212,7 +212,7 @@ describe('createResponse', () => {
         , params: ['message']
         }
         const customError = new Error('custom error')
-        const validator = jest.fn(() => {
+        const validator = vi.fn(() => {
           throw customError
         })
         const validators = {
@@ -242,7 +242,7 @@ describe('createResponse', () => {
 
     describe('with channel', () => {
       test('no channel', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = { echo: method }
         const request: IRequest<unknown> = {
           protocol: 'delight-rpc'
@@ -260,7 +260,7 @@ describe('createResponse', () => {
 
       describe('channel is AnyChannel', () => {
         test('request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -285,7 +285,7 @@ describe('createResponse', () => {
         })
 
         test('no request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -310,7 +310,7 @@ describe('createResponse', () => {
 
       describe('channel is a string', () => {
         test('same request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -335,7 +335,7 @@ describe('createResponse', () => {
         })
 
         test('diff request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -354,7 +354,7 @@ describe('createResponse', () => {
         })
 
         test('no request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -374,7 +374,7 @@ describe('createResponse', () => {
 
       describe('channel is a regexp', () => {
         test('request.channel is matched', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -399,7 +399,7 @@ describe('createResponse', () => {
         })
 
         test('request.channel is not matched', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -418,7 +418,7 @@ describe('createResponse', () => {
         })
 
         test('no request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -439,7 +439,7 @@ describe('createResponse', () => {
 
     describe('with ownPropsOnly', () => {
       test('own prop', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = {
           namespace: {
             echo: method
@@ -466,7 +466,7 @@ describe('createResponse', () => {
       })
 
       test('non-own prop', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = Object.create({
           namespace: {
             echo: method
@@ -497,14 +497,70 @@ describe('createResponse', () => {
         })
       })
     })
+
+    describe('with signal', () => {
+      test('signal is aborted', async () => {
+        const method = vi.fn(async (message: string) => message)
+        const api = { echo: method }
+        const request: IRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , method: ['echo']
+        , params: ['message']
+        }
+        const controller = new AbortController()
+        controller.abort()
+
+        const result = await createResponse(api, request, {
+          signal: controller.signal
+        })
+
+        expect(result).toStrictEqual({
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , error: {
+            name: 'DOMException'
+          , ancestors: ['Error']
+          , message: expect.any(String)
+          , stack: expect.any(String)
+          }
+        })
+      })
+
+      test('signal isnt aborted', async () => {
+        const method = vi.fn(async (message: string) => message)
+        const api = { echo: method }
+        const request: IRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , method: ['echo']
+        , params: ['message']
+        }
+        const controller = new AbortController()
+
+        const result = await createResponse(api, request, {
+          signal: controller.signal
+        })
+
+        expect(result).toStrictEqual({
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , result: 'message'
+        })
+      })
+    })
   })
 
   describe('IBatchRequest => IBatchResponse', () => {
     test('success', async () => {
-      const method1 = jest.fn(async () => {
+      const method1 = vi.fn(async () => {
         throw new Error('message')
       })
-      const method2 = jest.fn(async (message: string) => message)
+      const method2 = vi.fn(async (message: string) => message)
       const api = {
         throws: method1
       , echo: method2
@@ -584,12 +640,12 @@ describe('createResponse', () => {
 
     describe('parallel', () => {
       test('parallel = true', async () => {
-        const method1 = jest.fn(async () => {
+        const method1 = vi.fn(async () => {
           const timestamp = Date.now()
           await delay(1000)
           return timestamp
         })
-        const method2 = jest.fn(async () => {
+        const method2 = vi.fn(async () => {
           return Date.now()
         })
         const api = { method1, method2 }
@@ -636,12 +692,12 @@ describe('createResponse', () => {
       })
 
       test('parallel = false', async () => {
-        const method1 = jest.fn(async () => {
+        const method1 = vi.fn(async () => {
           const timestamp = Date.now()
           await delay(1000)
           return timestamp
         })
-        const method2 = jest.fn(async () => {
+        const method2 = vi.fn(async () => {
           return Date.now()
         })
         const api = { method1, method2 }
@@ -689,7 +745,7 @@ describe('createResponse', () => {
     })
 
     test('with namespace', async () => {
-      const method = jest.fn(async (message: string) => message)
+      const method = vi.fn(async (message: string) => message)
       const api = {
         namespace: { echo: method }
       }
@@ -721,7 +777,7 @@ describe('createResponse', () => {
 
     describe('with expectedVersion', () => {
       test('match', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = { echo: method }
         const request: IBatchRequest<unknown> = {
           protocol: 'delight-rpc'
@@ -752,7 +808,7 @@ describe('createResponse', () => {
       })
 
       test('mismatch', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = { echo: method }
         const request: IBatchRequest<unknown> = {
           protocol: 'delight-rpc'
@@ -788,7 +844,7 @@ describe('createResponse', () => {
 
     describe('with validators', () => {
       test('pass', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = {
           namespace: {
             echo: method
@@ -806,7 +862,7 @@ describe('createResponse', () => {
             }
           ]
         }
-        const validator = jest.fn()
+        const validator = vi.fn()
         const validators = {
           namespace: {
             echo: validator
@@ -829,7 +885,7 @@ describe('createResponse', () => {
       })
 
       test('not pass', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = {
           namespace: {
             echo: method
@@ -848,7 +904,7 @@ describe('createResponse', () => {
           ]
         }
         const customError = new Error('custom error')
-        const validator = jest.fn(() => {
+        const validator = vi.fn(() => {
           throw customError
         })
         const validators = {
@@ -882,7 +938,7 @@ describe('createResponse', () => {
 
     describe('with channel', () => {
       test('no channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -905,7 +961,7 @@ describe('createResponse', () => {
 
       describe('channel is AnyChannel', () => {
         test('request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -939,7 +995,7 @@ describe('createResponse', () => {
         })
 
         test('no request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -973,7 +1029,7 @@ describe('createResponse', () => {
 
       describe('channel is a string', () => {
         test('same request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -1007,7 +1063,7 @@ describe('createResponse', () => {
         })
 
         test('diff request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -1031,7 +1087,7 @@ describe('createResponse', () => {
         })
 
         test('no request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -1056,7 +1112,7 @@ describe('createResponse', () => {
 
       describe('channel is a regexp', () => {
         test('request.channel is matched', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -1090,7 +1146,7 @@ describe('createResponse', () => {
         })
 
         test('request.channel is not matched', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -1114,7 +1170,7 @@ describe('createResponse', () => {
         })
 
         test('no request.channel', async () => {
-          const method = jest.fn(async (message: string) => message)
+          const method = vi.fn(async (message: string) => message)
           const api = { echo: method }
           const request: IBatchRequest<unknown> = {
             protocol: 'delight-rpc'
@@ -1140,7 +1196,7 @@ describe('createResponse', () => {
 
     describe('with ownPropsOnly', () => {
       test('own prop', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = {
           namespace: {
             echo: method
@@ -1176,7 +1232,7 @@ describe('createResponse', () => {
       })
 
       test('non-own prop', async () => {
-        const method = jest.fn(async (message: string) => message)
+        const method = vi.fn(async (message: string) => message)
         const api = Object.create({
           namespace: {
             echo: method
@@ -1211,6 +1267,116 @@ describe('createResponse', () => {
               , ancestors: ['CustomError', 'Error']
               , message: 'The method is not available.'
               }
+            }
+          ]
+        })
+      })
+    })
+
+    describe('with signal', () => {
+      test('signal is aborted', async () => {
+        const method1 = vi.fn(async () => {
+          throw new Error('message')
+        })
+        const method2 = vi.fn(async (message: string) => message)
+        const api = {
+          throws: method1
+        , echo: method2
+        }
+        const request: IBatchRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , parallel: false
+        , requests: [
+            {
+              method: ['throws']
+            , params: []
+            }
+          , {
+              method: ['echo']
+            , params: ['message']
+            }
+          ]
+        }
+        const controller = new AbortController()
+        controller.abort()
+
+        const result = await createResponse(api, request, {
+          signal: controller.signal
+        })
+
+        expect(result).toStrictEqual({
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , responses: [
+            {
+              error: {
+                name: 'DOMException'
+              , ancestors: ['Error']
+              , message: expect.any(String)
+              , stack: expect.any(String)
+              }
+            }
+          , {
+              error: {
+                name: 'DOMException'
+              , ancestors: ['Error']
+              , message: expect.any(String)
+              , stack: expect.any(String)
+              }
+            }
+          ]
+        })
+      })
+
+      test('signal isnt aborted', async () => {
+        const method1 = vi.fn(async () => {
+          throw new Error('message')
+        })
+        const method2 = vi.fn(async (message: string) => message)
+        const api = {
+          throws: method1
+        , echo: method2
+        }
+        const request: IBatchRequest<unknown> = {
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , parallel: false
+        , requests: [
+            {
+              method: ['throws']
+            , params: []
+            }
+          , {
+              method: ['echo']
+            , params: ['message']
+            }
+          ]
+        }
+        const controller = new AbortController()
+
+        const result = await createResponse(api, request, {
+          signal: controller.signal
+        })
+
+        expect(result).toStrictEqual({
+          protocol: 'delight-rpc'
+        , version: '3.1'
+        , id: 'id'
+        , responses: [
+            {
+              error: {
+                name: 'Error'
+              , message: 'message'
+              , stack: expect.any(String)
+              , ancestors: []
+              }
+            }
+          , {
+              result: 'message'
             }
           ]
         })

@@ -64,7 +64,7 @@ async function handle(
 type ImplementationOf<Obj> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result
-      ? (...args: Args) => Awaitable<Awaited<Result>>
+      ? (...args: [...args: Args, signal?: AbortSignal]) => Awaitable<Awaited<Result>>
       : ImplementationOf<Obj[Key]>
 }
 
@@ -81,12 +81,15 @@ type ParameterValidators<Obj> = Partial<{
 type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
     Obj[Key] extends (...args: infer Args) => infer Result
-      ? (...args: Args) => Promise<Awaited<Result>>
+      ? (...args: [...args: Args, signal?: AbortSignal]) => Promise<Awaited<Result>>
       : ClientProxy<Obj[Key]>
 }
 
 function createClient<API extends object, DataType = unknown>(
-  send: (request: IRequest<DataType>) => PromiseLike<IResponse<DataType>>
+  send: (
+    request: IRequest<DataType>
+  , signal?: AbortSignal
+  ) => Awaitable<IResponse<DataType>>
 , options?: {
     parameterValidators?: ParameterValidators<API>
     expectedVersion?: string
@@ -109,7 +112,7 @@ type MapRequestsToResults<RequestTuple extends IRequestForBatchRequest<unknown, 
 
 class BatchClient<DataType = unknown> {
   constructor(
-    send: (batchRequest: IBatchRequest<DataType>) => PromiseLike<
+    send: (batchRequest: IBatchRequest<DataType>) => Awaitable<
     | IError
     | IBatchResponse<DataType>
     >
@@ -152,11 +155,12 @@ const AnyChannel
 function createResponse<API, DataType>(
   api: ImplementationOf<API>
 , request: IRequest<DataType> | IBatchRequest<DataType>
-, { parameterValidators = {}, version, channel, ownPropsOnly = false }: {
+, { parameterValidators = {}, version, channel, signal, ownPropsOnly = false }: {
     parameterValidators?: ParameterValidators<API>
     version?: `${number}.${number}.${number}`
-    channel?: string | RegExp | AnyChannel
+    channel?: string | RegExp | typeof AnyChannel
     ownPropsOnly?: boolean
+    signal?: AbortSignal
   } = {}
 ): Promise<null | IResponse<DataType> | IBatchResponse<DataType>>
 ```
@@ -217,4 +221,14 @@ function matchChannel<DataType>(
   | RegExp
   | typeof AnyChannel
 ): boolean
+```
+
+### createAbort
+```ts
+function createAbort(id: string, channel: string | undefined): IAbort
+```
+
+### isAbort
+```ts
+function isAbort(val: unknown): val is IAbort
 ```
