@@ -81,8 +81,8 @@ export async function createResponse<API, DataType>(
 
           const fn = (ownPropsOnly ? tryGetOwnProp : tryGetProp)(api, request.method)
           if (isntFunction(fn)) {
-            return createErrorForBatchResponse(new 
-              MethodNotAvailable('The method is not available.')
+            return createErrorForBatchResponse(
+              new MethodNotAvailable('The method is not available.')
             )
           }
 
