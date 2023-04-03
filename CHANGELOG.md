@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/delight-rpc/delight-rpc/compare/v6.0.1...v6.1.0) (2023-04-03)
+
+
+### Features
+
+* add `createAbort`, `isAbort`, add signal support for `createClient`, `createResponse` ([364a6e7](https://github.com/delight-rpc/delight-rpc/commit/364a6e725de4699bc7d8e558b4d3edb0b96a6261))
+* upgrade protocol version to 3.1 ([ee07983](https://github.com/delight-rpc/delight-rpc/commit/ee079830301d0bf17e7bfac39d4f46864db08733))
+
 ### [6.0.1](https://github.com/delight-rpc/delight-rpc/compare/v6.0.0...v6.0.1) (2023-03-19)
 
 ## [6.0.0](https://github.com/delight-rpc/delight-rpc/compare/v5.1.0...v6.0.0) (2023-03-19)
