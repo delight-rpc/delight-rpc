@@ -210,11 +210,7 @@ function isBatchResponse<T>(val: unknown): val is IBatchResponse<T>
 ### matchChannel
 ```ts
 function matchChannel<DataType>(
-  requestOrResponse:
-  | IRequest<DataType>
-  | IBatchRequest<DataType>
-  | IResponse<DataType>
-  | IBatchResponse<DataType>
+  message: IDelightRPC
 , channel:
   | undefined
   | string
