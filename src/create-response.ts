@@ -14,6 +14,9 @@ import { InternalError, MethodNotAvailable, VersionMismatch } from '@src/errors.
 import { AnyChannel } from './types.js'
 import { matchChannel } from '@utils/match-channel.js'
 
+/**
+ * @returns returns `null` if the `channel` does not match.
+ */
 export async function createResponse<API, DataType>(
   api: ImplementationOf<API>
 , request: IRequest<DataType> | IBatchRequest<DataType>
