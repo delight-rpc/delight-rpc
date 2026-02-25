@@ -1,3 +1,4 @@
+import { describe, test, it, expect, vi } from 'vitest'
 import { createBatchProxy } from '@src/create-batch-proxy.js'
 import { getError } from 'return-style'
 

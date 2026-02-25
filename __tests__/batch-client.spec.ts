@@ -1,3 +1,4 @@
+import { describe, test, expect, vi } from 'vitest'
 import { BatchClient } from '@src/batch-client.js'
 import { VersionMismatch } from '@src/errors.js'
 import { IBatchRequest, IBatchResponse } from '@delight-rpc/protocol'
@@ -7,11 +8,10 @@ import { normalize, CustomError } from '@blackglory/errors'
 describe('BatchClient', () => {
   test('then method', () => {
     const send = vi.fn()
-    // @ts-ignore
     const client = new BatchClient(send)
 
     const exists = 'then' in client
-    // @ts-ignore
+    // @ts-expect-error .then
     const value = client.then
 
     expect(exists).toBe(false)
@@ -20,11 +20,10 @@ describe('BatchClient', () => {
 
   test('toJSON method', () => {
     const send = vi.fn()
-    // @ts-ignore
     const client = new BatchClient(send)
 
     const exists = 'toJSON' in client
-    // @ts-ignore
+    // @ts-expect-error .toJSON
     const value = client.toJSON
 
     expect(exists).toBe(false)

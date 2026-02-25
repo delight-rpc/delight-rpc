@@ -1,3 +1,4 @@
+import { describe, test, it, expect, vi } from 'vitest'
 import { createClient } from '@src/create-client.js'
 import { getErrorPromise, getError } from 'return-style'
 import { VersionMismatch, MethodNotAvailable } from '@src/errors.js'
@@ -8,11 +9,10 @@ import { AbortController } from 'extra-abort'
 describe('createClient', () => {
   test('then method', () => {
     const send = vi.fn()
-    // @ts-ignore
     const client = createClient(send)
 
     const exists = 'then' in client
-    // @ts-ignore
+    // @ts-expect-error .then
     const value = client.then
 
     expect(exists).toBe(false)
@@ -21,11 +21,10 @@ describe('createClient', () => {
 
   test('toJSON method', () => {
     const send = vi.fn()
-    // @ts-ignore
     const client = createClient(send)
 
     const exists = 'toJSON' in client
-    // @ts-ignore
+    // @ts-expect-error .toJSON
     const value = client.toJSON
 
     expect(exists).toBe(false)

@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { matchChannel } from '@utils/match-channel.js'
 import { IDelightRPC } from '@delight-rpc/protocol'
 import { AnyChannel } from '@src/types.js'

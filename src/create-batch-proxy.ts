@@ -18,7 +18,7 @@ export function createBatchProxy<API extends object, DataType = unknown>(
   } = {}
 ): BatchClientProxy<API, DataType> {
   return new Proxy(Object.create(null), {
-    get(target: any, prop: string | symbol) {
+    get(target, prop) {
       if (isntString(prop)) return
       if (['then', 'toJSON'].includes(prop)) return
       return createCallableNestedProxy([prop])

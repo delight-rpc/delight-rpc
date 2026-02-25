@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { IDelightRPC } from '@delight-rpc/protocol'
 import { isResult } from '@utils/is-result.js'
 import { createResult } from '@utils/create-result.js'

@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { createError } from '@src/utils/create-error.js'
 
 describe('createError', () => {

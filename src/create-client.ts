@@ -9,7 +9,6 @@ import { ParameterValidators } from '@src/types.js'
 import { tryGetProp } from 'object-path-operator'
 import { createUUID } from '@utils/create-uuid.js'
 import { isAbortSignal } from 'extra-abort'
-import { throwIfAborted } from './utils/throw-if-aborted.js'
 
 export type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
@@ -30,7 +29,7 @@ export function createClient<API extends object, DataType = unknown>(
   } = {}
 ): ClientProxy<API> {
   return new Proxy(Object.create(null), {
-    get(target: any, prop: string | symbol) {
+    get(target, prop) {
       if (isntString(prop)) return
       if (['then', 'toJSON'].includes(prop)) return
       return createCallableNestedProxy([prop])
@@ -64,7 +63,7 @@ export function createClient<API extends object, DataType = unknown>(
 
         return go(async () => {
           const { args: realArgs, signal } = parseArgs(args)
-          if (signal) throwIfAborted(signal)
+          signal?.throwIfAborted()
 
           const id = createUUID()
           const request = createRequest<DataType>(

@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { isBatchResponse } from '@utils/is-batch-response.js'
 import { createBatchResponse } from '@utils/create-batch-response.js'
 import { IDelightRPC } from '@delight-rpc/protocol'

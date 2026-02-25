@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { isError } from '@utils/is-error.js'
 import { createError } from '@utils/create-error.js'
 import { IDelightRPC } from '@delight-rpc/protocol'
