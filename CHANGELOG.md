@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/delight-rpc/delight-rpc/compare/v6.1.3...v7.0.0) (2026-02-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* Node.js v16 => Node.js v22
+
+* upgrade dependencies ([80d7a8b](https://github.com/delight-rpc/delight-rpc/commit/80d7a8b7ec7fc3526dc4b49702b1168db8f1ff3d))
+
 ### [6.1.3](https://github.com/delight-rpc/delight-rpc/compare/v6.1.2...v6.1.3) (2026-02-25)
 
 
