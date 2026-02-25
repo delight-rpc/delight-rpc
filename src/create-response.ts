@@ -13,6 +13,7 @@ import { createBatchResponse, createErrorForBatchResponse, createResultForBatchR
 import { InternalError, MethodNotAvailable, VersionMismatch } from '@src/errors.js'
 import { AnyChannel } from './types.js'
 import { matchChannel } from '@utils/match-channel.js'
+import { throwIfAborted } from './utils/throw-if-aborted.js'
 
 /**
  * @returns returns `null` if the `channel` does not match.
@@ -60,7 +61,7 @@ export async function createResponse<API, DataType>(
           )
         }
 
-        signal?.throwIfAborted()
+        if (signal) throwIfAborted(signal)
         const result: DataType = await Reflect.apply(
           fn
         , api
@@ -89,7 +90,7 @@ export async function createResponse<API, DataType>(
             )
           }
 
-          signal?.throwIfAborted()
+          if (signal) throwIfAborted(signal)
           const result: DataType = await Reflect.apply(
             fn
           , api
