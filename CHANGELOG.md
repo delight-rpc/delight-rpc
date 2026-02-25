@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.3](https://github.com/delight-rpc/delight-rpc/compare/v6.1.2...v6.1.3) (2026-02-25)
+
+
+### Bug Fixes
+
+* remove `signal.throwIfAborted()` ([3f2954f](https://github.com/delight-rpc/delight-rpc/commit/3f2954ff9cb1582a5f515fc458e3891e447d8232))
+
 ### [6.1.2](https://github.com/delight-rpc/delight-rpc/compare/v6.1.1...v6.1.2) (2023-04-04)
 
 ### [6.1.1](https://github.com/delight-rpc/delight-rpc/compare/v6.1.0...v6.1.1) (2023-04-03)
