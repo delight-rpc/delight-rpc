@@ -9,6 +9,7 @@ import { ParameterValidators } from '@src/types.js'
 import { tryGetProp } from 'object-path-operator'
 import { createUUID } from '@utils/create-uuid.js'
 import { isAbortSignal } from 'extra-abort'
+import { NonEmptyArray } from '@blackglory/prelude'
 
 export type ClientProxy<Obj> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
@@ -41,7 +42,9 @@ export function createClient<API extends object, DataType = unknown>(
     }
   })
 
-  function createCallableNestedProxy(path: [string, ...string[]]): ClientProxy<API> {
+  function createCallableNestedProxy(
+    path: NonEmptyArray<string>
+  ): ClientProxy<API> {
     return new Proxy(pass, {
       get(target, prop) {
         if (isntString(prop)) return

@@ -4,6 +4,7 @@ import { ParameterValidators} from '@src/types.js'
 import { IRequestForBatchRequest } from '@delight-rpc/protocol'
 import { tryGetProp } from 'object-path-operator'
 import { createRequestForBatchRequest } from '@utils/create-batch-request.js'
+import { NonEmptyArray } from '@blackglory/prelude'
 
 export type BatchClientProxy<Obj, DataType> = {
   [Key in FunctionKeys<Obj> | KeysByType<Obj, object>]:
@@ -30,7 +31,9 @@ export function createBatchProxy<API extends object, DataType = unknown>(
     }
   })
 
-  function createCallableNestedProxy(path: [string, ...string[]]): BatchClientProxy<API, DataType> {
+  function createCallableNestedProxy(
+    path: NonEmptyArray<string>
+  ): BatchClientProxy<API, DataType> {
     return new Proxy(pass, {
       get(target, prop) {
         if (isntString(prop)) return
