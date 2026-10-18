@@ -35,7 +35,7 @@
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@eslint/js": "^10.0.1",
-    "@types/semver": "^7.7.1",
+    "@types/semver": "^7.8.0",
     "cross-env": "^10.1.0",
     "eslint": "^10.0.2",
     "husky": "4",
@@ -53,14 +53,14 @@
   },
   "dependencies": {
     "@blackglory/errors": "^3.1.0",
-    "@blackglory/prelude": "^0.4.0",
+    "@blackglory/prelude": "^0.5.0",
     "@delight-rpc/protocol": "^4.1.1",
-    "extra-abort": "^0.4.1",
+    "extra-abort": "^0.5.1",
     "extra-promise": "^7.1.1",
-    "hotypes": "^0.6.5",
-    "nanoid": "^5.1.6",
+    "hotypes": "^0.6.6",
+    "nanoid": "^6.0.2",
     "object-path-operator": "^5.2.2",
     "return-style": "^4.0.0",
-    "semver": "^7.7.4"
+    "semver": "^7.8.5"
   }
 }
