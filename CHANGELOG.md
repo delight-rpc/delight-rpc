@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.0.1](https://github.com/delight-rpc/delight-rpc/compare/v7.0.0...v7.0.1) (2026-10-18)
+
 ## [7.0.0](https://github.com/delight-rpc/delight-rpc/compare/v6.1.3...v7.0.0) (2026-02-25)
 
 
